@@ -329,9 +329,9 @@ const TestimonialSlider = () => {
   const currentTestimonial = testimonials[currentSlide];
 
   return (
-    <section id='testimonials' className="relative py-8 overflow-hidden bg-gradient-to-br from-[#fffdf7] to-[#fefaf3]">
+    <section id='testimonials' className="relative py-1 md:py-8 overflow-hidden bg-gradient-to-br from-[#fffdf7] to-[#fefaf3]">
       <div className="container mx-auto px-4 md:px-8 relative z-10">
-        <div className="relative w-full max-w-6xl mx-auto flex items-center justify-center min-h-[500px]">
+        <div className="relative w-full max-w-6xl mx-auto flex items-center justify-center min-h-[420px] md:min-h-[500px]">
           <AnimatePresence initial={false} custom={direction}>
             <motion.div
               key={currentSlide}
@@ -344,7 +344,7 @@ const TestimonialSlider = () => {
             >
               <div className="flex flex-col md:flex-row items-stretch justify-center bg-white rounded-2xl shadow-xl w-full overflow-hidden">
                 {/* User Image */}
-                <div className="md:w-1/2 w-full h-80 md:h-[500px] overflow-hidden flex-shrink-0 relative">
+                <div className="md:w-1/2 w-full h-48 md:h-[500px] overflow-hidden flex-shrink-0 relative">
                   <img
                     src={currentTestimonial.userImage}
                     alt={currentTestimonial.name}
@@ -353,12 +353,12 @@ const TestimonialSlider = () => {
                 </div>
 
                 {/* Content */}
-                <div className="md:w-1/2 flex flex-col justify-between p-6 md:p-10">
+                <div className="md:w-1/2 flex flex-col justify-between p-4 md:p-10">
                   <div className="flex flex-col items-start text-left">
-                    <div className="text-5xl md:text-6xl text-gray-300 mb-4 leading-none font-serif">
+                    <div className="text-2xl md:text-6xl text-gray-300 mb-2 md:mb-4 leading-none font-serif">
                       “
                     </div>
-                    <blockquote className="text-xl md:text-3xl font-semibold text-gray-900 leading-snug tracking-tight">
+                    <blockquote className="text-sm md:text-3xl font-semibold text-gray-900 leading-snug tracking-tight">
                       {currentTestimonial.review}
                     </blockquote>
 
@@ -367,26 +367,26 @@ const TestimonialSlider = () => {
                       {currentTestimonial.desc}
                     </p>
 
-                    <cite className="text-base font-bold text-gray-900 mt-6">
+                    <cite className="text-xs md:text-base font-bold text-gray-900 mt-4 md:mt-6">
                       - {currentTestimonial.name}
                     </cite>
                   </div>
 
                   {/* Product Banner */}
-                  <div className="bg-gray-50 rounded-xl p-4 flex items-center border border-gray-200 shadow-sm mt-6 md:mt-10">
+                  <div className="bg-gray-50 rounded-xl p-3 md:p-4 flex items-center border border-gray-200 shadow-sm mt-4 md:mt-10">
                     <img
                       src={currentTestimonial.productImage}
                       alt={currentTestimonial.productName}
-                      className="w-16 h-16 md:w-20 md:h-20 object-contain mr-4 rounded-md"
+                      className="w-12 h-12 md:w-20 md:h-20 object-contain mr-3 md:mr-4 rounded-md"
                     />
                     <div className="flex-1">
-                      <p className="text-xs font-semibold uppercase text-gray-500 mb-1">
+                      <p className="text-[10px] md:text-xs font-semibold uppercase text-gray-500 mb-0.5 md:mb-1">
                         Featured Product
                       </p>
-                      <h4 className="text-sm md:text-lg font-bold text-gray-900">
+                      <h4 className="text-xs md:text-lg font-bold text-gray-900">
                         {currentTestimonial.productName}
                       </h4>
-                      <div className="flex items-center space-x-1 mt-1">
+                      <div className="flex items-center space-x-1 mt-0.5 md:mt-1">
                         {Array.from({ length: 5 }).map((_, i) => (
                           <IoStarSharp
                             key={i}
@@ -396,7 +396,7 @@ const TestimonialSlider = () => {
                               }`}
                           />
                         ))}
-                        <span className="text-xs md:text-sm text-gray-500 ml-2">
+                        <span className="text-[10px] md:text-sm text-gray-500 ml-2">
                           {currentTestimonial.ratingsCount}+ Reviews
                         </span>
                       </div>

@@ -506,8 +506,8 @@ const MyOrdersPage = () => {
     if (error) return <div className="text-center text-red-500 mt-10">{error}</div>;
 
     return (
-        <div className="bg-gray-100 min-h-screen container mx-auto px-4 py-8 md:py-12">
-            <h1 className="text-4xl font-extrabold mb-8 text-center text-gray-800">Your Order History</h1>
+        <div className="bg-gray-100 min-h-screen container mx-auto px-4 py-4 md:py-12">
+            <h1 className="text-2xl md:text-4xl font-extrabold mb-4 md:mb-8 text-center text-gray-800">Your Order History</h1>
             {requestMessage && (
                 <div className="bg-green-100 text-green-700 p-4 rounded-md mb-6 transition-all duration-300 transform animate-fadeInUp">
                     {requestMessage}
@@ -515,9 +515,9 @@ const MyOrdersPage = () => {
             )}
 
             {orders.length === 0 ? (
-                <div className="text-center text-gray-500 py-12">
-                    <FaBox className="mx-auto w-16 h-16 text-gray-300 mb-4" />
-                    <p className="text-xl">You have not placed any orders yet.</p>
+                <div className="text-center text-gray-500 py-8 md:py-12">
+                    <FaBox className="mx-auto w-12 h-12 md:w-16 md:h-16 text-gray-300 mb-4" />
+                    <p className="text-base md:text-xl">You have not placed any orders yet.</p>
                 </div>
             ) : (
                 <div className="space-y-8">
@@ -535,7 +535,7 @@ const MyOrdersPage = () => {
                             <div key={order._id} className="bg-white rounded-xl shadow-lg p-6 md:p-8 hover:shadow-xl transition-shadow duration-300">
                                 <div className="flex flex-col md:flex-row md:justify-between md:items-center border-b pb-4 mb-4">
                                     <div className="mb-4 md:mb-0">
-                                        <h2 className="text-xl md:text-2xl font-bold text-gray-800 break-words md:break-normal">
+                                        <h2 className="text-lg md:text-2xl font-bold text-gray-800 break-words md:break-normal">
                                             Order #{order.orderNumber}
                                         </h2>
                                         <p className="text-sm text-gray-500 mt-1">

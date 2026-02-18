@@ -261,12 +261,12 @@ const AllProductsPage = () => {
   });
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-4 md:py-8">
       {/* Mobile filter button */}
       <div className="md:hidden mb-4 flex justify-start">
         <button
           onClick={() => setMobileFilterOpen(true)}
-          className="px-3 py-1.5 bg-green-600 text-white rounded-md text-xs font-semibold shadow-sm flex items-center gap-1"
+          className="px-3 py-1.5 md:px-4 md:py-2 bg-green-600 text-white rounded-md text-xs md:text-base font-semibold shadow-sm flex items-center gap-1"
         >
           Open Filters
         </button>
@@ -287,10 +287,10 @@ const AllProductsPage = () => {
 
         {/* Products area */}
         <div className="flex-1">
-          <h1 className="text-4xl font-bold text-center mb-10">All Products</h1>
+          <h1 className="text-2xl md:text-4xl font-bold text-center mb-6 md:mb-10">All Products</h1>
 
           {filteredProducts.length === 0 ? (
-            <p className="text-center text-lg text-gray-600">No products found.</p>
+            <p className="text-center text-sm md:text-lg text-gray-600">No products found.</p>
           ) : (
             <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
               {filteredProducts.map((product) => (

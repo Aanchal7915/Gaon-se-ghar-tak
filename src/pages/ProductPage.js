@@ -179,7 +179,7 @@ const ProductPage = () => {
     ));
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-16 bg-white font-sans antialiased">
+    <div className="container mx-auto px-4 py-4 md:py-16 bg-white font-sans antialiased">
       {/* Full-screen image modal for mobile zoom */}
       <AnimatePresence>
         {isFullScreen && (
@@ -207,7 +207,7 @@ const ProductPage = () => {
         {/* Image and Video Gallery */}
         <div className="w-full md:w-1/2">
           <div
-            className="relative w-full h-[500px] bg-gray-50 rounded-2xl shadow-xl overflow-hidden group"
+            className="relative w-full h-[300px] md:h-[500px] bg-gray-50 rounded-2xl shadow-xl overflow-hidden group"
             onMouseMove={handleMouseMove}
             onMouseLeave={() => setIsZoomed(false)}
             onClick={() => {
@@ -297,8 +297,8 @@ const ProductPage = () => {
               <div
                 key={index}
                 className={`flex-shrink-0 w-16 h-16 md:w-24 md:h-24 overflow-hidden rounded-md cursor-pointer border-2 transition-all duration-300 ${activeImageIndex === index
-                    ? "border-gray-900 shadow-md"
-                    : "border-transparent hover:border-gray-400"
+                  ? "border-gray-900 shadow-md"
+                  : "border-transparent hover:border-gray-400"
                   }`}
                 onClick={() => {
                   setActiveImageIndex(index);
@@ -319,10 +319,10 @@ const ProductPage = () => {
         </div>
 
         {/* Product details */}
-        <div className="w-full md:w-1/2 flex flex-col p-4 md:p-0">
+        <div className="w-full md:w-1/2 flex flex-col p-2 md:p-0">
           <div className="flex items-center justify-between mb-2">
             {isNewArrival(product.createdAt) && (
-              <span className="bg-gray-200 text-gray-700 text-sm font-semibold px-3 py-1 rounded-full tracking-wide">
+              <span className="bg-gray-200 text-gray-700 text-xs md:text-sm font-semibold px-3 py-1 rounded-full tracking-wide">
                 New Arrival
               </span>
             )}
@@ -333,8 +333,8 @@ const ProductPage = () => {
               >
                 <FaHeart
                   className={`text-2xl transition-transform duration-300 ${isWishlisted
-                      ? "text-red-500 scale-110"
-                      : "text-gray-400 hover:text-red-400"
+                    ? "text-red-500 scale-110"
+                    : "text-gray-400 hover:text-red-400"
                     }`}
                 />
                 <AnimatePresence>
@@ -360,40 +360,40 @@ const ProductPage = () => {
             </div>
           </div>
 
-          <h1 className="text-4xl font-extrabold text-gray-900 leading-tight tracking-tight mt-2">
+          <h1 className="text-2xl md:text-4xl font-extrabold text-gray-900 leading-tight tracking-tight mt-2">
             {product.name}
           </h1>
-          <p className="text-xl font-medium text-gray-500">{product.brand}</p>
+          <p className="text-lg md:text-xl font-medium text-gray-500">{product.brand}</p>
 
           {dynamicRating && (
             <div className="flex items-center mt-3">
               {[...Array(5)].map((_, i) => (
                 <FaStar
                   key={i}
-                  className={`w-5 h-5 ${i < Math.floor(dynamicRating.rating)
-                      ? "text-yellow-400"
-                      : "text-gray-300"
+                  className={`w-4 h-4 md:w-5 md:h-5 ${i < Math.floor(dynamicRating.rating)
+                    ? "text-yellow-400"
+                    : "text-gray-300"
                     }`}
                 />
               ))}
-              <span className="ml-2 text-sm text-gray-500">
+              <span className="ml-2 text-xs md:text-sm text-gray-500">
                 ({dynamicRating.reviews} Reviews)
               </span>
             </div>
           )}
 
-          <p className="mt-4 text-3xl font-bold text-gray-900">
+          <p className="mt-4 text-2xl md:text-3xl font-bold text-gray-900">
             ₹{selectedVariant ? selectedVariant.price : "N/A"}
           </p>
 
           <div className="mt-6">
-            <h4 className="font-semibold text-gray-800 mb-2">Select Pack Size:</h4>
+            <h4 className="font-semibold text-gray-800 mb-2 text-sm md:text-base">Select Pack Size:</h4>
             <div className="grid grid-cols-4 md:grid-cols-5 gap-2">
               {product.variants.map((variant) => (
                 <button
                   key={variant.size}
                   onClick={() => setSelectedVariant(variant)}
-                  className={`py-3 rounded-md font-medium transition-all duration-200 border border-gray-300 hover:border-gray-900
+                  className={`py-2 md:py-3 rounded-md font-medium text-xs md:text-base transition-all duration-200 border border-gray-300 hover:border-gray-900
                     ${selectedVariant?.size === variant.size
                       ? "bg-gray-900 text-white"
                       : "bg-white text-gray-800"
@@ -410,9 +410,9 @@ const ProductPage = () => {
             </div>
           </div>
 
-          <div className="mt-auto pt-8">
-            <h4 className="font-semibold text-gray-800 mb-2">Description:</h4>
-            <div className="mt-2 text-gray-700 leading-relaxed">
+          <div className="mt-auto pt-4 md:pt-8">
+            <h4 className="font-semibold text-gray-800 mb-2 text-sm md:text-base">Description:</h4>
+            <div className="mt-2 text-sm md:text-base text-gray-700 leading-relaxed">
               {productDescriptionParagraphs}
             </div>
           </div>
@@ -421,13 +421,13 @@ const ProductPage = () => {
             {selectedVariant && selectedVariant.countInStock > 0 ? (
               <button
                 onClick={handleAddToCart}
-                className="w-full bg-gray-900 text-white font-bold py-4 rounded-md text-lg hover:bg-gray-800 transition transform shadow-lg"
+                className="w-full bg-gray-900 text-white font-bold py-3 md:py-4 rounded-md text-base md:text-lg hover:bg-gray-800 transition transform shadow-lg"
               >
                 Add to Cart
               </button>
             ) : (
               <button
-                className="w-full bg-gray-400 text-white font-bold py-4 rounded-md text-lg cursor-not-allowed shadow-md"
+                className="w-full bg-gray-400 text-white font-bold py-3 md:py-4 rounded-md text-base md:text-lg cursor-not-allowed shadow-md"
                 disabled
               >
                 Out of Stock

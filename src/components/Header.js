@@ -166,8 +166,10 @@ const Header = () => {
       role="banner"
     >
       {/* Promo bar */}
-      <div className="bg-green-600 text-white text-center py-2 text-[10px] md:text-xs font-bold tracking-widest uppercase">
-        Fresh Organic Vegetables at your doorstep. Get 20% off on your first order!
+      <div className="bg-green-600 text-white py-1.5 px-2 text-[9px] md:text-xs font-bold tracking-widest uppercase overflow-hidden relative">
+        <div className="animate-marquee whitespace-nowrap inline-block min-w-full">
+          Fresh Organic Vegetables at your doorstep. Get 20% off on your first order! &nbsp;&nbsp;&nbsp;&nbsp; Fresh Organic Vegetables at your doorstep. Get 20% off on your first order!
+        </div>
       </div>
       <div
         className="mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between transition-all duration-300 py-4"
@@ -178,7 +180,7 @@ const Header = () => {
           className="flex items-center transition-all duration-300"
           aria-label="Rohtak Grocery Co. Home"
         >
-          <img src="./final-logo.png" alt="Rohtak Grocery Co." className="h-[50px] w-[200px] object-contain mix-blend-multiply" />
+          <img src="./final-logo.png" alt="Rohtak Grocery Co." className="h-[30px] w-[120px] md:h-[50px] md:w-[200px] object-contain mix-blend-multiply" />
         </Link>
 
         {/* Desktop Nav */}
@@ -291,7 +293,7 @@ const Header = () => {
             aria-label="Open search"
             className="text-gray-600 hover:text-blue-800 p-2 rounded-full transition"
           >
-            <HiOutlineSearch className="w-6 h-6" />
+            <HiOutlineSearch className="w-5 h-5" />
           </button>
 
           <Link
@@ -300,7 +302,7 @@ const Header = () => {
             aria-label="Open wishlist"
             title="Wishlist"
           >
-            <HiOutlineHeart className="w-6 h-6" />
+            <HiOutlineHeart className="w-5 h-5" />
           </Link>
 
           <Link
@@ -309,7 +311,7 @@ const Header = () => {
             aria-label="Open cart"
             title="Cart"
           >
-            <HiOutlineShoppingCart className="w-6 h-6" />
+            <HiOutlineShoppingCart className="w-5 h-5" />
             {cartCount > 0 && (
               <span
                 key={cartCount}
@@ -327,9 +329,9 @@ const Header = () => {
             className="text-gray-600 hover:text-blue-800 p-2 rounded-full transition"
           >
             {isMenuOpen ? (
-              <HiOutlineX className="w-6 h-6" />
+              <HiOutlineX className="w-5 h-5" />
             ) : (
-              <HiOutlineMenu className="w-6 h-6" />
+              <HiOutlineMenu className="w-5 h-5" />
             )}
           </button>
         </div>

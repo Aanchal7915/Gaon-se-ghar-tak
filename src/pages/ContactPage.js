@@ -80,7 +80,7 @@ const ContactPage = () => {
   const whatsappNumber = "919728268800";
 
   return (
-    <div className="container mx-auto p-8 lg:p-16">
+    <div className="container mx-auto p-4 lg:p-16">
       {/* Header Section */}
       <motion.div
         initial={{ opacity: 0, y: -30 }}
@@ -88,10 +88,10 @@ const ContactPage = () => {
         transition={{ duration: 0.6 }}
         className="text-center mb-12"
       >
-        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mb-4">
+        <h1 className="text-2xl md:text-5xl font-extrabold text-gray-800 mb-4">
           Contact Us
         </h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <p className="text-sm md:text-lg text-gray-600 max-w-2xl mx-auto">
           We'd love to hear from you! Whether you have a question about our
           products, need help with an order, or just want to say hello, we're
           here to help.
@@ -108,7 +108,7 @@ const ContactPage = () => {
           transition={{ duration: 0.6 }}
           className="bg-white p-8 rounded-xl shadow-lg"
         >
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">Our Details</h2>
+          <h2 className="text-lg md:text-2xl font-bold text-gray-800 mb-4 md:mb-6">Our Details</h2>
           <div className="space-y-6">
             <div className="flex items-start space-x-4">
               <FaMapMarkerAlt className="text-indigo-600 text-xl mt-1" />
@@ -168,7 +168,7 @@ const ContactPage = () => {
           transition={{ duration: 0.6 }}
           className="bg-white p-4 rounded-xl shadow-lg"
         >
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Find Us</h2>
+          <h2 className="text-lg md:text-2xl font-bold text-gray-800 mb-4">Find Us</h2>
           <div className="rounded-lg overflow-hidden">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3497.100913506757!2d76.5878482!3d28.8927891!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390da57f02d4f3b7%3A0x6334a171d9f0412e!2sGandhi%20Shopping%20Complex!5e0!3m2!1sen!2sin!4v1672345678901!5m2!1sen!2sin"

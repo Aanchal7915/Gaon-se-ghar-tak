@@ -26,10 +26,10 @@ const CategorySection = () => {
     if (categories.length === 0) return null;
 
     return (
-        <section className="py-8 bg-white">
+        <section className="py-4 md:py-8 bg-white">
             <div className="container mx-auto px-4 md:px-8">
-                <div className="flex flex-col mb-6">
-                    <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight mb-2">
+                <div className="flex flex-col mb-3 md:mb-6">
+                    <h2 className="text-xl md:text-4xl font-extrabold text-gray-900 tracking-tight mb-2">
                         Shop By Category
                     </h2>
                     <div className="h-1.5 w-20 bg-green-600 rounded-full"></div>
@@ -40,7 +40,7 @@ const CategorySection = () => {
                         <Link
                             key={category._id}
                             to={`/categories/${category._id}`}
-                            className="group relative h-32 md:h-48 overflow-hidden rounded-xl bg-gray-100 shadow-sm hover:shadow-lg transition-all duration-500"
+                            className="group relative h-24 md:h-48 overflow-hidden rounded-xl bg-gray-100 shadow-sm hover:shadow-lg transition-all duration-500"
                         >
                             <img
                                 src={category.image}

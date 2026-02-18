@@ -7,6 +7,7 @@
   0% {
     transform: translateX(-100%);
   }
+
   100% {
     transform: translateX(100%);
   }
@@ -14,41 +15,60 @@
 
 .animate-shimmer {
   animation: shimmer 1s infinite linear;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.4) 50%,
-    transparent 100%
-  );
-  background-size: 200% 100%; /* Important for the translateX effect */
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.4) 50%,
+      transparent 100%);
+  background-size: 200% 100%;
+  /* Important for the translateX effect */
 }
 
 /* Pause shimmer animation when not hovered */
 .group .animate-shimmer {
-    animation-play-state: paused;
-    opacity: 0; /* Ensure it's hidden when not hovered */
+  animation-play-state: paused;
+  opacity: 0;
+  /* Ensure it's hidden when not hovered */
 }
 
 /* Play shimmer animation on hover */
 .group:hover .animate-shimmer {
-    animation-play-state: running;
-    opacity: 1; /* Make it visible on hover */
+  animation-play-state: running;
+  opacity: 1;
+  /* Make it visible on hover */
 }
 
 /* Adjust initial position for shimmer start */
 .group:hover .animate-shimmer {
-    transform: translateX(-100%); /* Start shimmer off-screen left */
-    transition: transform 0s; /* No transition on initial position change */
+  transform: translateX(-100%);
+  /* Start shimmer off-screen left */
+  transition: transform 0s;
+  /* No transition on initial position change */
 }
 
 @keyframes pulseHot {
-  0%, 100% { transform: scale(1); opacity: 0.9; }
-  50% { transform: scale(1.2); opacity: 1; }
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
 }
 
 @keyframes glowHot {
-  0%, 100% { text-shadow: 0 0 5px rgba(255, 140, 0, 0.6); }
-  50% { text-shadow: 0 0 15px rgba(255, 140, 0, 0.9); }
+
+  0%,
+  100% {
+    text-shadow: 0 0 5px rgba(255, 140, 0, 0.6);
+  }
+
+  50% {
+    text-shadow: 0 0 15px rgba(255, 140, 0, 0.9);
+  }
 }
 
 .animate-pulseHot {
@@ -59,12 +79,29 @@
   animation: glowHot 2s infinite alternate;
 }
 
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+  white-space: nowrap;
+  display: inline-block;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500&display=swap');
 
 body {
   font-family: 'Inter', sans-serif;
 }
-h1, h2 {
+
+h1,
+h2 {
   font-family: 'Playfair Display', serif;
 }
-
