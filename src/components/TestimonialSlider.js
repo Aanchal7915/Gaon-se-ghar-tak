@@ -209,11 +209,12 @@ import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { IoStarSharp } from 'react-icons/io5';
 
 // Assets
-const person1 = "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80"; // Person with vegetables
-const person2 = "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?auto=format&fit=crop&w=800&q=80"; // Person shopping for fruit
-const person3 = "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=800&q=80"; // Person in kitchen (milk context)
-const person4 = "https://images.unsplash.com/photo-1620706122100-31f792d67243?auto=format&fit=crop&w=800&q=80"; // Person with snacks
-const person5 = "https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=800&q=80"; // Person with bread/bakery
+// Assets from public/assets
+const person1 = "/assets/person1.jpg";
+const person2 = "/assets/person2.jpg";
+const person3 = "/assets/person3.jpg";
+const person4 = "/assets/person4.jpg";
+const person5 = "/assets/person5.jpg";
 
 
 const testimonials = [

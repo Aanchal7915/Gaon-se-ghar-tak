@@ -8,11 +8,6 @@ import {
   HiOutlineSearch,
   HiOutlineHeart,
   HiChevronRight,
-  HiOutlineSparkles,
-  HiOutlineFire,
-  HiOutlineShoppingBag,
-  HiOutlinePhone,
-  HiOutlineBookOpen,
 } from "react-icons/hi";
 import { useCart } from "../context/CartContext";
 import { useLocation } from "react-router-dom";
@@ -141,7 +136,7 @@ const Header = () => {
               <li key={link.name}>
                 <Link
                   to={link.path}
-                  className="font-medium text-gray-600 hover:text-blue-800 transition-colors duration-200"
+                  className="font-medium text-gray-600 hover:text-green-800 transition-colors duration-200"
                 >
                   {link.name}
                 </Link>
@@ -154,7 +149,7 @@ const Header = () => {
         <div className="hidden md:flex items-center space-x-6">
           <form
             onSubmit={handleSearch}
-            className="flex items-center rounded-full bg-white/70 backdrop-blur px-3 py-1 border border-transparent focus-within:border-blue-300 transition-all duration-200 shadow-sm"
+            className="flex items-center rounded-full bg-white/70 backdrop-blur px-3 py-1 border border-transparent focus-within:border-green-300 transition-all duration-200 shadow-sm"
           >
             <HiOutlineSearch className="text-gray-500 mr-2" />
             <input
@@ -170,20 +165,20 @@ const Header = () => {
             <div className="flex items-center space-x-4">
               <Link
                 to={user.role === "admin" ? "/admin" : user.role === "delivery" ? "/delivery" : "/myorders"}
-                className="text-gray-600 hover:text-blue-800 transition-colors"
+                className="text-gray-600 hover:text-green-800 transition-colors"
                 title="Account"
               >
                 <HiOutlineUser className="w-6 h-6" />
               </Link>
               <button
                 onClick={handleLogout}
-                className="text-gray-600 hover:text-blue-800 transition-colors text-sm font-medium"
+                className="text-gray-600 hover:text-green-800 transition-colors text-sm font-medium"
               >
                 Logout
               </button>
             </div>
           ) : (
-            <Link to="/login" className="text-gray-600 hover:text-blue-800 transition-colors font-medium">
+            <Link to="/login" className="text-gray-600 hover:text-green-800 transition-colors font-medium">
               Login
             </Link>
           )}
@@ -192,7 +187,7 @@ const Header = () => {
             <HiOutlineHeart className="w-6 h-6" />
           </Link>
 
-          <Link to="/cart" className="relative text-gray-600 hover:text-blue-800 transition-colors" title="Cart">
+          <Link to="/cart" className="relative text-gray-600 hover:text-green-800 transition-colors" title="Cart">
             <HiOutlineShoppingCart className="w-6 h-6" />
             {cartCount > 0 && (
               <span className={`absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center transition-all duration-300 transform ${animateCart ? "scale-125" : "scale-100"}`}>
@@ -229,7 +224,7 @@ const Header = () => {
               placeholder="Search products..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-gray-100 rounded-xl outline-none border-none focus:ring-2 focus:ring-blue-500/20"
+              className="w-full pl-10 pr-4 py-2.5 bg-gray-100 rounded-xl outline-none border-none focus:ring-2 focus:ring-green-500/20"
             />
           </form>
         </div>
@@ -252,10 +247,10 @@ const Header = () => {
 
           <div className="flex-1 overflow-y-auto">
             {/* User Info Section */}
-            <div className="p-6 bg-gradient-to-r from-blue-50 to-white">
+            <div className="p-6 bg-gradient-to-r from-green-50 to-white">
               {user ? (
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                  <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
                     {user.name?.charAt(0) || user.email?.charAt(0) || "U"}
                   </div>
                   <div>
@@ -264,8 +259,8 @@ const Header = () => {
                   </div>
                 </div>
               ) : (
-                <Link to="/login" onClick={toggleMenu} className="flex items-center space-x-3 text-blue-600 font-bold">
-                  <div className="w-10 h-10 border-2 border-dashed border-blue-200 rounded-full flex items-center justify-center">
+                <Link to="/login" onClick={toggleMenu} className="flex items-center space-x-3 text-green-600 font-bold">
+                  <div className="w-10 h-10 border-2 border-dashed border-green-200 rounded-full flex items-center justify-center">
                     <HiOutlineUser className="w-5 h-5" />
                   </div>
                   <span>Sign In / Register</span>
@@ -275,7 +270,7 @@ const Header = () => {
 
             {/* Quick Links Grid */}
             <div className="grid grid-cols-2 gap-4 p-6 border-b">
-              <Link to="/cart" onClick={toggleMenu} className="flex flex-col items-center p-3 bg-gray-50 rounded-xl hover:bg-blue-50 transition-colors">
+              <Link to="/cart" onClick={toggleMenu} className="flex flex-col items-center p-3 bg-gray-50 rounded-xl hover:bg-green-50 transition-colors">
                 <div className="relative mb-1">
                   <HiOutlineShoppingCart className="w-6 h-6 text-gray-700" />
                   {cartCount > 0 && <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">{cartCount}</span>}
@@ -316,7 +311,7 @@ const Header = () => {
                         <Link
                           to={`/categories/${cat._id}`}
                           onClick={toggleMenu}
-                          className="flex items-center p-2 text-gray-600 hover:text-blue-800 transition-colors"
+                          className="flex items-center p-2 text-gray-600 hover:text-green-800 transition-colors"
                         >
                           <div className="w-8 h-8 rounded-full bg-gray-100 overflow-hidden mr-3">
                             <img src={cat.image} alt={cat.name} className="w-full h-full object-cover" />
@@ -326,7 +321,7 @@ const Header = () => {
                       </li>
                     ))}
                     <li>
-                      <Link to="/products" onClick={toggleMenu} className="block p-3 text-blue-600 text-sm font-bold text-center border-t mt-2">
+                      <Link to="/products" onClick={toggleMenu} className="block p-3 text-green-600 text-sm font-bold text-center border-t mt-2">
                         View All Categories
                       </Link>
                     </li>
@@ -404,7 +399,7 @@ const Header = () => {
                 <Link
                   to="/login"
                   onClick={toggleMenu}
-                  className="block w-full py-3 bg-blue-600 text-white text-center rounded-xl font-bold shadow-lg shadow-blue-200"
+                  className="block w-full py-3 bg-green-600 text-white text-center rounded-xl font-bold shadow-lg shadow-green-200"
                 >
                   Login to Your Account
                 </Link>

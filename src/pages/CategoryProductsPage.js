@@ -85,7 +85,9 @@ const CategoryProductsPage = () => {
       } catch (err) {
         setError(err.response?.data?.message || err.message);
       } finally {
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+        }, 1500);
       }
     };
 

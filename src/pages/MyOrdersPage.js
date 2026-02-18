@@ -391,7 +391,9 @@ const MyOrdersPage = () => {
             console.error('Error fetching data:', err);
             setError('Failed to fetch orders or requests.');
         } finally {
-            setLoading(false);
+            setTimeout(() => {
+                setLoading(false);
+            }, 1500);
         }
     };
 

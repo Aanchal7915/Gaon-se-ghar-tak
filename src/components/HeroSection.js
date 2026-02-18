@@ -12,17 +12,17 @@ const groceryData = [
   {
     productName: "Premium Bananas",
     productPrice: "₹75/dozen",
-    productImage: "https://images.unsplash.com/photo-1571771894821-ad9902d83f4a?auto=format&fit=crop&w=800&q=80",
+    productImage: "/banana.jpg",
   },
   {
     productName: "Fresh Bread",
     productPrice: "₹45/pack",
-    productImage: "https://images.unsplash.com/photo-1533777419517-3e4017e2e15a?auto=format&fit=crop&w=800&q=80",
+    productImage: "/bread.jpg",
   },
   {
     productName: "Medjool Dates",
     productPrice: "₹250/500g",
-    productImage: "https://images.unsplash.com/photo-1590779033100-9f60705a2f3a?auto=format&fit=crop&w=800&q=80",
+    productImage: "/medjhool.jpg",
   }
 ];
 
@@ -33,7 +33,7 @@ const HeroSection = () => {
   const categories = [
     {
       title: "Dates & Dryfruits",
-      image: "https://images.unsplash.com/photo-1590779033100-9f60705a2f3a?auto=format&fit=crop&w=500&q=80",
+      image: "/dry.jpg",
       link: "/products/recent"
     },
     {
@@ -48,12 +48,12 @@ const HeroSection = () => {
     },
     {
       title: "Milk & Dairy",
-      image: "https://images.unsplash.com/photo-1550583724-125581cc255b?auto=format&fit=crop&w=500&q=80",
+      image: "/milk.jpg",
       link: "/products"
     },
     {
       title: "Bakery Items",
-      image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=500&q=80",
+      image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=500&q=80",
       link: "/categories/bakery"
     },
     {
@@ -129,8 +129,7 @@ const HeroSection = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ delay: 0.05 * idx, duration: 0.5 }}
               whileHover={{ y: -5 }}
-              onClick={() => navigate(cat.link)}
-              className="cursor-pointer group flex flex-col items-center"
+              className="group flex flex-col items-center"
             >
               <div className="bg-[#b8ead4] rounded-xl overflow-hidden shadow-md relative w-full aspect-[4/5] flex flex-col items-center justify-center border border-yellow-600/10 hover:border-yellow-400/60 transition-all duration-500 group">
                 {/* Intricate Pattern Background */}

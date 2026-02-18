@@ -1,16 +1,4 @@
-
-
-// import React from "react";
-// import { motion } from "framer-motion";
-// import { Link } from "react-router-dom";
-// import vi from "../assets/vi.mp4"
-// import b1 from "../assets/b1.jpg";
-// import b2 from "../assets/b2.jpg";
-// import b3 from "../assets/b3.jpg";
-// import b4 from "../assets/b4.jpg";
-// import b5 from "../assets/b5.jpg";
-// import b6 from "../assets/b6.jpg";
-// import b7 from "../assets/b7.jpg";
+// PremiumShowcase.js - Updated to use public assets
 
 // const sections = [
 //   {
@@ -331,15 +319,10 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import vi from "../assets/vi.mp4";
-import vi2 from "../assets/vi2.mp4";
-import b1 from "../assets/b1.jpg";
-import b2 from "../assets/b2.jpg";
-import b3 from "../assets/b3.jpg";
-import b4 from "../assets/b4.jpg";
-import b5 from "../assets/b5.jpg";
-import b6 from "../assets/b6.jpg";
-import b7 from "../assets/b7.jpg";
+
+// Using public asset paths
+const vi = "/assets/vi.mp4";
+const vi2 = "/assets/vi2.mp4";
 
 const sections = [
   {

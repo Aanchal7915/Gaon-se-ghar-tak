@@ -1,7 +1,4 @@
-// import React from 'react';
-// import { motion } from 'framer-motion';
-// import { IoLocationOutline } from 'react-icons/io5'; // For the store icon
-// import storeImage from '../assets/place.jpg'; // Make sure this path is correct
+// VisitInStoreSection.js - Updated to use public assets
 
 // const VisitInStoreSection = () => {
 //     // Animation variants
@@ -101,7 +98,7 @@
 
 import React from "react";
 import { IoLocationOutline } from "react-icons/io5"; // For the store icon
-import storeImage from "../assets/place.jpg"; // Make sure this path is correct
+const storeImage = "/assets/place.jpg";
 
 const VisitInStoreSection = () => {
   return (

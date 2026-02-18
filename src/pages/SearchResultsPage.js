@@ -13,7 +13,9 @@ const SearchResultsPage = () => {
     useEffect(() => {
         const fetchSearchResults = async () => {
             if (!query) {
-                setLoading(false);
+                setTimeout(() => {
+                    setLoading(false);
+                }, 1000);
                 setProducts([]);
                 return;
             }
@@ -28,7 +30,9 @@ const SearchResultsPage = () => {
             } catch (err) {
                 setError(err.message);
             } finally {
-                setLoading(false);
+                setTimeout(() => {
+                    setLoading(false);
+                }, 1500);
             }
         };
 
