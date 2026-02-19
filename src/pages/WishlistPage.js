@@ -1,13 +1,30 @@
-import React, { useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import ProductCard from "../components/ProductCard";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useRef } from "react";
 
 const WishlistPage = () => {
-  const { wishlist, fetchWishlist } = useAuth();
+  const { user, loading, wishlist, fetchWishlist } = useAuth();
+
+  const navigate = useNavigate();
+  const alertShown = useRef(false);
 
   useEffect(() => {
-    fetchWishlist();
-  }, [fetchWishlist]);
+    if (loading) return; // Wait until auth state is loaded
+
+    if (!user) {
+      if (!alertShown.current) {
+        alert("Please login to view your wishlist.");
+        alertShown.current = true;
+        navigate("/");
+      }
+      return;
+    } else {
+      fetchWishlist();
+    }
+  }, [fetchWishlist, user, loading, navigate]);
+
+  if (loading || !user) return null;
 
   if (wishlist.length === 0) {
     return (

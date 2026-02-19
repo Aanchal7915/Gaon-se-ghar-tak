@@ -95,6 +95,10 @@ const ProductPage = () => {
   }, [id, user, wishlist]);
 
   const handleAddToCart = () => {
+    if (!user) {
+      alert("Please login to add items to cart.");
+      return;
+    }
     if (!selectedVariant) {
       alert("Please select a pack size first.");
       return;
@@ -334,7 +338,7 @@ const ProductPage = () => {
                 className="relative p-2 rounded-full hover:bg-gray-100 transition"
               >
                 <FaHeart
-                  className={`text-2xl transition-transform duration-300 ${isWishlisted
+                  className={`text-2xl transition-transform duration-300 ${user && isWishlisted
                     ? "text-red-500 scale-110"
                     : "text-gray-400 hover:text-red-400"
                     }`}
@@ -384,9 +388,23 @@ const ProductPage = () => {
             </div>
           )}
 
-          <p className="mt-3 text-lg md:text-xl font-bold text-gray-900">
-            ₹{selectedVariant ? selectedVariant.price : "N/A"}
-          </p>
+          <div className="mt-3 flex flex-col gap-1">
+            <div className="flex items-baseline gap-3">
+              <span className="text-2xl md:text-3xl font-extrabold text-gray-900">
+                ₹{selectedVariant ? selectedVariant.price : "N/A"}
+              </span>
+              {selectedVariant && selectedVariant.originalPrice && (
+                <span className="text-base md:text-xl text-gray-400 font-medium">
+                  MRP: <span className="line-through decoration-red-500/40">₹{selectedVariant.originalPrice}</span>
+                </span>
+              )}
+            </div>
+            {selectedVariant && selectedVariant.originalPrice && (
+              <span className="inline-block bg-green-100 text-green-700 text-[10px] md:text-xs font-bold px-2 py-0.5 rounded-full w-fit">
+                SAVE ₹{selectedVariant.originalPrice - selectedVariant.price} ({Math.round(((selectedVariant.originalPrice - selectedVariant.price) / selectedVariant.originalPrice) * 100)}% OFF)
+              </span>
+            )}
+          </div>
 
           <div className="mt-6">
             <h4 className="font-semibold text-gray-800 mb-2 text-sm md:text-base">Select Pack Size:</h4>

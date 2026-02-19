@@ -1,17 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import apiClient from '../services/apiClient';
 import { FaTrash, FaMinus, FaPlus, FaArrowLeft, FaMapMarkerAlt, FaPhone, FaUser } from 'react-icons/fa';
 
 const CartPage = () => {
+    const { user, loading } = useAuth();
     const { cartItems, removeFromCart, updateCartQuantity, getTotalPrice, clearCart } = useCart();
     const navigate = useNavigate();
     const [customerInfo, setCustomerInfo] = useState({ name: '', phone: '' });
     const [shippingAddress, setShippingAddress] = useState({ address: '', city: '', postalCode: '' });
     const [customerLocation, setCustomerLocation] = useState({ latitude: null, longitude: null });
+    const alertShown = useRef(false);
 
     useEffect(() => {
+        if (loading) return; // Wait until auth state is loaded
+
+        if (!user) {
+            if (!alertShown.current) {
+                alert("Please login to access your shopping cart.");
+                alertShown.current = true;
+                navigate("/");
+            }
+            return;
+        }
+
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
@@ -25,7 +39,9 @@ const CartPage = () => {
                 }
             );
         }
-    }, []);
+    }, [user, loading, navigate]);
+
+    if (loading || !user) return null;
 
     const handleCheckout = async (e) => {
         e.preventDefault();

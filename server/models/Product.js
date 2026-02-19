@@ -22,6 +22,7 @@ const productSchema = new mongoose.Schema({
   variants: [{
     size: { type: String, required: true },
     price: { type: Number, required: true },
+    originalPrice: { type: Number }, // Standard/MRP price to show as strikethrough
     countInStock: { type: Number, required: true, default: 0 },
   }],
   isFeatured: { type: Boolean, default: false },

@@ -21,7 +21,7 @@ const ProductManagement = () => {
   const [newCategoryImage, setNewCategoryImage] = useState(null);
   const [newCategoryImagePreview, setNewCategoryImagePreview] = useState(null);
   const [showCategoryForm, setShowCategoryForm] = useState(false);
-  const [variants, setVariants] = useState([{ size: '', price: '', countInStock: '' }]);
+  const [variants, setVariants] = useState([{ size: '', price: '', originalPrice: '', countInStock: '' }]);
   const [images, setImages] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
@@ -85,7 +85,7 @@ const ProductManagement = () => {
     setVariants(newVariants);
   };
 
-  const addVariant = () => setVariants([...variants, { size: '', price: '', countInStock: '' }]);
+  const addVariant = () => setVariants([...variants, { size: '', price: '', originalPrice: '', countInStock: '' }]);
   const removeVariant = (index) => {
     const newVariants = [...variants];
     newVariants.splice(index, 1);
@@ -128,7 +128,10 @@ const ProductManagement = () => {
       isFeatured: product.isFeatured || false,
       isBestseller: product.isBestseller || false,
     });
-    setVariants(product.variants);
+    setVariants(product.variants.map(v => ({
+      ...v,
+      originalPrice: v.originalPrice || ''
+    })));
     setExistingImages(product.images);
     setImages([]);
     setImagePreviews([]);
@@ -177,7 +180,7 @@ const ProductManagement = () => {
   const resetForm = () => {
     setEditingProduct(null);
     setFormData({ name: '', description: '', brand: '', category: '', gender: '', subCategory: '', isFeatured: false, isBestseller: false });
-    setVariants([{ size: '', price: '', countInStock: '' }]);
+    setVariants([{ size: '', price: '', originalPrice: '', countInStock: '' }]);
     setImages([]);
     setImagePreviews([]);
     setExistingImages([]);
@@ -323,9 +326,10 @@ const ProductManagement = () => {
         <h3 className="text-lg font-semibold">Product Variants</h3>
         {variants.map((variant, index) => (
           <div key={index} className="flex space-x-2">
-            <input type="text" name="size" value={variant.size} onChange={(e) => handleVariantChange(index, e)} placeholder="Pack Size (e.g., 500g, 1kg, 1L)" className="w-full p-2 border rounded-md" required />
-            <input type="number" name="price" value={variant.price} onChange={(e) => handleVariantChange(index, e)} placeholder="Price" className="w-full p-2 border rounded-md" required />
-            <input type="number" name="countInStock" value={variant.countInStock} onChange={(e) => handleVariantChange(index, e)} placeholder="Inventory" className="w-full p-2 border rounded-md" required />
+            <input type="text" name="size" value={variant.size} onChange={(e) => handleVariantChange(index, e)} placeholder="Pack/Size" className="w-full p-2 border rounded-md" required />
+            <input type="number" name="originalPrice" value={variant.originalPrice} onChange={(e) => handleVariantChange(index, e)} placeholder="Original Price" className="w-full p-2 border rounded-md" />
+            <input type="number" name="price" value={variant.price} onChange={(e) => handleVariantChange(index, e)} placeholder="Selling Price" className="w-full p-2 border rounded-md" required />
+            <input type="number" name="countInStock" value={variant.countInStock} onChange={(e) => handleVariantChange(index, e)} placeholder="Stock" className="w-full p-2 border rounded-md" required />
             <button type="button" onClick={() => removeVariant(index)} className="bg-red-500 text-white p-2 rounded-md">-</button>
           </div>
         ))}
@@ -368,7 +372,7 @@ const ProductManagement = () => {
                 <span className="font-semibold">{product.name} - {product.brand}</span>
                 <p className="text-sm text-gray-600">Category: {product.category?.name || 'N/A'}</p>
                 <p className="text-sm text-gray-600">Type: {product.gender} | Sub: {product.subCategory || 'N/A'}</p>
-                <p className="text-sm text-gray-600">Variants: {product.variants.map(v => `${v.size}(₹${v.price})`).join(', ')}</p>
+                <p className="text-sm text-gray-600">Variants: {product.variants.map(v => `${v.size}(₹${v.price}${v.originalPrice ? ` [cut: ₹${v.originalPrice}]` : ''})`).join(', ')}</p>
               </div>
             </div>
             <div className="flex space-x-2">

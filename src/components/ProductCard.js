@@ -225,12 +225,20 @@ const ProductCard = ({ product }) => {
 
   const handleAdd = (e) => {
     e.preventDefault();
+    if (!user) {
+      alert("Please login to add items to cart.");
+      return;
+    }
     if (!defaultVariant) return;
     addToCart({ ...product, selectedVariant: defaultVariant });
   };
 
   const handleIncrement = (e) => {
     e.preventDefault();
+    if (!user) {
+      alert("Please login to add items to cart.");
+      return;
+    }
     if (!defaultVariant) return;
     // If not in cart, add first
     if (qty === 0) {
@@ -242,6 +250,10 @@ const ProductCard = ({ product }) => {
 
   const handleDecrement = (e) => {
     e.preventDefault();
+    if (!user) {
+      alert("Please login to manage cart.");
+      return;
+    }
     if (!defaultVariant) return;
     if (qty > 1) {
       updateCartQuantity(product._id, defaultVariant.size, qty - 1);
@@ -250,7 +262,7 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  const isWishlisted = wishlist.some((item) => item._id === product._id);
+  const isWishlisted = user && wishlist.some((item) => item._id === product._id);
 
   // Auto image cycle is now based on hover state
   useEffect(() => {
@@ -310,7 +322,7 @@ const ProductCard = ({ product }) => {
       <div className="absolute top-2 right-2 z-20 flex space-x-2">
         <button onClick={toggleWishlist} className="relative">
           <FaHeart
-            className={`text-sm sm:text-lg ${isWishlisted ? "text-red-500" : "text-gray-400 hover:text-red-400"
+            className={`text-sm sm:text-lg ${user && isWishlisted ? "text-red-500" : "text-gray-400 hover:text-red-400"
               } transition-colors`}
           />
           <AnimatePresence>
@@ -407,9 +419,23 @@ const ProductCard = ({ product }) => {
         )}
         <p className="mt-0 text-[6px] sm:text-[9px] text-gray-500 uppercase tracking-wide truncate">{product.brand}</p>
         <div className="flex items-center justify-between mt-1 gap-1">
-          <span className="text-[8px] sm:text-[12px] font-bold text-gray-900">
-            ₹{product.variants.length > 0 ? product.variants[0].price : "N/A"}
-          </span>
+          <div className="flex flex-col">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] sm:text-[15px] font-bold text-gray-900 leading-none">
+                ₹{product.variants[0].price}
+              </span>
+              {product.variants[0].originalPrice && (
+                <span className="text-[7px] sm:text-[11px] text-gray-400 line-through decoration-red-500/50 leading-none">
+                  ₹{product.variants[0].originalPrice}
+                </span>
+              )}
+            </div>
+            {product.variants[0].originalPrice && (
+              <span className="text-[6px] sm:text-[10px] text-green-600 font-bold mt-0.5">
+                {Math.round(((product.variants[0].originalPrice - product.variants[0].price) / product.variants[0].originalPrice) * 100)}% OFF
+              </span>
+            )}
+          </div>
 
           {/* ADD Button or Counter */}
           <div className="relative z-20 flex justify-end">
