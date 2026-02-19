@@ -330,9 +330,9 @@ const TestimonialSlider = () => {
   const currentTestimonial = testimonials[currentSlide];
 
   return (
-    <section id='testimonials' className="relative py-1 md:py-8 overflow-hidden bg-gradient-to-br from-[#fffdf7] to-[#fefaf3]">
+    <section id='testimonials' className="relative py-1 md:py-4 overflow-hidden bg-gradient-to-br from-[#fffdf7] to-[#fefaf3]">
       <div className="container mx-auto px-4 md:px-8 relative z-10">
-        <div className="relative w-full max-w-6xl mx-auto flex items-center justify-center min-h-[420px] md:min-h-[500px]">
+        <div className="relative w-full max-w-5xl mx-auto flex items-center justify-center min-h-[360px] md:min-h-[420px]">
           <AnimatePresence initial={false} custom={direction}>
             <motion.div
               key={currentSlide}
@@ -343,61 +343,65 @@ const TestimonialSlider = () => {
               exit="exit"
               className="absolute w-full flex-shrink-0"
             >
-              <div className="flex flex-col md:flex-row items-stretch justify-center bg-white rounded-2xl shadow-xl w-full overflow-hidden">
-                {/* User Image */}
-                <div className="md:w-1/2 w-full h-48 md:h-[500px] overflow-hidden flex-shrink-0 relative">
+              <div className="flex flex-col md:flex-row items-stretch justify-center bg-white rounded-xl shadow-lg w-full overflow-hidden border border-gray-100">
+                {/* User Image Section */}
+                <div className="md:w-5/12 w-full h-56 md:h-[420px] bg-gray-50 flex-shrink-0 relative border-b md:border-b-0 md:border-r border-gray-100">
                   <img
                     src={currentTestimonial.userImage}
                     alt={currentTestimonial.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain p-2 md:p-0 md:object-cover"
                   />
                 </div>
 
-                {/* Content */}
-                <div className="md:w-1/2 flex flex-col justify-between p-4 md:p-10">
+                {/* Content Section */}
+                <div className="md:w-7/12 flex flex-col justify-between p-5 md:p-8">
                   <div className="flex flex-col items-start text-left">
-                    <div className="text-2xl md:text-6xl text-gray-300 mb-2 md:mb-4 leading-none font-serif">
+                    <div className="text-xl md:text-4xl text-green-600/20 mb-1 md:mb-2 leading-none font-serif">
                       “
                     </div>
-                    <blockquote className="text-sm md:text-3xl font-semibold text-gray-900 leading-snug tracking-tight">
+                    <blockquote className="text-[13px] md:text-xl font-bold text-gray-800 leading-relaxed tracking-tight italic">
                       {currentTestimonial.review}
                     </blockquote>
 
-                    {/* Hide desc on mobile */}
-                    <p className="hidden md:block text-base font-medium text-gray-600 mt-4 max-w-lg">
+                    {/* Description - optimized */}
+                    <p className="hidden md:block text-[13px] font-medium text-gray-500 mt-2 max-w-lg leading-relaxed">
                       {currentTestimonial.desc}
                     </p>
 
-                    <cite className="text-xs md:text-base font-bold text-gray-900 mt-4 md:mt-6">
-                      - {currentTestimonial.name}
+                    <cite className="text-[9px] md:text-xs font-black text-green-700 mt-2 md:mt-4 uppercase tracking-wider">
+                      — {currentTestimonial.name}
                     </cite>
                   </div>
 
-                  {/* Product Banner */}
-                  <div className="bg-gray-50 rounded-xl p-3 md:p-4 flex items-center border border-gray-200 shadow-sm mt-4 md:mt-10">
-                    <img
-                      src={currentTestimonial.productImage}
-                      alt={currentTestimonial.productName}
-                      className="w-12 h-12 md:w-20 md:h-20 object-contain mr-3 md:mr-4 rounded-md"
-                    />
-                    <div className="flex-1">
-                      <p className="text-[10px] md:text-xs font-semibold uppercase text-gray-500 mb-0.5 md:mb-1">
-                        Featured Product
+                  {/* Featured Product Banner - Slimmer */}
+                  <div className="bg-green-50/50 rounded-lg p-2.5 md:p-3 flex items-center border border-green-100 mt-4 md:mt-6">
+                    <div className="w-10 h-10 md:w-16 md:h-16 bg-white rounded-md p-1 shadow-sm mr-3 flex-shrink-0">
+                      <img
+                        src={currentTestimonial.productImage}
+                        alt={currentTestimonial.productName}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <div className="flex-1 overflow-hidden">
+                      <p className="text-[7px] md:text-[9px] font-bold uppercase text-green-600/70 mb-0.5">
+                        FEATURED
                       </p>
-                      <h4 className="text-xs md:text-lg font-bold text-gray-900">
+                      <h4 className="text-[9px] md:text-sm font-black text-gray-900 truncate">
                         {currentTestimonial.productName}
                       </h4>
-                      <div className="flex items-center space-x-1 mt-0.5 md:mt-1">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <IoStarSharp
-                            key={i}
-                            className={`w-3 h-3 md:w-4 md:h-4 ${i < currentTestimonial.rating
-                              ? 'text-yellow-400'
-                              : 'text-gray-300'
-                              }`}
-                          />
-                        ))}
-                        <span className="text-[10px] md:text-sm text-gray-500 ml-2">
+                      <div className="flex items-center space-x-1 mt-0.5">
+                        <div className="flex mr-1">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <IoStarSharp
+                              key={i}
+                              className={`w-2 h-2 md:w-3 md:h-3 ${i < currentTestimonial.rating
+                                ? 'text-yellow-400'
+                                : 'text-gray-200'
+                                }`}
+                            />
+                          ))}
+                        </div>
+                        <span className="text-[7px] md:text-[10px] text-gray-400 font-bold whitespace-nowrap uppercase tracking-tighter">
                           {currentTestimonial.ratingsCount}+ Reviews
                         </span>
                       </div>
