@@ -210,11 +210,11 @@ import { IoStarSharp } from 'react-icons/io5';
 
 // Assets
 // Assets from public/assets
-const person1 = "/assets/person1.jpg";
-const person2 = "/assets/person2.jpg";
-const person3 = "/assets/person3.jpg";
-const person4 = "/assets/person4.jpg";
-const person5 = "/assets/person5.jpg";
+const person1 = "/tomato.jpg";
+const person2 = "/banana.jpg";
+const person3 = "/milk.jpg";
+const person4 = "/chips.jpg";
+const person5 = "/bread.jpg";
 
 
 const testimonials = [
@@ -226,7 +226,7 @@ const testimonials = [
     rating: 5,
     ratingsCount: 128,
     userImage: person1,
-    productImage: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=500&q=60",
+    productImage: "/tomato.jpg",
     productName: 'Organic Red Tomatoes',
     tagline: 'Farm Fresh Goodness',
     desc: 'Deep red, juice-filled tomatoes sourced from certified organic farms. Perfect for your daily gourmet cooking.',
@@ -239,7 +239,7 @@ const testimonials = [
     rating: 5,
     ratingsCount: 96,
     userImage: person2,
-    productImage: "https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=500&q=60",
+    productImage: "/banana.jpg",
     productName: 'Premium Cavendish Bananas',
     tagline: 'Nature\'s Sweetest Snack',
     desc: 'Naturally ripened, pesticide-free bananas. A great source of energy and nutrients for your family.',
@@ -252,7 +252,7 @@ const testimonials = [
     rating: 5,
     ratingsCount: 142,
     userImage: person3,
-    productImage: "https://images.unsplash.com/photo-1550583724-125581cc255b?auto=format&fit=crop&w=500&q=60",
+    productImage: "/milk.jpg",
     productName: 'Full Cream Farm Milk',
     tagline: 'Pure & Wholesome',
     desc: 'Freshly pasteurized full cream milk with no additives. Rich in calcium and essential vitamins.',
@@ -265,7 +265,7 @@ const testimonials = [
     rating: 5,
     ratingsCount: 178,
     userImage: person4,
-    productImage: "https://images.unsplash.com/photo-1566478989037-eec170784d0b?auto=format&fit=crop&w=500&q=60",
+    productImage: "/chips.jpg",
     productName: 'Classic Salted Chips',
     tagline: 'Crunchy Delight',
     desc: 'Hand-sliced golden potato chips fried in healthy oil and lightly seasoned with sea salt.',
@@ -278,7 +278,7 @@ const testimonials = [
     rating: 5,
     ratingsCount: 210,
     userImage: person5,
-    productImage: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=500&q=60",
+    productImage: "/bread.jpg",
     productName: 'Soft Whole Wheat Bread',
     tagline: 'Healthy Morning Start',
     desc: 'Fiber-rich, stone-ground whole wheat bread baked daily with love and care.',

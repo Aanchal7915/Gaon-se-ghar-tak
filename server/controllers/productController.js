@@ -63,7 +63,7 @@ exports.deleteProduct = async (req, res) => {
 };
 
 exports.createProduct = async (req, res) => {
-  const { name, description, brand, category, gender, subCategory, variants } = req.body;
+  const { name, description, brand, category, gender, subCategory, variants, isFeatured, isBestseller } = req.body;
 
   if (!category || !gender) {
     return res.status(400).json({ message: 'Category and gender are required.' });
@@ -87,6 +87,8 @@ exports.createProduct = async (req, res) => {
       subCategory,
       images: fileUrls,
       variants: JSON.parse(variants),
+      isFeatured: isFeatured === 'true' || isFeatured === true,
+      isBestseller: isBestseller === 'true' || isBestseller === true,
     });
 
     const createdProduct = await product.save();
@@ -101,7 +103,7 @@ exports.createProduct = async (req, res) => {
 };
 
 exports.updateProduct = async (req, res) => {
-  const { name, description, brand, category, gender, subCategory, variants } = req.body;
+  const { name, description, brand, category, gender, subCategory, variants, isFeatured, isBestseller } = req.body;
 
   try {
     const product = await Product.findById(req.params.id);
@@ -129,7 +131,9 @@ exports.updateProduct = async (req, res) => {
     product.gender = gender || product.gender;
     product.subCategory = subCategory || product.subCategory;
     product.images = fileUrls;
-    product.variants = JSON.parse(variants) || product.variants;
+    product.variants = variants ? JSON.parse(variants) : product.variants;
+    product.isFeatured = isFeatured !== undefined ? (isFeatured === 'true' || isFeatured === true) : product.isFeatured;
+    product.isBestseller = isBestseller !== undefined ? (isBestseller === 'true' || isBestseller === true) : product.isBestseller;
 
     const updatedProduct = await product.save();
     res.json({
@@ -176,6 +180,24 @@ exports.getProductsBySubCategory = async (req, res) => {
 exports.getProductsByGender = async (req, res) => {
   try {
     const products = await Product.find({ gender: req.params.gender });
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getFeaturedProducts = async (req, res) => {
+  try {
+    const products = await Product.find({ isFeatured: true }).populate('category', 'name');
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getBestsellerProducts = async (req, res) => {
+  try {
+    const products = await Product.find({ isBestseller: true }).populate('category', 'name');
     res.json(products);
   } catch (error) {
     res.status(500).json({ message: error.message });

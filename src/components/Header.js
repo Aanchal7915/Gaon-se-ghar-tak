@@ -93,7 +93,7 @@ const Header = () => {
 
   const navLinks = [
     { name: "New Release", path: "/products/recent" },
-    { name: "Best Seller", path: "/products/subcategory/featured" },
+    { name: "Best Seller", path: "/products/bestseller" },
     { name: "Shop All", path: "/products" },
     { name: "Contact", path: "/contact" },
     { name: "Blogs", path: "/blog" },
@@ -340,7 +340,7 @@ const Header = () => {
                   <Link to="/products/recent" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
                     <span className="text-sm font-medium">New Release</span>
                   </Link>
-                  <Link to="/products/subcategory/featured" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
+                  <Link to="/products/bestseller" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
                     <span className="text-sm font-medium">Best Seller</span>
                   </Link>
                   <Link to="/products" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
@@ -380,7 +380,7 @@ const Header = () => {
                   <Link to="/products/recent" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
                     <span className="text-sm font-medium">New Release</span>
                   </Link>
-                  <Link to="/products/subcategory/featured" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
+                  <Link to="/products/bestseller" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
                     <span className="text-sm font-medium">Best Seller</span>
                   </Link>
                   <Link to="/products" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">

@@ -24,6 +24,8 @@ const productSchema = new mongoose.Schema({
     price: { type: Number, required: true },
     countInStock: { type: Number, required: true, default: 0 },
   }],
+  isFeatured: { type: Boolean, default: false },
+  isBestseller: { type: Boolean, default: false },
 }, { timestamps: true });
 
 // Auto-increment productId

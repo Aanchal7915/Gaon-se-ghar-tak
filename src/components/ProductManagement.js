@@ -14,6 +14,8 @@ const ProductManagement = () => {
     category: '',
     gender: '',
     subCategory: '',
+    isFeatured: false,
+    isBestseller: false,
   });
   const [newCategoryName, setNewCategoryName] = useState('');
   const [newCategoryImage, setNewCategoryImage] = useState(null);
@@ -54,7 +56,11 @@ const ProductManagement = () => {
   };
 
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === 'checkbox' ? checked : value
+    });
   };
 
   const handleImageChange = (e) => {
@@ -119,6 +125,8 @@ const ProductManagement = () => {
       category: product.category._id,
       gender: product.gender,
       subCategory: product.subCategory || '',
+      isFeatured: product.isFeatured || false,
+      isBestseller: product.isBestseller || false,
     });
     setVariants(product.variants);
     setExistingImages(product.images);
@@ -168,7 +176,7 @@ const ProductManagement = () => {
 
   const resetForm = () => {
     setEditingProduct(null);
-    setFormData({ name: '', description: '', brand: '', category: '', gender: '', subCategory: '' });
+    setFormData({ name: '', description: '', brand: '', category: '', gender: '', subCategory: '', isFeatured: false, isBestseller: false });
     setVariants([{ size: '', price: '', countInStock: '' }]);
     setImages([]);
     setImagePreviews([]);
@@ -182,6 +190,34 @@ const ProductManagement = () => {
         <input type="text" name="name" value={formData.name} onChange={handleInputChange} placeholder="Product Name" className="w-full p-2 border rounded-md" required />
         <textarea name="description" value={formData.description} onChange={handleInputChange} placeholder="Description" className="w-full p-2 border rounded-md" required />
         <input type="text" name="brand" value={formData.brand} onChange={handleInputChange} placeholder="Brand" className="w-full p-2 border rounded-md" required />
+
+        <div className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            name="isFeatured"
+            id="isFeatured"
+            checked={formData.isFeatured}
+            onChange={handleInputChange}
+            className="w-4 h-4 accent-blue-600"
+          />
+          <label htmlFor="isFeatured" className="text-gray-700 font-medium cursor-pointer">
+            Featured Product
+          </label>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            name="isBestseller"
+            id="isBestseller"
+            checked={formData.isBestseller}
+            onChange={handleInputChange}
+            className="w-4 h-4 accent-green-600"
+          />
+          <label htmlFor="isBestseller" className="text-gray-700 font-medium cursor-pointer">
+            Best Seller Product
+          </label>
+        </div>
 
         {/* Category */}
         {/* Category */}

@@ -63,6 +63,7 @@ import FilterSidebar from "../components/FilterSidebar";
 const CategoryProductsPage = () => {
   const { categoryId } = useParams();
   const [products, setProducts] = useState([]);
+  const [categoryName, setCategoryName] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -77,11 +78,21 @@ const CategoryProductsPage = () => {
 
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   useEffect(() => {
-    const fetchProductsByCategory = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await apiClient.get(`/products/category/${categoryId}`);
-        setProducts(response.data);
+        // Fetch products
+        const productsResponse = await apiClient.get(`/products/category/${categoryId}`);
+        setProducts(productsResponse.data);
+
+        // Fetch category name
+        try {
+          const categoryResponse = await apiClient.get(`/categories/${categoryId}`);
+          setCategoryName(categoryResponse.data.name);
+        } catch (catErr) {
+          console.error("Failed to fetch category details:", catErr);
+          setCategoryName("Category");
+        }
       } catch (err) {
         setError(err.response?.data?.message || err.message);
       } finally {
@@ -91,7 +102,7 @@ const CategoryProductsPage = () => {
       }
     };
 
-    if (categoryId) fetchProductsByCategory();
+    if (categoryId) fetchData();
   }, [categoryId]);
 
 
@@ -133,7 +144,7 @@ const CategoryProductsPage = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold text-center mb-10 text-gray-800">
-        Products in this Category
+        {categoryName || "Products"}
       </h1>
 
       <div className="flex flex-col md:flex-row gap-8">

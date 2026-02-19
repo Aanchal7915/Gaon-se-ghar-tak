@@ -32,7 +32,7 @@ exports.createCategory = async (req, res) => {
     if (!file) {
         return res.status(400).json({ message: 'Category image is required' });
     }
-    
+
     try {
         const result = await bufferUpload(file.buffer, process.env.CLOUDINARY_FOLDER);
         const category = new Category({ name, image: result.secure_url });
@@ -56,6 +56,22 @@ exports.getCategories = async (req, res) => {
     }
 };
 
+// @desc    Get category by ID
+// @route   GET /api/categories/:id
+// @access  Public
+exports.getCategoryById = async (req, res) => {
+    try {
+        const category = await Category.findById(req.params.id);
+        if (category) {
+            res.json(category);
+        } else {
+            res.status(404).json({ message: 'Category not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
 // @desc    Delete a category by ID
 // @route   DELETE /api/categories/:id
 // @access  Private/Admin
@@ -66,12 +82,12 @@ exports.deleteCategory = async (req, res) => {
         if (!category) {
             return res.status(404).json({ message: 'Category not found' });
         }
-        
+
         const productsCount = await Product.countDocuments({ category: categoryId });
         if (productsCount > 0) {
             return res.status(400).json({ message: 'Cannot delete category with associated products.' });
         }
-        
+
         await Category.findByIdAndDelete(categoryId);
         res.json({ message: 'Category deleted successfully' });
     } catch (error) {

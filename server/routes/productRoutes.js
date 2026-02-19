@@ -6,6 +6,8 @@ const { protect, admin } = require('../middlewares/authMiddleware');
 const upload = require('../middlewares/uploadMiddleware');
 
 router.get('/recent', productController.getRecentProducts);
+router.get('/featured', productController.getFeaturedProducts);
+router.get('/bestseller', productController.getBestsellerProducts);
 
 router.get('/gender/:gender', productController.getProductsByGender);
 router.get('/search', productController.searchProducts);

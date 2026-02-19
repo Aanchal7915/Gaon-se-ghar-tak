@@ -442,6 +442,22 @@ const FilterSidebar = ({
     return counts;
   }, [products]);
 
+  const sizeCounts = useMemo(() => {
+    const counts = {};
+    (products || []).forEach((p) => {
+      if (Array.isArray(p.variants)) {
+        const productSizes = new Set();
+        p.variants.forEach((v) => {
+          if (v.size) productSizes.add(v.size);
+        });
+        productSizes.forEach((s) => {
+          counts[s] = (counts[s] || 0) + 1;
+        });
+      }
+    });
+    return counts;
+  }, [products]);
+
   // final normalized options (only those with count > 0)
   const normalizedCategories = Array.from(
     new Set(categories.map(normalizeValue).filter((c) => categoryCounts[c] > 0))
@@ -454,6 +470,8 @@ const FilterSidebar = ({
   const normalizedBrands = Array.from(
     new Set(brands.map(normalizeValue).filter((b) => brandCounts[b] > 0))
   ).sort();
+
+  const normalizedSizes = Object.keys(sizeCounts).sort();
 
   const handleChange = (key, value) => {
     if (typeof setFilters !== "function") return;
@@ -550,7 +568,7 @@ const FilterSidebar = ({
       {/* Size / Weight */}
       <div className="mb-6">
         <h3 className="font-semibold mb-2">Pack Size</h3>
-        {["500g", "1kg", "2kg", "1L", "500ml", "Small", "Regular", "Large"].map((s) => (
+        {normalizedSizes.map((s) => (
           <label key={s} className="flex items-center mb-2 text-xs">
             <input
               type="checkbox"
@@ -563,7 +581,7 @@ const FilterSidebar = ({
               }}
               className="mr-2 accent-green-600"
             />
-            {s}
+            {s} <span className="text-gray-500 ml-1">({sizeCounts[s]})</span>
           </label>
         ))}
       </div>

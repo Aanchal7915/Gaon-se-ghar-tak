@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaFire } from "react-icons/fa";
+import apiClient from "../services/apiClient";
 
 const groceryData = [
   {
@@ -28,50 +29,20 @@ const groceryData = [
 
 const HeroSection = () => {
   const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
 
-
-  const categories = [
-    {
-      title: "Dates & Dryfruits",
-      image: "/dry.jpg",
-      link: "/products/recent"
-    },
-    {
-      title: "Sharbat & Milkshakes",
-      image: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=500&q=80",
-      link: "/products"
-    },
-    {
-      title: "Fresh Fruits",
-      image: "https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=500&q=80",
-      link: "/categories/fruits"
-    },
-    {
-      title: "Milk & Dairy",
-      image: "/milk.jpg",
-      link: "/products"
-    },
-    {
-      title: "Bakery Items",
-      image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=500&q=80",
-      link: "/categories/bakery"
-    },
-    {
-      title: "Gourmet Snacks",
-      image: "https://images.unsplash.com/photo-1566478989037-eec170784d0b?auto=format&fit=crop&w=500&q=80",
-      link: "/products"
-    },
-    {
-      title: "Organic Veggies",
-      image: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=500&q=80",
-      link: "/categories/vegetables"
-    },
-    {
-      title: "Spices & Oils",
-      image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=500&q=80",
-      link: "/products"
-    }
-  ];
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await apiClient.get('/categories');
+        // Show first 8 categories like the original design
+        setCategories(response.data.slice(0, 8));
+      } catch (error) {
+        console.error('Failed to fetch categories:', error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   return (
     <div className="relative flex flex-col bg-white overflow-hidden pt-0 pb-10 md:pb-20">
@@ -124,12 +95,13 @@ const HeroSection = () => {
         <div className="grid grid-cols-4 md:grid-cols-8 gap-2 w-full max-w-[1400px] px-0 md:px-4 pb-16">
           {categories.map((cat, idx) => (
             <motion.div
-              key={idx}
+              key={cat._id || idx}
               initial={{ opacity: 0, scale: 0.9, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ delay: 0.05 * idx, duration: 0.5 }}
               whileHover={{ y: -5 }}
-              className="group flex flex-col items-center"
+              className="group flex flex-col items-center cursor-pointer"
+              onClick={() => navigate(`/categories/${cat._id}`)}
             >
               <div className="bg-[#b8ead4] rounded-xl overflow-hidden shadow-md relative w-full aspect-[4/5] flex flex-col items-center justify-center border border-yellow-600/10 hover:border-yellow-400/60 transition-all duration-500 group">
                 {/* Intricate Pattern Background */}
@@ -148,7 +120,7 @@ const HeroSection = () => {
                   <div className="w-12 h-12 md:w-28 md:h-28 lg:w-34 lg:h-34 rounded-lg overflow-hidden border border-white/80 shadow-[0_0_10px_rgba(255,255,255,0.4)] bg-white/30 p-0.5 transform transition-all duration-500 group-hover:scale-105 group-hover:rotate-1">
                     <img
                       src={cat.image}
-                      alt={cat.title}
+                      alt={cat.name}
                       className="w-full h-full object-cover rounded-md"
                     />
                   </div>
@@ -156,7 +128,7 @@ const HeroSection = () => {
                   {/* Glassmorphism Title Bar */}
                   <div className="mt-auto w-full bg-white/20 backdrop-blur-md border-t border-white/30 py-1.5 md:py-2 group-hover:bg-white/40 transition-colors">
                     <h3 className="text-[#1e4636] text-[7px] sm:text-[9px] md:text-[11px] font-black text-center px-0.5 uppercase tracking-widest leading-tight">
-                      {cat.title}
+                      {cat.name}
                     </h3>
                   </div>
                 </div>
