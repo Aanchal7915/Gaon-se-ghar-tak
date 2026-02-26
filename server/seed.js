@@ -41,8 +41,8 @@ const sampleProducts = [
         name: "Full Cream Milk",
         description: "Fresh and pure full cream milk, pasteurized for safety. Rich in calcium and vitamins.",
         brand: "DairyPure",
-        categoryName: "Dairy & Eggs",
-        categoryImage: "https://images.unsplash.com/photo-1550583724-125581cc255b?auto=format&fit=crop&w=500&q=60",
+        categoryName: "Milk",
+        categoryImage: "/milk (2).jpg",
         gender: "standard",
         subCategory: "Essential",
         images: [
@@ -57,8 +57,8 @@ const sampleProducts = [
         name: "Potato Chips - Classic Salted",
         description: "Crunchy and Delicious classic salted potato chips. Perfect for parties and snacking.",
         brand: "SnackTime",
-        categoryName: "Snacks",
-        categoryImage: "https://images.unsplash.com/photo-1566478989037-eec170784d0b?auto=format&fit=crop&w=500&q=60",
+        categoryName: "Ghee",
+        categoryImage: "/ghee.jpg",
         gender: "budget",
         subCategory: "Party",
         images: [

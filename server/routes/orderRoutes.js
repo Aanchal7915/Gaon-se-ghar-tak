@@ -8,6 +8,7 @@ router.post('/', protect, orderController.createOrder);
 router.post('/:id/razorpay', protect, orderController.createRazorpayOrder);
 router.post('/:id/verify-payment', protect, orderController.verifyPayment);
 router.get('/myorders', protect, orderController.getMyOrders);
+router.get('/status', orderController.getOrderStatus);
 
 
 router.get('/completed', protect, admin, orderController.getCompletedOrders);

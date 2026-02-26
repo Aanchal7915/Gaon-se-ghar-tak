@@ -285,6 +285,7 @@ const ProductCard = ({ product }) => {
   };
 
   const isOutOfStock = product.variants.every((v) => v.countInStock <= 0);
+  const isComingSoon = product.isComingSoon;
 
   // ✅ Fixed wishlist toggle
   const toggleWishlist = async () => {
@@ -353,11 +354,15 @@ const ProductCard = ({ product }) => {
       {/* Product Image */}
       <Link to={`/product/${product._id}`} className="block">
         <div className="relative w-full h-20 sm:h-36 bg-white flex items-center justify-center overflow-hidden">
-          {isOutOfStock && (
+          {isComingSoon ? (
+            <div className="absolute top-1.5 left-1.5 z-10 px-1.5 py-0.5 bg-yellow-500 text-white text-[7px] font-bold rounded-full">
+              Coming Soon
+            </div>
+          ) : isOutOfStock ? (
             <div className="absolute top-1.5 left-1.5 z-10 px-1.5 py-0.5 bg-red-600 text-white text-[7px] font-bold rounded-full">
               Out of Stock
             </div>
-          )}
+          ) : null}
           {product.images && product.images.length > 0 ? (
             product.images.map((url, index) => (
               <div
@@ -439,7 +444,11 @@ const ProductCard = ({ product }) => {
 
           {/* ADD Button or Counter */}
           <div className="relative z-20 flex justify-end">
-            {qty === 0 ? (
+            {isComingSoon ? (
+              <span className="px-1 py-0.5 sm:px-2 sm:py-1 rounded border border-gray-400 text-gray-500 bg-gray-100 font-bold text-[6px] sm:text-[9px] shadow-sm uppercase tracking-wider">
+                Soon
+              </span>
+            ) : qty === 0 ? (
               <button
                 onClick={handleAdd}
                 className="px-1 py-0.5 sm:px-2 sm:py-1 rounded border border-green-600 text-green-700 bg-green-50 hover:bg-green-600 hover:text-white transition-all font-bold text-[6px] sm:text-[9px] shadow-sm uppercase tracking-wider"

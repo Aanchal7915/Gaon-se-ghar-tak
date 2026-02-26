@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import apiClient from '../services/apiClient';
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import {
   FaHeart,
@@ -16,6 +16,7 @@ import {
 import LoadingSpinner from "../components/LoadingSpinner";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
+import ProductCard from "../components/ProductCard";
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -23,6 +24,7 @@ const ProductPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedVariant, setSelectedVariant] = useState(null);
+  const [similarProducts, setSimilarProducts] = useState([]);
   const { addToCart } = useCart();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
@@ -84,6 +86,25 @@ const ProductPage = () => {
     };
     fetchProduct();
   }, [id]);
+
+  useEffect(() => {
+    const fetchSimilarProducts = async () => {
+      if (product && product.category) {
+        try {
+          const catId = product.category._id || product.category;
+          const response = await apiClient.get(`/products/category/${catId}`);
+          // Filter out current product and take top 8
+          const filtered = response.data
+            .filter(p => p._id !== product._id)
+            .slice(0, 8);
+          setSimilarProducts(filtered);
+        } catch (error) {
+          console.error("Failed to fetch similar products:", error);
+        }
+      }
+    };
+    fetchSimilarProducts();
+  }, [product, id]);
 
   useEffect(() => {
     if (!user) {
@@ -406,6 +427,7 @@ const ProductPage = () => {
             )}
           </div>
 
+          {/* Pack Size Selection */}
           <div className="mt-6">
             <h4 className="font-semibold text-gray-800 mb-2 text-sm md:text-base">Select Pack Size:</h4>
             <div className="grid grid-cols-4 md:grid-cols-5 gap-2">
@@ -430,18 +452,27 @@ const ProductPage = () => {
             </div>
           </div>
 
-          <div className="mt-auto pt-4 md:pt-5">
-            <h4 className="font-semibold text-gray-800 mb-1 text-[10px] md:text-xs">Description:</h4>
-            <div className="mt-1 text-[11px] md:text-xs text-gray-700 leading-relaxed">
+          {/* Description */}
+          <div className="mt-6 pt-4 border-t border-gray-100">
+            <h4 className="font-semibold text-gray-800 mb-1 text-[10px] md:text-sm">Description:</h4>
+            <div className="text-[11px] md:text-xs text-gray-700 leading-relaxed">
               {productDescriptionParagraphs}
             </div>
           </div>
 
+          {/* Action Button */}
           <div className="mt-8">
-            {selectedVariant && selectedVariant.countInStock > 0 ? (
+            {product.isComingSoon ? (
+              <button
+                className="w-full bg-yellow-500 text-white font-bold py-3 md:py-4 rounded-md text-base md:text-lg cursor-not-allowed shadow-md"
+                disabled
+              >
+                Coming Soon
+              </button>
+            ) : selectedVariant && selectedVariant.countInStock > 0 ? (
               <button
                 onClick={handleAddToCart}
-                className="w-full bg-green-600 text-white font-bold py-2 md:py-3 rounded-md text-xs md:text-sm hover:bg-green-700 transition transform shadow-lg"
+                className="w-full bg-green-600 text-white font-bold py-3 md:py-4 rounded-md text-sm md:text-base hover:bg-green-700 transition transform shadow-lg"
               >
                 Add to Cart
               </button>
@@ -456,6 +487,118 @@ const ProductPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Video & Consultation Section (Full Width Below) */}
+      {product.videoUrl && (
+        <div className="mt-4 md:mt-6 border-t border-gray-100 pt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 items-stretch">
+            {/* Video Showcase Card */}
+            <div className="bg-white rounded-2xl p-4 md:p-6 border border-gray-100 shadow-sm">
+              <h3 className="text-sm md:text-base font-bold text-gray-900 mb-3 flex items-center">
+                <span className="mr-2">🎬</span> Video Showcase
+              </h3>
+              <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-md bg-black">
+                {product.videoUrl.includes('youtube.com') || product.videoUrl.includes('youtu.be') ? (
+                  <iframe
+                    src={product.videoUrl.replace('watch?v=', 'embed/').split('&')[0]}
+                    title="Product Video"
+                    className="absolute top-0 left-0 w-full h-full"
+                    allowFullScreen
+                  ></iframe>
+                ) : (
+                  <video
+                    src={product.videoUrl}
+                    controls
+                    className="absolute top-0 left-0 w-full h-full object-contain"
+                  ></video>
+                )}
+              </div>
+            </div>
+
+            {/* Book Consultation Card */}
+            <div className="bg-white rounded-2xl p-6 md:p-8 border-2 border-green-600/10 shadow-sm flex flex-col items-center text-center justify-center relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1.5 bg-green-600"></div>
+
+              <h3 className="text-lg md:text-2xl font-black text-gray-900 mb-4 uppercase tracking-tight">
+                Authentic Farm Experience
+              </h3>
+
+              <p className="text-xs md:text-base text-gray-600 leading-relaxed mb-6 max-w-2xl">
+                Go beyond the product and witness the purity firsthand. Join us for a personalized farm tour where you can see our heritage practices in action, connect with nature, and explore our chemical-free ecosystem through traditional farming techniques.
+              </p>
+
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8 w-full max-w-4xl">
+                <div className="flex items-center gap-2 bg-green-50/50 p-2.5 rounded-lg border border-green-100/50">
+                  <span className="text-green-600 font-bold text-[10px] md:text-xs">✓</span>
+                  <span className="text-[9px] md:text-[11px] text-gray-700 font-semibold text-left">Guided Field Tours</span>
+                </div>
+                <div className="flex items-center gap-2 bg-green-50/50 p-2.5 rounded-lg border border-green-100/50">
+                  <span className="text-green-600 font-bold text-[10px] md:text-xs">✓</span>
+                  <span className="text-[9px] md:text-[11px] text-gray-700 font-semibold text-left">Expert Consulting</span>
+                </div>
+                <div className="flex items-center gap-2 bg-green-50/50 p-2.5 rounded-lg border border-green-100/50">
+                  <span className="text-green-600 font-bold text-[10px] md:text-xs">✓</span>
+                  <span className="text-[9px] md:text-[11px] text-gray-700 font-semibold text-left">Seasonal Harvesting</span>
+                </div>
+                <div className="flex items-center gap-2 bg-green-50/50 p-2.5 rounded-lg border border-green-100/50">
+                  <span className="text-green-600 font-bold text-[10px] md:text-xs">✓</span>
+                  <span className="text-[9px] md:text-[11px] text-gray-700 font-semibold text-left">Cattle Interaction</span>
+                </div>
+                <div className="flex items-center gap-2 bg-green-50/50 p-2.5 rounded-lg border border-green-100/50">
+                  <span className="text-green-600 font-bold text-[10px] md:text-xs">✓</span>
+                  <span className="text-[9px] md:text-[11px] text-gray-700 font-semibold text-left">Organic Diet Tips</span>
+                </div>
+                <div className="flex items-center gap-2 bg-green-50/50 p-2.5 rounded-lg border border-green-100/50">
+                  <span className="text-green-600 font-bold text-[10px] md:text-xs">✓</span>
+                  <span className="text-[9px] md:text-[11px] text-gray-700 font-semibold text-left">Natural Composting</span>
+                </div>
+              </div>
+
+              <Link
+                to="/book-appointment"
+                className="inline-flex items-center justify-center px-10 py-3 bg-green-600 text-white font-extrabold rounded-md hover:bg-green-700 transition-all shadow-md group border-b-4 border-green-800 text-[12px] md:text-base"
+              >
+                SCHEDULE YOUR VISIT
+                <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
+              </Link>
+
+              <div className="mt-6 flex items-center gap-2 text-[8px] md:text-[10px] text-green-700 font-bold uppercase tracking-widest bg-green-50 px-4 py-1.5 rounded-full">
+                <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                Join 500+ Organic Families
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Similar Products Section */}
+      {similarProducts.length > 0 && (
+        <div className="mt-16 mb-20">
+          <div className="flex items-center justify-between mb-8">
+            <h3 className="text-xl md:text-2xl font-black text-gray-900">
+              Recommended for You
+            </h3>
+            <div className="h-0.5 flex-grow mx-8 bg-gray-100 hidden md:block"></div>
+            <button className="text-green-600 font-bold text-sm hover:underline">
+              View All
+            </button>
+          </div>
+
+          <div className="grid grid-cols-4 md:grid-cols-8 gap-2 md:gap-4">
+            {similarProducts.map((p) => (
+              <motion.div
+                key={p._id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+              >
+                <ProductCard product={p} />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

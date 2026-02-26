@@ -75,6 +75,8 @@ const analyticsRoutes = require('./routes/analyticsRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const returnReplaceRoutes = require('./routes/returnReplaceRoutes');
 const wishlistRoutes = require('./routes/wishlistRoutes');
+const appointmentRoutes = require('./routes/appointmentRoutes');
+const settingsRoutes = require('./routes/settingsRoutes');
 
 const app = express();
 
@@ -108,6 +110,8 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/return-replace', returnReplaceRoutes);
 app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/appointments', appointmentRoutes);
+app.use('/api/settings', settingsRoutes);
 
 // Test route
 app.get('/', (req, res) => {

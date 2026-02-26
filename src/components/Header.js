@@ -96,7 +96,7 @@ const Header = () => {
     { name: "Best Seller", path: "/products/bestseller" },
     { name: "Shop All", path: "/products" },
     { name: "Contact", path: "/contact" },
-    { name: "Blogs", path: "/blog" },
+    { name: "Book Farm Visit", path: "/book-appointment" },
   ];
 
   const cartCount = cartItems.length;
@@ -349,6 +349,9 @@ const Header = () => {
                   <Link to="/contact" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
                     <span className="text-sm font-medium">Contact</span>
                   </Link>
+                  <Link to="/book-appointment" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
+                    <span className="text-sm font-medium">Book Visit</span>
+                  </Link>
                   <Link to="/blog" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
                     <span className="text-sm font-medium">Blog</span>
                   </Link>
@@ -388,6 +391,9 @@ const Header = () => {
                   </Link>
                   <Link to="/contact" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
                     <span className="text-sm font-medium">Contact</span>
+                  </Link>
+                  <Link to="/book-appointment" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
+                    <span className="text-sm font-medium">Book Visit</span>
                   </Link>
                   <Link to="/blog" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
                     <span className="text-sm font-medium">Blog</span>

@@ -37,6 +37,7 @@ import SearchResultsPage from "./pages/SearchResultsPage";
 import WishlistPage from "./pages/WishlistPage"
 import LoginRegisterPage from "./pages/LoginRegisterPage";
 import PremiumShowcase from "./pages/PremiumShowcase"
+import AppointmentBookingPage from "./pages/AppointmentBookingPage";
 
 // Define the ScrollToTop component
 const ScrollToTop = () => {
@@ -77,6 +78,7 @@ function AppLayout() {
           <Route path="/search" element={<SearchResultsPage />} />
           <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="/blog" element={<PremiumShowcase />} />
+          <Route path="/book-appointment" element={<AppointmentBookingPage />} />
         </Routes>
       </main>
       <Footer />

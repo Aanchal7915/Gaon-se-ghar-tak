@@ -63,7 +63,7 @@ exports.deleteProduct = async (req, res) => {
 };
 
 exports.createProduct = async (req, res) => {
-  const { name, description, brand, category, gender, subCategory, variants, isFeatured, isBestseller } = req.body;
+  const { name, description, brand, category, gender, subCategory, variants, isFeatured, isBestseller, videoUrl, isComingSoon } = req.body;
 
   if (!category || !gender) {
     return res.status(400).json({ message: 'Category and gender are required.' });
@@ -71,11 +71,17 @@ exports.createProduct = async (req, res) => {
 
   try {
     const fileUrls = [];
-    if (req.files && req.files.length > 0) {
-      for (const file of req.files) {
+    if (req.files && req.files.images) {
+      for (const file of req.files.images) {
         const result = await bufferUpload(file.buffer, process.env.CLOUDINARY_FOLDER);
         fileUrls.push(result.secure_url);
       }
+    }
+
+    let uploadedVideoUrl = videoUrl;
+    if (req.files && req.files.video) {
+      const videoResult = await bufferUpload(req.files.video[0].buffer, process.env.CLOUDINARY_FOLDER);
+      uploadedVideoUrl = videoResult.secure_url;
     }
 
     const product = new Product({
@@ -87,6 +93,8 @@ exports.createProduct = async (req, res) => {
       subCategory,
       images: fileUrls,
       variants: JSON.parse(variants),
+      videoUrl: uploadedVideoUrl,
+      isComingSoon: isComingSoon === 'true' || isComingSoon === true,
       isFeatured: isFeatured === 'true' || isFeatured === true,
       isBestseller: isBestseller === 'true' || isBestseller === true,
     });
@@ -103,7 +111,7 @@ exports.createProduct = async (req, res) => {
 };
 
 exports.updateProduct = async (req, res) => {
-  const { name, description, brand, category, gender, subCategory, variants, isFeatured, isBestseller } = req.body;
+  const { name, description, brand, category, gender, subCategory, variants, isFeatured, isBestseller, videoUrl, isComingSoon } = req.body;
 
   try {
     const product = await Product.findById(req.params.id);
@@ -113,15 +121,20 @@ exports.updateProduct = async (req, res) => {
 
     let fileUrls = [];
     if (req.body.existingImages) {
-      // If only one image is sent, it might not be an array depending on how body-parser/multer handles it
       fileUrls = Array.isArray(req.body.existingImages) ? req.body.existingImages : [req.body.existingImages];
     }
 
-    if (req.files && req.files.length > 0) {
-      for (const file of req.files) {
+    if (req.files && req.files.images) {
+      for (const file of req.files.images) {
         const result = await bufferUpload(file.buffer, process.env.CLOUDINARY_FOLDER);
         fileUrls.push(result.secure_url);
       }
+    }
+
+    let updatedVideoUrl = videoUrl !== undefined ? videoUrl : product.videoUrl;
+    if (req.files && req.files.video) {
+      const videoResult = await bufferUpload(req.files.video[0].buffer, process.env.CLOUDINARY_FOLDER);
+      updatedVideoUrl = videoResult.secure_url;
     }
 
     product.name = name || product.name;
@@ -132,6 +145,8 @@ exports.updateProduct = async (req, res) => {
     product.subCategory = subCategory || product.subCategory;
     product.images = fileUrls;
     product.variants = variants ? JSON.parse(variants) : product.variants;
+    product.videoUrl = updatedVideoUrl;
+    product.isComingSoon = isComingSoon !== undefined ? (isComingSoon === 'true' || isComingSoon === true) : product.isComingSoon;
     product.isFeatured = isFeatured !== undefined ? (isFeatured === 'true' || isFeatured === true) : product.isFeatured;
     product.isBestseller = isBestseller !== undefined ? (isBestseller === 'true' || isBestseller === true) : product.isBestseller;
 
@@ -198,6 +213,15 @@ exports.getFeaturedProducts = async (req, res) => {
 exports.getBestsellerProducts = async (req, res) => {
   try {
     const products = await Product.find({ isBestseller: true }).populate('category', 'name');
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getUpcomingProducts = async (req, res) => {
+  try {
+    const products = await Product.find({ isComingSoon: true }).populate('category', 'name');
     res.json(products);
   } catch (error) {
     res.status(500).json({ message: error.message });

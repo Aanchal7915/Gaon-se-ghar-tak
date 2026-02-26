@@ -12,6 +12,8 @@ import CancelledOrders from '../components/CancelledOrders';
 import ReturnReplaceRequests from '../components/ReturnReplaceRequests';
 import CompletedCancelledRequests from '../components/CompletedCancelledRequests';
 import AssignedPickups from './AssignedPickups';
+import AppointmentManagement from '../components/AppointmentManagement';
+import SettingsManagement from '../components/SettingsManagement';
 
 const AdminDashboard = () => {
     const [unassignedOrders, setUnassignedOrders] = useState([]);
@@ -144,6 +146,8 @@ const AdminDashboard = () => {
                     <button onClick={() => setActiveTab('assignedPickups')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'assignedPickups' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Pickup Tasks</button>
                     <button onClick={() => setActiveTab('completedReturns')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'completedReturns' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Completed Returns</button>
                     <button onClick={() => setActiveTab('cancelledReturns')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'cancelledReturns' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Cancelled Returns</button>
+                    <button onClick={() => setActiveTab('appointments')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'appointments' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Appointments</button>
+                    <button onClick={() => setActiveTab('settings')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'settings' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Settings</button>
                 </nav>
             </div>
 
@@ -261,6 +265,8 @@ const AdminDashboard = () => {
             {activeTab === 'analytics' && <AnalyticsDashboard />}
             {activeTab === 'completedOrders' && <CompletedOrders refreshFlag={refreshFlag} />}
             {activeTab === 'cancelledOrders' && <CancelledOrders refreshFlag={refreshFlag} />}
+            {activeTab === 'appointments' && <AppointmentManagement />}
+            {activeTab === 'settings' && <SettingsManagement />}
 
             {showAssignModal && (
                 <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">

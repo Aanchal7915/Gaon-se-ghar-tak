@@ -16,6 +16,8 @@ const ProductManagement = () => {
     subCategory: '',
     isFeatured: false,
     isBestseller: false,
+    videoUrl: '',
+    isComingSoon: false,
   });
   const [newCategoryName, setNewCategoryName] = useState('');
   const [newCategoryImage, setNewCategoryImage] = useState(null);
@@ -26,6 +28,7 @@ const ProductManagement = () => {
   const [imagePreviews, setImagePreviews] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [videoFile, setVideoFile] = useState(null);
   const [refreshCategories, setRefreshCategories] = useState(false);
   const [refreshProducts, setRefreshProducts] = useState(false);
 
@@ -70,6 +73,10 @@ const ProductManagement = () => {
     setImagePreviews(prevPreviews => [...prevPreviews, ...newPreviews]);
   };
 
+  const handleVideoChange = (e) => {
+    setVideoFile(e.target.files[0]);
+  };
+
   const handleRemoveImage = (indexToRemove, isExisting) => {
     if (isExisting) {
       setExistingImages(existingImages.filter((_, index) => index !== indexToRemove));
@@ -99,6 +106,7 @@ const ProductManagement = () => {
     for (const key in formData) data.append(key, formData[key]);
     data.append('variants', JSON.stringify(variants));
     for (const image of images) data.append('images', image);
+    if (videoFile) data.append('video', videoFile);
 
     try {
       await apiClient.post('/products', data, {
@@ -127,6 +135,8 @@ const ProductManagement = () => {
       subCategory: product.subCategory || '',
       isFeatured: product.isFeatured || false,
       isBestseller: product.isBestseller || false,
+      videoUrl: product.videoUrl || '',
+      isComingSoon: product.isComingSoon || false,
     });
     setVariants(product.variants.map(v => ({
       ...v,
@@ -135,6 +145,7 @@ const ProductManagement = () => {
     setExistingImages(product.images);
     setImages([]);
     setImagePreviews([]);
+    setVideoFile(null);
   };
 
   const handleUpdateProduct = async (e) => {
@@ -145,6 +156,7 @@ const ProductManagement = () => {
     data.append('variants', JSON.stringify(variants));
     for (const image of images) data.append('images', image);
     for (const imageUrl of existingImages) data.append('existingImages', imageUrl);
+    if (videoFile) data.append('video', videoFile);
 
     try {
       await apiClient.put(`/products/${editingProduct._id}`, data, {
@@ -179,11 +191,12 @@ const ProductManagement = () => {
 
   const resetForm = () => {
     setEditingProduct(null);
-    setFormData({ name: '', description: '', brand: '', category: '', gender: '', subCategory: '', isFeatured: false, isBestseller: false });
+    setFormData({ name: '', description: '', brand: '', category: '', gender: '', subCategory: '', isFeatured: false, isBestseller: false, videoUrl: '', isComingSoon: false });
     setVariants([{ size: '', price: '', originalPrice: '', countInStock: '' }]);
     setImages([]);
     setImagePreviews([]);
     setExistingImages([]);
+    setVideoFile(null);
   };
 
   return (
@@ -219,6 +232,20 @@ const ProductManagement = () => {
           />
           <label htmlFor="isBestseller" className="text-gray-700 font-medium cursor-pointer">
             Best Seller Product
+          </label>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            name="isComingSoon"
+            id="isComingSoon"
+            checked={formData.isComingSoon}
+            onChange={handleInputChange}
+            className="w-4 h-4 accent-yellow-600"
+          />
+          <label htmlFor="isComingSoon" className="text-gray-700 font-medium cursor-pointer">
+            Coming Soon (Upcoming Product)
           </label>
         </div>
 
@@ -321,6 +348,21 @@ const ProductManagement = () => {
           placeholder="Sub Category (e.g., Fruits, Vegetables, Dairy)"
           className="w-full p-2 border rounded-md"
         />
+
+        {/* Video Upload */}
+        <div className="space-y-1">
+          <label className="block text-sm font-medium text-gray-700">Upload Product Video (Optional)</label>
+          <input
+            type="file"
+            name="video"
+            accept="video/*"
+            onChange={handleVideoChange}
+            className="w-full p-2 border rounded-md border-blue-300"
+          />
+          {formData.videoUrl && !videoFile && (
+            <p className="text-xs text-blue-600">Current video: {formData.videoUrl}</p>
+          )}
+        </div>
 
         {/* Variants */}
         <h3 className="text-lg font-semibold">Product Variants</h3>

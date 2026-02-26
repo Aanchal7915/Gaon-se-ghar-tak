@@ -12,6 +12,7 @@ const CartPage = () => {
     const [customerInfo, setCustomerInfo] = useState({ name: '', phone: '' });
     const [shippingAddress, setShippingAddress] = useState({ address: '', city: '', postalCode: '' });
     const [customerLocation, setCustomerLocation] = useState({ latitude: null, longitude: null });
+    const [orderStatus, setOrderStatus] = useState({ isOpen: true, reason: '' });
     const alertShown = useRef(false);
 
     useEffect(() => {
@@ -39,6 +40,16 @@ const CartPage = () => {
                 }
             );
         }
+
+        const checkStatus = async () => {
+            try {
+                const { data } = await apiClient.get('/orders/status');
+                setOrderStatus(data);
+            } catch (error) {
+                console.error('Failed to check order status:', error);
+            }
+        };
+        checkStatus();
     }, [user, loading, navigate]);
 
     if (loading || !user) return null;
@@ -300,9 +311,13 @@ const CartPage = () => {
                                     </div>
                                     <button
                                         type="submit"
-                                        className="w-full bg-green-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-green-700 shadow-lg hover:shadow-green-500/30 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0"
+                                        disabled={!orderStatus.isOpen}
+                                        className={`w-full py-4 rounded-xl font-bold text-lg shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 ${orderStatus.isOpen
+                                                ? 'bg-green-600 text-white hover:bg-green-700 hover:shadow-green-500/30'
+                                                : 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                                            }`}
                                     >
-                                        Proceed to Checkout
+                                        {orderStatus.isOpen ? 'Proceed to Checkout' : orderStatus.reason}
                                     </button>
                                     <p className="text-center text-xs text-gray-400 mt-4">
                                         Secure Payment via Razorpay

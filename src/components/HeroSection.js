@@ -16,9 +16,9 @@ const groceryData = [
     productImage: "/banana.jpg",
   },
   {
-    productName: "Fresh Bread",
-    productPrice: "₹45/pack",
-    productImage: "/bread.jpg",
+    productName: "Full Cream Milk",
+    productPrice: "₹33/500ml",
+    productImage: "/milk (2).jpg",
   },
   {
     productName: "Medjool Dates",
@@ -37,8 +37,8 @@ const HeroSection = () => {
       try {
         setLoading(true);
         const response = await apiClient.get('/categories');
-        // Show first 8 categories like the original design
-        setCategories(response.data.slice(0, 8));
+        // Show exactly 4 categories on the home page per user instruction
+        setCategories(response.data.slice(0, 4));
       } catch (error) {
         console.error('Failed to fetch categories:', error);
       } finally {
@@ -67,7 +67,7 @@ const HeroSection = () => {
         >
           {/* Content Left */}
           <div className="relative z-10 w-full md:w-[60%] px-4 md:px-16 flex flex-col justify-center">
-            <h2 className="text-lg md:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-1 md:mb-4 drop-shadow-md">
+            <h2 className="text-lg md:text-3xl lg:text-5xl font-extrabold text-white leading-tight mb-1 md:mb-4 drop-shadow-md">
               Stock up on daily essentials
             </h2>
             <p className="text-white/90 text-[10px] md:text-lg font-medium mb-3 md:mb-8 max-w-[500px] leading-relaxed">
@@ -95,8 +95,8 @@ const HeroSection = () => {
         </motion.div>
 
 
-        {/* Dome Cards Container - Updated for better mobile fit */}
-        <div className="grid grid-cols-4 md:grid-cols-8 gap-2 w-full max-w-[1400px] px-0 md:px-4 pb-16 min-h-[120px] md:min-h-[200px] items-center justify-center">
+        {/* Dome Cards Container - Updated for 4 columns on laptop */}
+        <div className="grid grid-cols-4 md:grid-cols-4 gap-2 md:gap-6 w-full max-w-[1400px] px-0 md:px-4 pb-16 min-h-[120px] md:min-h-[200px] items-center justify-center">
           {loading ? (
             <div className="col-span-full flex flex-col items-center justify-center py-10">
               <motion.div
@@ -117,7 +117,7 @@ const HeroSection = () => {
                 className="group flex flex-col items-center cursor-pointer"
                 onClick={() => navigate(`/categories/${cat._id}`)}
               >
-                <div className="bg-[#b8ead4] rounded-xl overflow-hidden shadow-md relative w-full aspect-[4/5] flex flex-col items-center justify-center border border-yellow-600/10 hover:border-yellow-400/60 transition-all duration-500 group">
+                <div className="bg-[#b8ead4] rounded-xl overflow-hidden shadow-md relative w-full aspect-[4/5] sm:aspect-square flex flex-col items-center justify-center border border-yellow-600/10 hover:border-yellow-400/60 transition-all duration-500 group">
                   {/* Intricate Pattern Background */}
                   <div className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0l20 20M10 0l10 10M0 10l10 10' stroke='%231e4636' stroke-width='1' fill='none'/%3E%3C/svg%3E")` }}></div>
 
@@ -131,7 +131,7 @@ const HeroSection = () => {
                   {/* Content Container */}
                   <div className="relative z-10 flex flex-col items-center w-full h-full pt-4 md:pt-8">
                     {/* Square Image with Glow - Optimized for mobile */}
-                    <div className="w-12 h-12 md:w-28 md:h-28 lg:w-34 lg:h-34 rounded-lg overflow-hidden border border-white/80 shadow-[0_0_10px_rgba(255,255,255,0.4)] bg-white/30 p-0.5 transform transition-all duration-500 group-hover:scale-105 group-hover:rotate-1">
+                    <div className="w-12 h-12 sm:w-24 sm:h-24 md:w-36 md:h-36 lg:w-48 lg:h-48 rounded-lg overflow-hidden border border-white/80 shadow-[0_0_12px_rgba(255,255,255,0.5)] bg-white/30 p-0.5 transform transition-all duration-500 group-hover:scale-105 group-hover:rotate-1">
                       <img
                         src={cat.image}
                         alt={cat.name}
@@ -141,7 +141,7 @@ const HeroSection = () => {
 
                     {/* Glassmorphism Title Bar */}
                     <div className="mt-auto w-full bg-white/20 backdrop-blur-md border-t border-white/30 py-1.5 md:py-2 group-hover:bg-white/40 transition-colors">
-                      <h3 className="text-[#1e4636] text-[7px] sm:text-[9px] md:text-[11px] font-black text-center px-0.5 uppercase tracking-widest leading-tight">
+                      <h3 className="text-[#1e4636] text-[8px] sm:text-[14px] md:text-[16px] font-black text-center px-0.5 uppercase tracking-widest leading-tight">
                         {cat.name}
                       </h3>
                     </div>

@@ -25,6 +25,8 @@ const productSchema = new mongoose.Schema({
     originalPrice: { type: Number }, // Standard/MRP price to show as strikethrough
     countInStock: { type: Number, required: true, default: 0 },
   }],
+  videoUrl: { type: String }, // NEW FIELD for video (YouTube/Upload)
+  isComingSoon: { type: Boolean, default: false }, // NEW FIELD for upcoming section
   isFeatured: { type: Boolean, default: false },
   isBestseller: { type: Boolean, default: false },
 }, { timestamps: true });

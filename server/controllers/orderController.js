@@ -6,12 +6,50 @@ const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const moment = require('moment');
 const mongoose = require('mongoose');
+const SystemSettings = require('../models/SystemSettings'); // IMPORT SystemSettings
+
 const razorpayInstance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
+exports.getOrderStatus = async (req, res) => {
+  const currentTime = moment();
+  const currentHour = currentTime.hour();
+  if (currentHour < 12 || currentHour >= 18) {
+    return res.json({ isOpen: false, reason: 'Order Closed. Orders are only accepted between 12:00 PM and 6:00 PM.' });
+  }
+
+  const settings = await SystemSettings.findOne() || { dailyOrderLimit: 50 };
+  const startOfDay = moment().startOf('day').toDate();
+  const endOfDay = moment().endOf('day').toDate();
+  const todayOrderCount = await Order.countDocuments({ createdAt: { $gte: startOfDay, $lte: endOfDay } });
+
+  if (todayOrderCount >= settings.dailyOrderLimit) {
+    return res.json({ isOpen: false, reason: 'Orders Full for Today' });
+  }
+
+  return res.json({ isOpen: true, reason: '' });
+};
+
 exports.createOrder = async (req, res) => {
+  // Check Order Timing: 12:00 PM to 6:00 PM (18:00)
+  const currentTime = moment();
+  const currentHour = currentTime.hour();
+  if (currentHour < 12 || currentHour >= 18) {
+    return res.status(403).json({ message: 'Orders are only accepted between 12:00 PM and 6:00 PM.' });
+  }
+
+  // Check Daily Order Limit
+  const settings = await SystemSettings.findOne() || { dailyOrderLimit: 50 };
+  const startOfDay = moment().startOf('day').toDate();
+  const endOfDay = moment().endOf('day').toDate();
+  const todayOrderCount = await Order.countDocuments({ createdAt: { $gte: startOfDay, $lte: endOfDay } });
+
+  if (todayOrderCount >= settings.dailyOrderLimit) {
+    return res.status(403).json({ message: 'Orders full for today. Please try again tomorrow.' });
+  }
+
   // CORRECTED: Accept customerInfo from the request body
   const { orderItems, shippingAddress, totalPrice, customerLocation, customerInfo } = req.body;
   if (!orderItems || orderItems.length === 0) {
