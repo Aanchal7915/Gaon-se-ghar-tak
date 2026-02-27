@@ -116,6 +116,8 @@ const Header = () => {
     { name: "Book Farm Visit", path: "/book-appointment" },
   ];
 
+  const isActive = (path) => location.pathname === path;
+
   const cartCount = cartItems.length;
 
   return (
@@ -153,9 +155,15 @@ const Header = () => {
               <li key={link.name}>
                 <Link
                   to={link.path}
-                  className="font-medium text-[11px] lg:text-sm text-gray-600 hover:text-green-800 transition-colors duration-200 whitespace-nowrap"
+                  className={`relative font-semibold text-[11px] lg:text-sm transition-all duration-300 whitespace-nowrap px-1 py-1 group
+                    ${isActive(link.path)
+                      ? "text-green-700"
+                      : "text-gray-600 hover:text-green-800"}`}
                 >
                   {link.name}
+                  <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-green-600 transition-all duration-300 transform origin-left
+                    ${isActive(link.path) ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0 group-hover:scale-x-100 group-hover:opacity-30"}`}
+                  />
                 </Link>
               </li>
             ))}
@@ -199,14 +207,14 @@ const Header = () => {
             <div className="flex items-center space-x-4">
               <Link
                 to={user.role === "admin" ? "/admin" : user.role === "delivery" ? "/delivery" : "/myorders"}
-                className="text-gray-600 hover:text-green-800 transition-colors"
+                className={`transition-colors ${isActive("/admin") || isActive("/delivery") || isActive("/myorders") ? "text-green-700 font-bold" : "text-gray-600 hover:text-green-800"}`}
                 title="Account"
               >
                 <HiOutlineUser className="w-6 h-6" />
               </Link>
               <Link
                 to="/my-appointments"
-                className="text-gray-600 hover:text-green-800 transition-colors text-sm font-medium"
+                className={`transition-colors text-sm font-medium ${isActive("/my-appointments") ? "text-green-700 font-bold" : "text-gray-600 hover:text-green-800"}`}
               >
                 Your Appointment
               </Link>
@@ -218,7 +226,7 @@ const Header = () => {
               </button>
             </div>
           ) : (
-            <Link to="/login" className="text-gray-600 hover:text-green-800 transition-colors font-medium">
+            <Link to="/login" className={`transition-all duration-300 font-bold px-4 py-1.5 rounded-full ${isActive("/login") ? "bg-green-600 text-white shadow-md shadow-green-200" : "text-gray-600 hover:text-green-800 hover:bg-green-50"}`}>
               Login
             </Link>
           )}
@@ -349,10 +357,13 @@ const Header = () => {
                     <Link
                       to={link.path}
                       onClick={toggleMenu}
-                      className="flex items-center justify-between p-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors group"
+                      className={`flex items-center justify-between p-3 rounded-lg transition-all duration-200 group
+                        ${isActive(link.path)
+                          ? "bg-green-50 text-green-700 border-l-4 border-green-600 shadow-sm"
+                          : "text-gray-700 hover:bg-gray-50"}`}
                     >
-                      <span className="font-medium">{link.name}</span>
-                      <HiChevronRight className="w-4 h-4 text-gray-300 group-hover:translate-x-1 transition-transform" />
+                      <span className={`font-medium ${isActive(link.path) ? "ml-1" : ""}`}>{link.name}</span>
+                      <HiChevronRight className={`w-4 h-4 transition-transform ${isActive(link.path) ? "text-green-600 translate-x-1" : "text-gray-300 group-hover:translate-x-1"}`} />
                     </Link>
                   </li>
                 ))}
@@ -394,28 +405,28 @@ const Header = () => {
               <div className="space-y-4">
                 <div className="space-y-1 pb-4 border-b border-gray-100">
                   <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-2 mb-2">Quick Access</h4>
-                  <Link to="/products/recent" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
+                  <Link to="/products/recent" onClick={toggleMenu} className={`flex items-center p-2 rounded-lg transition-all ${isActive("/products/recent") ? "bg-green-100 text-green-800" : "text-gray-700 hover:bg-white"}`}>
                     <span className="text-sm font-medium">New Release</span>
                   </Link>
-                  <Link to="/products/bestseller" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
+                  <Link to="/products/bestseller" onClick={toggleMenu} className={`flex items-center p-2 rounded-lg transition-all ${isActive("/products/bestseller") ? "bg-green-100 text-green-800" : "text-gray-700 hover:bg-white"}`}>
                     <span className="text-sm font-medium">Best Seller</span>
                   </Link>
-                  <Link to="/products" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
+                  <Link to="/products" onClick={toggleMenu} className={`flex items-center p-2 rounded-lg transition-all ${isActive("/products") ? "bg-green-100 text-green-800" : "text-gray-700 hover:bg-white"}`}>
                     <span className="text-sm font-medium">Shop All</span>
                   </Link>
-                  <Link to="/contact" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
+                  <Link to="/contact" onClick={toggleMenu} className={`flex items-center p-2 rounded-lg transition-all ${isActive("/contact") ? "bg-green-100 text-green-800" : "text-gray-700 hover:bg-white"}`}>
                     <span className="text-sm font-medium">Contact</span>
                   </Link>
-                  <Link to="/book-appointment" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
+                  <Link to="/book-appointment" onClick={toggleMenu} className={`flex items-center p-2 rounded-lg transition-all ${isActive("/book-appointment") ? "bg-green-100 text-green-800" : "text-gray-700 hover:bg-white"}`}>
                     <span className="text-sm font-medium">Book Visit</span>
                   </Link>
-                  <Link to="/blog" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
+                  <Link to="/blog" onClick={toggleMenu} className={`flex items-center p-2 rounded-lg transition-all ${isActive("/blog") ? "bg-green-100 text-green-800" : "text-gray-700 hover:bg-white"}`}>
                     <span className="text-sm font-medium">Blog</span>
                   </Link>
-                  <Link to="/wishlist" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
+                  <Link to="/wishlist" onClick={toggleMenu} className={`flex items-center p-2 rounded-lg transition-all ${isActive("/wishlist") ? "bg-green-100 text-green-800" : "text-gray-700 hover:bg-white"}`}>
                     <span className="text-sm font-medium">Wishlist</span>
                   </Link>
-                  <Link to="/my-appointments" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
+                  <Link to="/my-appointments" onClick={toggleMenu} className={`flex items-center p-2 rounded-lg transition-all ${isActive("/my-appointments") ? "bg-green-100 text-green-800" : "text-gray-700 hover:bg-white"}`}>
                     <span className="text-sm font-medium">Your Appointment</span>
                   </Link>
                 </div>
@@ -423,7 +434,7 @@ const Header = () => {
                   <Link
                     to={user.role === "admin" ? "/admin" : user.role === "delivery" ? "/delivery" : "/myorders"}
                     onClick={toggleMenu}
-                    className="flex items-center justify-center space-x-2 w-full py-2.5 bg-white border border-gray-200 rounded-lg text-sm font-medium shadow-sm"
+                    className={`flex items-center justify-center space-x-2 w-full py-2.5 bg-white border rounded-lg text-sm font-medium shadow-sm ${isActive("/admin") || isActive("/delivery") || isActive("/myorders") ? "border-green-600 text-green-700" : "border-gray-200 text-gray-700"}`}
                   >
                     <HiOutlineUser className="w-4 h-4" />
                     <span>Account Dashboard</span>
@@ -440,28 +451,28 @@ const Header = () => {
               <div className="space-y-4">
                 <div className="space-y-1 pb-4 border-b border-gray-100">
                   <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-2 mb-2">Quick Access</h4>
-                  <Link to="/products/recent" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
+                  <Link to="/products/recent" onClick={toggleMenu} className={`flex items-center p-2 rounded-lg transition-all ${isActive("/products/recent") ? "bg-green-100 text-green-800" : "text-gray-700 hover:bg-white"}`}>
                     <span className="text-sm font-medium">New Release</span>
                   </Link>
-                  <Link to="/products/bestseller" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
+                  <Link to="/products/bestseller" onClick={toggleMenu} className={`flex items-center p-2 rounded-lg transition-all ${isActive("/products/bestseller") ? "bg-green-100 text-green-800" : "text-gray-700 hover:bg-white"}`}>
                     <span className="text-sm font-medium">Best Seller</span>
                   </Link>
-                  <Link to="/products" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
+                  <Link to="/products" onClick={toggleMenu} className={`flex items-center p-2 rounded-lg transition-all ${isActive("/products") ? "bg-green-100 text-green-800" : "text-gray-700 hover:bg-white"}`}>
                     <span className="text-sm font-medium">Shop All</span>
                   </Link>
-                  <Link to="/contact" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
+                  <Link to="/contact" onClick={toggleMenu} className={`flex items-center p-2 rounded-lg transition-all ${isActive("/contact") ? "bg-green-100 text-green-800" : "text-gray-700 hover:bg-white"}`}>
                     <span className="text-sm font-medium">Contact</span>
                   </Link>
-                  <Link to="/book-appointment" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
+                  <Link to="/book-appointment" onClick={toggleMenu} className={`flex items-center p-2 rounded-lg transition-all ${isActive("/book-appointment") ? "bg-green-100 text-green-800" : "text-gray-700 hover:bg-white"}`}>
                     <span className="text-sm font-medium">Book Visit</span>
                   </Link>
-                  <Link to="/blog" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
+                  <Link to="/blog" onClick={toggleMenu} className={`flex items-center p-2 rounded-lg transition-all ${isActive("/blog") ? "bg-green-100 text-green-800" : "text-gray-700 hover:bg-white"}`}>
                     <span className="text-sm font-medium">Blog</span>
                   </Link>
-                  <Link to="/wishlist" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
+                  <Link to="/wishlist" onClick={toggleMenu} className={`flex items-center p-2 rounded-lg transition-all ${isActive("/wishlist") ? "bg-green-100 text-green-800" : "text-gray-700 hover:bg-white"}`}>
                     <span className="text-sm font-medium">Wishlist</span>
                   </Link>
-                  <Link to="/my-appointments" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
+                  <Link to="/my-appointments" onClick={toggleMenu} className={`flex items-center p-2 rounded-lg transition-all ${isActive("/my-appointments") ? "bg-green-100 text-green-800" : "text-gray-700 hover:bg-white"}`}>
                     <span className="text-sm font-medium">Your Appointment</span>
                   </Link>
                 </div>

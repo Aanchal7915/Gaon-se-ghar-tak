@@ -33,7 +33,7 @@ const BestsellerProductsSection = () => {
                     <div className="h-1.5 w-20 bg-green-600 rounded-full"></div>
                 </div>
 
-                <div className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2">
+                <div className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-1.5 sm:gap-2">
                     {products.map((product) => (
                         <ProductCard key={product._id} product={product} />
                     ))}
