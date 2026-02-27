@@ -413,8 +413,17 @@ const ProductManagement = () => {
               <div>
                 <span className="font-semibold">{product.name} - {product.brand}</span>
                 <p className="text-sm text-gray-600">Category: {product.category?.name || 'N/A'}</p>
-                <p className="text-sm text-gray-600">Type: {product.gender} | Sub: {product.subCategory || 'N/A'}</p>
-                <p className="text-sm text-gray-600">Variants: {product.variants.map(v => `${v.size}(₹${v.price}${v.originalPrice ? ` [cut: ₹${v.originalPrice}]` : ''})`).join(', ')}</p>
+                <p className="text-sm text-gray-600">Variants: {product.variants.map(v => (
+                  <span key={v._id || v.size} className={`mr-2 ${v.countInStock <= 0 ? 'text-red-600 font-bold' : ''}`}>
+                    {v.size}(₹{v.price}): {v.countInStock <= 0 ? 'OUT OF STOCK' : `Qty: ${v.countInStock}`}
+                  </span>
+                ))}</p>
+                <p className="text-xs font-bold mt-1">
+                  Total Inventory: {product.variants.reduce((acc, v) => acc + (v.countInStock || 0), 0)} unit(s)
+                  {product.variants.every(v => v.countInStock <= 0) && (
+                    <span className="ml-2 px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-[10px] uppercase">Sold Out</span>
+                  )}
+                </p>
               </div>
             </div>
             <div className="flex space-x-2">

@@ -359,16 +359,20 @@ const ProductCard = ({ product }) => {
               Coming Soon
             </div>
           ) : isOutOfStock ? (
-            <div className="absolute top-1.5 left-1.5 z-10 px-1.5 py-0.5 bg-red-600 text-white text-[7px] font-bold rounded-full">
-              Out of Stock
+            <div className="absolute inset-0 bg-white/40 z-10 flex items-center justify-center">
+              <div className="bg-red-600 text-white text-[6px] sm:text-[9px] font-black px-2 py-1 rounded shadow-lg transform -rotate-6 border border-white">
+                OUT OF STOCK
+              </div>
             </div>
           ) : null}
+
+          {/* ... existing code for images ... */}
           {product.images && product.images.length > 0 ? (
             product.images.map((url, index) => (
               <div
                 key={index}
                 className={`absolute inset-0 w-full h-full flex items-center justify-center p-1 sm:p-2 transition-opacity duration-700 ${index === activeImageIndex ? "opacity-100" : "opacity-0"
-                  }`}
+                  } ${isOutOfStock ? "grayscale" : ""}`}
               >
                 {isVideo(url) && isHovered ? (
                   <video
@@ -446,6 +450,8 @@ const ProductCard = ({ product }) => {
           <div className="relative z-20 flex justify-end">
             {isComingSoon ? (
               null
+            ) : isOutOfStock ? (
+              <span className="text-[6px] sm:text-[8px] font-black text-red-600 uppercase border border-red-600 px-1 py-0.5 rounded">Out of Stock</span>
             ) : qty === 0 ? (
               <button
                 onClick={handleAdd}

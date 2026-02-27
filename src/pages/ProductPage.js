@@ -163,7 +163,7 @@ const ProductPage = () => {
         return;
       }
       if (isWishlisted) {
-        await (`/wishlist/${product._id}`);
+        await apiClient.delete(`/wishlist/${product._id}`);
       } else {
         await apiClient.post(`/wishlist/${product._id}`);
       }
@@ -259,6 +259,15 @@ const ProductPage = () => {
                 className={`w-full h-full object-contain p-4 transition-transform duration-500 ease-in-out ${isZoomed && !isMobile ? "scale-110" : "scale-100"
                   }`}
               />
+            )}
+
+            {/* Out of Stock Overlay like Blinkit */}
+            {selectedVariant && selectedVariant.countInStock <= 0 && (
+              <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px] z-20 flex items-center justify-center">
+                <div className="bg-red-600 text-white font-black px-6 py-2 rounded-lg shadow-xl transform -rotate-12 scale-110 border-2 border-white">
+                  OUT OF STOCK
+                </div>
+              </div>
             )}
 
             {/* Desktop zoom toggle */}
@@ -431,24 +440,38 @@ const ProductPage = () => {
           <div className="mt-6">
             <h4 className="font-semibold text-gray-800 mb-2 text-sm md:text-base">Select Pack Size:</h4>
             <div className="grid grid-cols-4 md:grid-cols-5 gap-2">
-              {product.variants.map((variant) => (
-                <button
-                  key={variant.size}
-                  onClick={() => setSelectedVariant(variant)}
-                  className={`py-1 md:py-2 rounded-md font-medium text-[9px] md:text-xs transition-all duration-200 border border-gray-300 hover:border-gray-900
-                    ${selectedVariant?.size === variant.size
-                      ? "bg-gray-900 text-white"
-                      : "bg-white text-gray-800"
-                    }
-                    ${variant.countInStock <= 0
-                      ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200"
-                      : ""
-                    }`}
-                  disabled={variant.countInStock <= 0}
-                >
-                  {variant.size}
-                </button>
-              ))}
+              {product.variants.map((variant, index) => {
+                const isSelected = selectedVariant?.size === variant.size;
+                const isOutOfStock = variant.countInStock <= 0;
+
+                return (
+                  <button
+                    key={variant._id || `variant-${index}`}
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      if (!isOutOfStock) {
+                        setSelectedVariant(variant);
+                      }
+                    }}
+                    className={`py-1 md:py-2 px-2 rounded-md font-medium text-[9px] md:text-xs transition-all duration-300 border shadow-sm relative z-30 flex flex-col items-center justify-center min-h-[45px]
+                      ${isSelected
+                        ? "bg-gray-900 text-white border-gray-900 transform scale-105"
+                        : "bg-white text-gray-800 border-gray-300 hover:border-gray-900"
+                      }
+                      ${isOutOfStock
+                        ? "opacity-60 grayscale cursor-not-allowed bg-gray-50 text-gray-400 border-gray-200"
+                        : "hover:shadow-md cursor-pointer active:scale-95"
+                      }`}
+                  >
+                    <span>{variant.size}</span>
+                    {isOutOfStock && (
+                      <span className="text-[7px] md:text-[8px] font-bold text-red-500 mt-0.5 uppercase">Out of stock</span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
 

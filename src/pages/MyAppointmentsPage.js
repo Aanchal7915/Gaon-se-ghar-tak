@@ -27,8 +27,9 @@ const MyAppointmentsPage = () => {
     const getStatusStyle = (status) => {
         switch (status) {
             case 'confirmed': return 'bg-green-100 text-green-800 border-green-200';
-            case 'cancelled': return 'bg-red-100 text-red-800 border-red-200';
-            case 'completed': return 'bg-blue-100 text-blue-800 border-blue-200';
+            case 'rejected': return 'bg-red-100 text-red-800 border-red-200';
+            case 'cancelled': return 'bg-gray-100 text-gray-800 border-gray-200';
+            case 'visited': return 'bg-purple-100 text-purple-800 border-purple-200';
             default: return 'bg-yellow-100 text-yellow-800 border-yellow-200';
         }
     };
@@ -116,16 +117,11 @@ const MyAppointmentsPage = () => {
                                     </div>
 
                                     {appointment.message && (
-                                        <div className="mt-8 p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                        <div className="mt-8 p-4 bg-gray-50 rounded-xl border border-gray-100 overflow-auto max-h-40">
                                             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Your Message</p>
-                                            <p className="text-sm text-gray-600 italic">"{appointment.message}"</p>
+                                            <p className="text-sm text-gray-600 italic break-words">"{appointment.message}"</p>
                                         </div>
                                     )}
-                                </div>
-                                <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end">
-                                    <button className="text-xs font-bold text-red-600 hover:text-red-700 uppercase tracking-wider">
-                                        Cancel Appointment
-                                    </button>
                                 </div>
                             </div>
                         ))}
