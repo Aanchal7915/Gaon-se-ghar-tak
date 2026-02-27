@@ -8,6 +8,7 @@ import {
   HiOutlineSearch,
   HiOutlineHeart,
   HiChevronRight,
+  HiOutlineLocationMarker,
 } from "react-icons/hi";
 import { useCart } from "../context/CartContext";
 import { useLocation } from "react-router-dom";
@@ -32,6 +33,21 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [animateCart, setAnimateCart] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [pincode, setPincode] = useState("");
+  const [isDeliverable, setIsDeliverable] = useState(null);
+
+  const handlePincodeChange = (e) => {
+    const val = e.target.value.replace(/\D/g, "");
+    if (val.length <= 6) {
+      setPincode(val);
+      if (val.length === 6) {
+        // Mocking behavior: pincodes starting with 1, 2, or 4 are deliverable
+        setIsDeliverable(val.startsWith("1") || val.startsWith("2") || val.startsWith("4"));
+      } else {
+        setIsDeliverable(null);
+      }
+    }
+  };
 
   // Fetch categories for the menu
   useEffect(() => {
@@ -131,13 +147,13 @@ const Header = () => {
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex flex-1 justify-center">
-          <ul className="flex items-center space-x-8">
+        <nav className="hidden md:flex flex-1 justify-center px-2">
+          <ul className="flex items-center space-x-3 lg:space-x-5">
             {navLinks.map((link) => (
               <li key={link.name}>
                 <Link
                   to={link.path}
-                  className="font-medium text-gray-600 hover:text-green-800 transition-colors duration-200"
+                  className="font-medium text-[11px] lg:text-sm text-gray-600 hover:text-green-800 transition-colors duration-200 whitespace-nowrap"
                 >
                   {link.name}
                 </Link>
@@ -147,18 +163,35 @@ const Header = () => {
         </nav>
 
         {/* Right actions (desktop) */}
-        <div className="hidden md:flex items-center space-x-6">
+        <div className="hidden md:flex items-center space-x-3 lg:space-x-6">
+          {/* Pincode Search Bar */}
+          <div className="flex items-center rounded-full bg-white/70 backdrop-blur px-3 py-1 border border-transparent focus-within:border-green-300 transition-all duration-200 shadow-sm">
+            <HiOutlineLocationMarker className="text-red-600 w-3.5 h-3.5 mr-1.5 shrink-0" />
+            <input
+              type="text"
+              placeholder="Pincode"
+              className="bg-transparent outline-none text-[11px] w-14 py-1"
+              maxLength="6"
+              value={pincode}
+              onChange={handlePincodeChange}
+            />
+            {isDeliverable !== null && (
+              <span className={`ml-1 text-[8px] lg:text-[9px] font-bold ${isDeliverable ? "text-green-600" : "text-red-500"} whitespace-nowrap`}>
+                {isDeliverable ? "Available" : "Not Available"}
+              </span>
+            )}
+          </div>
           <form
             onSubmit={handleSearch}
             className="flex items-center rounded-full bg-white/70 backdrop-blur px-3 py-1 border border-transparent focus-within:border-green-300 transition-all duration-200 shadow-sm"
           >
-            <HiOutlineSearch className="text-gray-500 mr-2" />
+            <HiOutlineSearch className="text-gray-500 mr-1.5 w-3.5 h-3.5" />
             <input
               type="text"
-              placeholder="Search products..."
+              placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent outline-none w-40 text-sm py-1"
+              className="bg-transparent outline-none w-20 lg:w-32 text-[11px] py-1"
             />
           </form>
 
@@ -205,18 +238,35 @@ const Header = () => {
         </div>
 
         {/* Mobile icons */}
-        <div className="md:hidden flex items-center space-x-2">
-          <button onClick={toggleSearch} className="text-gray-600 p-2"><HiOutlineSearch className="w-6 h-6" /></button>
-          <Link to="/cart" className="relative text-gray-600 p-2">
-            <HiOutlineShoppingCart className="w-6 h-6" />
+        <div className="md:hidden flex items-center space-x-1.5">
+          {/* Mobile Pincode Search */}
+          <div className="flex items-center bg-white/70 backdrop-blur border border-transparent rounded-full px-1.5 py-0.5 mr-1 shadow-sm">
+            <HiOutlineLocationMarker className="text-red-600 w-3 h-3 mr-0.5" />
+            <input
+              type="text"
+              placeholder="Zip"
+              className="bg-transparent outline-none text-[9px] w-10"
+              maxLength="6"
+              value={pincode}
+              onChange={handlePincodeChange}
+            />
+            {isDeliverable !== null && (
+              <span className={`ml-1 text-[6px] font-bold ${isDeliverable ? "text-green-600" : "text-red-500"} whitespace-nowrap`}>
+                {isDeliverable ? "Available" : "Not Available"}
+              </span>
+            )}
+          </div>
+          <button onClick={toggleSearch} className="text-gray-600 p-1"><HiOutlineSearch className="w-5 h-5" /></button>
+          <Link to="/cart" className="relative text-gray-600 p-1">
+            <HiOutlineShoppingCart className="w-5 h-5" />
             {cartCount > 0 && (
-              <span className="absolute top-1 right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
+              <span className="absolute top-0 right-0 bg-red-500 text-white text-[10px] rounded-full w-3.5 h-3.5 flex items-center justify-center">
                 {cartCount}
               </span>
             )}
           </Link>
-          <button onClick={toggleMenu} className="text-gray-600 p-2">
-            {isMenuOpen ? <HiOutlineX className="w-7 h-7" /> : <HiOutlineMenu className="w-7 h-7" />}
+          <button onClick={toggleMenu} className="text-gray-600 p-1">
+            {isMenuOpen ? <HiOutlineX className="w-6 h-6" /> : <HiOutlineMenu className="w-6 h-6" />}
           </button>
         </div>
       </div>

@@ -32,6 +32,9 @@ exports.getOrderStatus = async (req, res) => {
   return res.json({ isOpen: true, reason: '' });
 };
 
+// Allowed Pincodes (Rohtak & Surrounding Areas)
+const ALLOWED_PINCODES = ['124001', '124021', '124401', '124406', '124411', '124113', '124002', '124003', '124501', '124022'];
+
 exports.createOrder = async (req, res) => {
   // Check Order Timing: 12:00 PM to 6:00 PM (18:00)
   const currentTime = moment();
@@ -50,8 +53,13 @@ exports.createOrder = async (req, res) => {
     return res.status(403).json({ message: 'Orders full for today. Please try again tomorrow.' });
   }
 
-  // CORRECTED: Accept customerInfo from the request body
   const { orderItems, shippingAddress, totalPrice, customerLocation, customerInfo } = req.body;
+
+  // Pincode Validation
+  if (!shippingAddress || !shippingAddress.postalCode || !ALLOWED_PINCODES.includes(shippingAddress.postalCode.toString().trim())) {
+    return res.status(400).json({ message: 'Delivery not available at your location. We currently serve only in Rohtak and surrounding areas.' });
+  }
+
   if (!orderItems || orderItems.length === 0) {
     return res.status(400).json({ message: 'No order items' });
   }

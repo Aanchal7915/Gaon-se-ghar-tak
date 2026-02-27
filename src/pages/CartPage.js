@@ -56,6 +56,13 @@ const CartPage = () => {
 
     const handleCheckout = async (e) => {
         e.preventDefault();
+
+        const allowedPincodes = ['124001', '124021', '124401', '124406', '124411', '124113', '124002', '124003', '124501', '124022'];
+        if (!allowedPincodes.includes(shippingAddress.postalCode.trim())) {
+            alert('Delivery not available at your location. We currently serve only in Rohtak and surrounding areas.');
+            return;
+        }
+
         const token = localStorage.getItem('token');
         if (!token) {
             alert('Please log in to checkout.');
@@ -292,14 +299,22 @@ const CartPage = () => {
                                             className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all outline-none"
                                             required
                                         />
-                                        <input
-                                            type="text"
-                                            value={shippingAddress.postalCode}
-                                            onChange={(e) => setShippingAddress({ ...shippingAddress, postalCode: e.target.value })}
-                                            placeholder="Postal Code"
-                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all outline-none"
-                                            required
-                                        />
+                                        <div className="flex flex-col">
+                                            <input
+                                                type="text"
+                                                value={shippingAddress.postalCode}
+                                                onChange={(e) => setShippingAddress({ ...shippingAddress, postalCode: e.target.value })}
+                                                placeholder="Postal Code"
+                                                className={`w-full px-4 py-3 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all outline-none ${shippingAddress.postalCode && !['124001', '124021', '124401', '124406', '124411', '124113', '124002', '124003', '124501', '124022'].includes(shippingAddress.postalCode.trim())
+                                                    ? 'border-red-500'
+                                                    : 'border-gray-200'
+                                                    }`}
+                                                required
+                                            />
+                                            {shippingAddress.postalCode && !['124001', '124021', '124401', '124406', '124411', '124113', '124002', '124003', '124501', '124022'].includes(shippingAddress.postalCode.trim()) && (
+                                                <p className="text-[10px] text-red-500 mt-1 font-bold italic">Delivery not available at your location</p>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
 
@@ -313,8 +328,8 @@ const CartPage = () => {
                                         type="submit"
                                         disabled={!orderStatus.isOpen}
                                         className={`w-full py-4 rounded-xl font-bold text-lg shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 ${orderStatus.isOpen
-                                                ? 'bg-green-600 text-white hover:bg-green-700 hover:shadow-green-500/30'
-                                                : 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                                            ? 'bg-green-600 text-white hover:bg-green-700 hover:shadow-green-500/30'
+                                            : 'bg-gray-400 text-gray-200 cursor-not-allowed'
                                             }`}
                                     >
                                         {orderStatus.isOpen ? 'Proceed to Checkout' : orderStatus.reason}
