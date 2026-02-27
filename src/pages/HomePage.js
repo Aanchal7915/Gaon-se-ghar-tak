@@ -11,10 +11,11 @@ const HomePage = () => {
     return (
         <div className="flex flex-col min-h-screen">
             <HeroSection />
-            <UpcomingSection />
+            <div id="debug-check" className="hidden">v1.2</div>
             <FeaturedProductsSection />
             <BestsellerProductsSection />
             <NewReleaseProductsSection />
+            <UpcomingSection />
             <VisitInStoreSection />
             <TestimonialSlider />
         </div>

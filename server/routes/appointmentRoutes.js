@@ -5,5 +5,6 @@ const { protect, admin } = require('../middlewares/authMiddleware');
 
 router.post('/', appointmentController.createAppointment);
 router.get('/', protect, admin, appointmentController.getAppointments);
+router.get('/my-appointments', protect, appointmentController.getUserAppointments);
 
 module.exports = router;

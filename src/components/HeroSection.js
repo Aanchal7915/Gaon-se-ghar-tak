@@ -67,6 +67,12 @@ const HeroSection = () => {
         >
           {/* Content Left */}
           <div className="relative z-10 w-full md:w-[60%] px-4 md:px-16 flex flex-col justify-center">
+            <div className="mb-2 md:mb-4">
+              <span className="bg-yellow-400 text-black text-[8px] md:text-[12px] font-black px-3 py-1 rounded-full shadow-md uppercase tracking-widest inline-flex items-center">
+                <span className="mr-1.5 w-2 h-2 bg-green-700 rounded-full animate-pulse"></span>
+                Shop open at 12pm and close at 6 pm
+              </span>
+            </div>
             <h2 className="text-lg md:text-3xl lg:text-5xl font-extrabold text-white leading-tight mb-1 md:mb-4 drop-shadow-md">
               Stock up on daily essentials
             </h2>

@@ -171,6 +171,12 @@ const Header = () => {
               >
                 <HiOutlineUser className="w-6 h-6" />
               </Link>
+              <Link
+                to="/my-appointments"
+                className="text-gray-600 hover:text-green-800 transition-colors text-sm font-medium"
+              >
+                Your Appointment
+              </Link>
               <button
                 onClick={handleLogout}
                 className="text-gray-600 hover:text-green-800 transition-colors text-sm font-medium"
@@ -359,6 +365,9 @@ const Header = () => {
                   <Link to="/wishlist" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
                     <span className="text-sm font-medium">Wishlist</span>
                   </Link>
+                  <Link to="/my-appointments" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
+                    <span className="text-sm font-medium">Your Appointment</span>
+                  </Link>
                 </div>
                 <div className="space-y-3">
                   <Link
@@ -401,6 +410,9 @@ const Header = () => {
                   </Link>
                   <Link to="/wishlist" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
                     <span className="text-sm font-medium">Wishlist</span>
+                  </Link>
+                  <Link to="/my-appointments" onClick={toggleMenu} className="flex items-center p-2 text-gray-700 hover:bg-white rounded-lg transition-all">
+                    <span className="text-sm font-medium">Your Appointment</span>
                   </Link>
                 </div>
                 <Link

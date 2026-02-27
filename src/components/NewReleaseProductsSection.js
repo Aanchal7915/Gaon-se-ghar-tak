@@ -25,7 +25,7 @@ const NewReleaseProductsSection = () => {
     if (products.length === 0) return null;
 
     return (
-        <section className="pt-2 pb-8 bg-white border-t border-gray-50">
+        <section className="pt-0 pb-12 bg-white overflow-hidden border-t border-gray-50">
             <div className="container mx-auto px-4">
                 <div className="flex flex-col mb-4">
                     <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight mb-2">

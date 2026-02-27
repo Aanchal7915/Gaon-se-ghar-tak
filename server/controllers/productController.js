@@ -232,7 +232,7 @@ exports.getRecentProducts = async (req, res) => {
   const limit = parseInt(req.query.limit, 10) || 20; // Default to 20 products
 
   // The key change: add .populate('category', 'name')
-  const products = await Product.find({})
+  const products = await Product.find({ isComingSoon: { $ne: true } })
     .sort({ createdAt: -1 }) // Sort by creation date, newest first
     .limit(limit)
     .populate('category', 'name') // This populates the category field

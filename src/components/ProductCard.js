@@ -445,9 +445,7 @@ const ProductCard = ({ product }) => {
           {/* ADD Button or Counter */}
           <div className="relative z-20 flex justify-end">
             {isComingSoon ? (
-              <span className="px-1 py-0.5 sm:px-2 sm:py-1 rounded border border-gray-400 text-gray-500 bg-gray-100 font-bold text-[6px] sm:text-[9px] shadow-sm uppercase tracking-wider">
-                Soon
-              </span>
+              null
             ) : qty === 0 ? (
               <button
                 onClick={handleAdd}
