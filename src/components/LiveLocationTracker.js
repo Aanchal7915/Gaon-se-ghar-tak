@@ -12,7 +12,7 @@ const LiveLocationTracker = () => {
     useEffect(() => {
         const currentUser = JSON.parse(localStorage.getItem('user'));
         setUser(currentUser);
-        
+
         if (!currentUser || currentUser.role !== 'delivery') {
             setStatus('You must be a delivery partner to use this feature.');
             return;
@@ -23,7 +23,7 @@ const LiveLocationTracker = () => {
                 const { latitude, longitude } = position.coords;
                 setLocation({ latitude, longitude });
                 setStatus('Tracking your location...');
-                
+
                 // Send the location to the backend via Socket.IO
                 socket.emit('update-location', {
                     deliveryPersonId: currentUser.id,
