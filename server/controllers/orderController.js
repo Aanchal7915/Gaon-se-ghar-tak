@@ -70,6 +70,9 @@ exports.createOrder = async (req, res) => {
   try {
     const orderNumber = `ORD-${Date.now()}`;
     const validatedOrderItems = [];
+    const nextDay = moment().add(1, 'day').startOf('day');
+    const deliveryWindowStart = nextDay.clone().hour(10).minute(0).second(0).millisecond(0);
+    const deliveryWindowEnd = nextDay.clone().hour(18).minute(0).second(0).millisecond(0);
 
     for (const item of orderItems) {
       const product = await Product.findById(item.product).session(session);
@@ -110,7 +113,10 @@ exports.createOrder = async (req, res) => {
       customerInfo: {
         name: customerInfo.name,
         phone: customerInfo.phone
-      }
+      },
+      expectedDeliveryDate: nextDay.toDate(),
+      deliveryWindowStart: deliveryWindowStart.toDate(),
+      deliveryWindowEnd: deliveryWindowEnd.toDate()
     });
 
     const createdOrder = await order.save({ session });
@@ -425,4 +431,3 @@ exports.getCancelledOrders = async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 };
-

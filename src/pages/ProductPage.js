@@ -29,6 +29,7 @@ const ProductPage = () => {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   const { user, wishlist, fetchWishlist } = useAuth();
+  const isAuthenticated = Boolean(user || localStorage.getItem("token"));
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [heartAnimation, setHeartAnimation] = useState(false);
 
@@ -116,7 +117,7 @@ const ProductPage = () => {
   }, [id, user, wishlist]);
 
   const handleAddToCart = () => {
-    if (!user) {
+    if (!isAuthenticated) {
       alert("Please login to add items to cart.");
       return;
     }
@@ -141,6 +142,12 @@ const ProductPage = () => {
   const isVideo = (url) => {
     const videoExtensions = [".mp4", ".mov", ".webm", ".ogg"];
     return videoExtensions.some((ext) => url.endsWith(ext));
+  };
+
+  const maskPhoneNumber = (phone = "") => {
+    const digits = String(phone).replace(/\D/g, "");
+    if (digits.length <= 4) return digits;
+    return `${"*".repeat(digits.length - 4)}${digits.slice(-4)}`;
   };
 
   const nextImage = () => {
@@ -518,16 +525,22 @@ const ProductPage = () => {
             {/* Video Showcase Card */}
             <div className="bg-white rounded-2xl p-4 md:p-6 border border-gray-100 shadow-sm">
               <h3 className="text-sm md:text-base font-bold text-gray-900 mb-3 flex items-center">
-                <span className="mr-2">🎬</span> Video Showcase
+                <span className="mr-2">🖼️</span> Media Showcase
               </h3>
               <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-md bg-black">
-                {product.videoUrl.includes('youtube.com') || product.videoUrl.includes('youtu.be') ? (
+                {(product.videoUrl.includes('youtube.com') || product.videoUrl.includes('youtu.be')) ? (
                   <iframe
                     src={product.videoUrl.replace('watch?v=', 'embed/').split('&')[0]}
                     title="Product Video"
                     className="absolute top-0 left-0 w-full h-full"
                     allowFullScreen
                   ></iframe>
+                ) : (/\.(jpg|jpeg|png|gif|webp|avif|svg)(\?.*)?$/i.test(product.videoUrl) || product.videoUrl.includes('/image/upload/')) ? (
+                  <img
+                    src={product.videoUrl}
+                    alt={`${product.name} showcase`}
+                    className="absolute top-0 left-0 w-full h-full object-contain bg-white"
+                  />
                 ) : (
                   <video
                     src={product.videoUrl}
@@ -550,30 +563,44 @@ const ProductPage = () => {
                 Go beyond the product and witness the purity firsthand. Join us for a personalized farm tour where you can see our heritage practices in action, connect with nature, and explore our chemical-free ecosystem through traditional farming techniques.
               </p>
 
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8 w-full max-w-4xl">
-                <div className="flex items-center gap-2 bg-green-50/50 p-2.5 rounded-lg border border-green-100/50">
-                  <span className="text-green-600 font-bold text-[10px] md:text-xs">✓</span>
-                  <span className="text-[9px] md:text-[11px] text-gray-700 font-semibold text-left">Guided Field Tours</span>
-                </div>
-                <div className="flex items-center gap-2 bg-green-50/50 p-2.5 rounded-lg border border-green-100/50">
-                  <span className="text-green-600 font-bold text-[10px] md:text-xs">✓</span>
-                  <span className="text-[9px] md:text-[11px] text-gray-700 font-semibold text-left">Expert Consulting</span>
-                </div>
-                <div className="flex items-center gap-2 bg-green-50/50 p-2.5 rounded-lg border border-green-100/50">
-                  <span className="text-green-600 font-bold text-[10px] md:text-xs">✓</span>
-                  <span className="text-[9px] md:text-[11px] text-gray-700 font-semibold text-left">Seasonal Harvesting</span>
-                </div>
-                <div className="flex items-center gap-2 bg-green-50/50 p-2.5 rounded-lg border border-green-100/50">
-                  <span className="text-green-600 font-bold text-[10px] md:text-xs">✓</span>
-                  <span className="text-[9px] md:text-[11px] text-gray-700 font-semibold text-left">Cattle Interaction</span>
-                </div>
-                <div className="flex items-center gap-2 bg-green-50/50 p-2.5 rounded-lg border border-green-100/50">
-                  <span className="text-green-600 font-bold text-[10px] md:text-xs">✓</span>
-                  <span className="text-[9px] md:text-[11px] text-gray-700 font-semibold text-left">Organic Diet Tips</span>
-                </div>
-                <div className="flex items-center gap-2 bg-green-50/50 p-2.5 rounded-lg border border-green-100/50">
-                  <span className="text-green-600 font-bold text-[10px] md:text-xs">✓</span>
-                  <span className="text-[9px] md:text-[11px] text-gray-700 font-semibold text-left">Natural Composting</span>
+              <div className="w-full max-w-4xl mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="rounded-xl border border-green-100 bg-green-50/40 p-4 text-left">
+                    <h4 className="text-sm md:text-base font-bold text-green-800 mb-3">Farmer Details</h4>
+                    <div className="grid grid-cols-1 gap-2 text-xs md:text-sm text-gray-700">
+                      {product.farmerName && <p><span className="font-semibold">Name:</span> {product.farmerName}</p>}
+                      {product.farmerEmail && <p><span className="font-semibold">Email:</span> {product.farmerEmail}</p>}
+                      {product.farmerPhone && <p><span className="font-semibold">Contact:</span> {maskPhoneNumber(product.farmerPhone)}</p>}
+                      {product.farmerLocation && <p><span className="font-semibold">Location:</span> {product.farmerLocation}</p>}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="flex items-center gap-2 bg-green-50/50 p-2.5 rounded-lg border border-green-100/50">
+                      <span className="text-green-600 font-bold text-[10px] md:text-xs">✓</span>
+                      <span className="text-[9px] md:text-[11px] text-gray-700 font-semibold text-left">Guided Field Tours</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-green-50/50 p-2.5 rounded-lg border border-green-100/50">
+                      <span className="text-green-600 font-bold text-[10px] md:text-xs">✓</span>
+                      <span className="text-[9px] md:text-[11px] text-gray-700 font-semibold text-left">Expert Consulting</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-green-50/50 p-2.5 rounded-lg border border-green-100/50">
+                      <span className="text-green-600 font-bold text-[10px] md:text-xs">✓</span>
+                      <span className="text-[9px] md:text-[11px] text-gray-700 font-semibold text-left">Seasonal Harvesting</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-green-50/50 p-2.5 rounded-lg border border-green-100/50">
+                      <span className="text-green-600 font-bold text-[10px] md:text-xs">✓</span>
+                      <span className="text-[9px] md:text-[11px] text-gray-700 font-semibold text-left">Cattle Interaction</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-green-50/50 p-2.5 rounded-lg border border-green-100/50">
+                      <span className="text-green-600 font-bold text-[10px] md:text-xs">✓</span>
+                      <span className="text-[9px] md:text-[11px] text-gray-700 font-semibold text-left">Organic Diet Tips</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-green-50/50 p-2.5 rounded-lg border border-green-100/50">
+                      <span className="text-green-600 font-bold text-[10px] md:text-xs">✓</span>
+                      <span className="text-[9px] md:text-[11px] text-gray-700 font-semibold text-left">Natural Composting</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 

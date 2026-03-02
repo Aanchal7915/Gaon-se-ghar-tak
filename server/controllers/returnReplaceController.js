@@ -4,13 +4,40 @@ const ReturnReplace = require('../models/ReturnReplace');
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 const moment = require('moment');
+const cloudinary = require('../config/cloudinary');
+const { Readable } = require('stream');
+
+const bufferUpload = (buffer, folder) => {
+    return new Promise((resolve, reject) => {
+        const readable = new Readable();
+        readable.push(buffer);
+        readable.push(null);
+        readable.pipe(
+            cloudinary.uploader.upload_stream(
+                { resource_type: "auto", folder },
+                (error, result) => {
+                    if (error) reject(error);
+                    resolve(result);
+                }
+            )
+        );
+    });
+};
 
 // User requests a return or replacement
 const requestReturnReplace = async (req, res) => {
-    const { orderId, type, reason, replacedProductInfo, originalItem } = req.body;
+    const parsedOriginalItem =
+        typeof req.body.originalItem === 'string' ? JSON.parse(req.body.originalItem) : req.body.originalItem;
+    const parsedReplacedProductInfo =
+        typeof req.body.replacedProductInfo === 'string' ? JSON.parse(req.body.replacedProductInfo) : req.body.replacedProductInfo;
+    const { orderId, type, reason } = req.body;
     const userId = req.user._id;
 
     try {
+        if (type === 'return' && (!req.files || req.files.length === 0)) {
+            return res.status(400).json({ message: 'Please upload product images for return request.' });
+        }
+
         const order = await Order.findById(orderId);
         if (!order) return res.status(404).json({ message: 'Order not found' });
 
@@ -20,12 +47,20 @@ const requestReturnReplace = async (req, res) => {
 
         const existingRequest = await ReturnReplace.findOne({
             order: orderId,
-            'originalItem.product': originalItem.product,
-            'originalItem.size': originalItem.size,
+            'originalItem.product': parsedOriginalItem.product,
+            'originalItem.size': parsedOriginalItem.size,
             status: { $in: ['pending', 'out for pickup'] }
         });
         if (existingRequest) {
             return res.status(400).json({ message: 'A return/replace request is already in progress for this particular item.' });
+        }
+
+        const uploadedReturnImages = [];
+        if (type === 'return' && req.files && req.files.length > 0) {
+            for (const file of req.files) {
+                const result = await bufferUpload(file.buffer, process.env.CLOUDINARY_FOLDER);
+                uploadedReturnImages.push(result.secure_url);
+            }
         }
 
         // if (type === 'replace' && order.isReplaced) {
@@ -41,8 +76,9 @@ const requestReturnReplace = async (req, res) => {
             user: userId,
             type,
             reason,
-            originalItem,
-            replacedItem: type === 'replace' ? replacedProductInfo : undefined
+            originalItem: parsedOriginalItem,
+            replacedItem: type === 'replace' ? parsedReplacedProductInfo : undefined,
+            returnImages: uploadedReturnImages
         });
 
         await returnReplaceRequest.save();
@@ -446,5 +482,4 @@ module.exports = {
     getAdminAssignedPickups,
     updatePickupStatusByAdmin
 };
-
 

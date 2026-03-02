@@ -26,6 +26,10 @@ const productSchema = new mongoose.Schema({
     countInStock: { type: Number, required: true, default: 0 },
   }],
   videoUrl: { type: String }, // NEW FIELD for video (YouTube/Upload)
+  farmerName: { type: String },
+  farmerPhone: { type: String },
+  farmerLocation: { type: String },
+  farmerEmail: { type: String },
   isComingSoon: { type: Boolean, default: false }, // NEW FIELD for upcoming section
   isFeatured: { type: Boolean, default: false },
   isBestseller: { type: Boolean, default: false },

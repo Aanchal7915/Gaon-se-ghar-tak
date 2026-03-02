@@ -63,7 +63,23 @@ exports.deleteProduct = async (req, res) => {
 };
 
 exports.createProduct = async (req, res) => {
-  const { name, description, brand, category, gender, subCategory, variants, isFeatured, isBestseller, videoUrl, isComingSoon } = req.body;
+  const {
+    name,
+    description,
+    brand,
+    category,
+    gender,
+    subCategory,
+    variants,
+    isFeatured,
+    isBestseller,
+    videoUrl,
+    isComingSoon,
+    farmerName,
+    farmerPhone,
+    farmerLocation,
+    farmerEmail,
+  } = req.body;
 
   if (!category || !gender) {
     return res.status(400).json({ message: 'Category and gender are required.' });
@@ -94,6 +110,10 @@ exports.createProduct = async (req, res) => {
       images: fileUrls,
       variants: JSON.parse(variants),
       videoUrl: uploadedVideoUrl,
+      farmerName,
+      farmerPhone,
+      farmerLocation,
+      farmerEmail,
       isComingSoon: isComingSoon === 'true' || isComingSoon === true,
       isFeatured: isFeatured === 'true' || isFeatured === true,
       isBestseller: isBestseller === 'true' || isBestseller === true,
@@ -111,7 +131,23 @@ exports.createProduct = async (req, res) => {
 };
 
 exports.updateProduct = async (req, res) => {
-  const { name, description, brand, category, gender, subCategory, variants, isFeatured, isBestseller, videoUrl, isComingSoon } = req.body;
+  const {
+    name,
+    description,
+    brand,
+    category,
+    gender,
+    subCategory,
+    variants,
+    isFeatured,
+    isBestseller,
+    videoUrl,
+    isComingSoon,
+    farmerName,
+    farmerPhone,
+    farmerLocation,
+    farmerEmail,
+  } = req.body;
 
   try {
     const product = await Product.findById(req.params.id);
@@ -146,6 +182,10 @@ exports.updateProduct = async (req, res) => {
     product.images = fileUrls;
     product.variants = variants ? JSON.parse(variants) : product.variants;
     product.videoUrl = updatedVideoUrl;
+    product.farmerName = farmerName !== undefined ? farmerName : product.farmerName;
+    product.farmerPhone = farmerPhone !== undefined ? farmerPhone : product.farmerPhone;
+    product.farmerLocation = farmerLocation !== undefined ? farmerLocation : product.farmerLocation;
+    product.farmerEmail = farmerEmail !== undefined ? farmerEmail : product.farmerEmail;
     product.isComingSoon = isComingSoon !== undefined ? (isComingSoon === 'true' || isComingSoon === true) : product.isComingSoon;
     product.isFeatured = isFeatured !== undefined ? (isFeatured === 'true' || isFeatured === true) : product.isFeatured;
     product.isBestseller = isBestseller !== undefined ? (isBestseller === 'true' || isBestseller === true) : product.isBestseller;

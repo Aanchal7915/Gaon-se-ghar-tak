@@ -371,6 +371,7 @@ const MyOrdersPage = () => {
     const [requestReason, setRequestReason] = useState('');
     const [requestMessage, setRequestMessage] = useState('');
     const [selectedItem, setSelectedItem] = useState(null);
+    const [returnImages, setReturnImages] = useState([]);
 
     const [availableSizes, setAvailableSizes] = useState([]);
     const [selectedSize, setSelectedSize] = useState('');
@@ -408,6 +409,7 @@ const MyOrdersPage = () => {
         setRequestType(type);
         setRequestReason('');
         setSelectedSize('');
+        setReturnImages([]);
 
         if (type === 'replace') {
             try {
@@ -461,14 +463,34 @@ const MyOrdersPage = () => {
                     product: selectedItem.product?._id || selectedItem.product,
                     size: selectedSize,
                 };
+                await apiClient.post('/return-replace/request', payload, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+            } else {
+                if (returnImages.length === 0) {
+                    setRequestMessage('Please upload product images for return request.');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('orderId', payload.orderId);
+                formData.append('type', payload.type);
+                formData.append('reason', payload.reason);
+                formData.append('originalItem', JSON.stringify(payload.originalItem));
+                returnImages.forEach((file) => formData.append('returnImages', file));
+
+                await apiClient.post('/return-replace/request', formData, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
             }
 
-            await apiClient.post('/return-replace/request', payload, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-
-            setRequestMessage('Request submitted successfully!');
+            setRequestMessage(
+                requestType === 'return'
+                    ? 'Return request submitted. Please wait for approval request.'
+                    : 'Request submitted successfully!'
+            );
             setShowRequestModal(false);
+            setReturnImages([]);
             fetchMyOrdersAndRequests();
         } catch (err) {
             setRequestMessage(err.response?.data?.message || 'Failed to submit request.');
@@ -515,6 +537,17 @@ const MyOrdersPage = () => {
         }
     };
 
+    const getDeliveryWindowText = (order) => {
+        const start = order.deliveryWindowStart
+            ? moment(order.deliveryWindowStart)
+            : moment(order.createdAt).add(1, 'day').hour(10).minute(0).second(0).millisecond(0);
+        const end = order.deliveryWindowEnd
+            ? moment(order.deliveryWindowEnd)
+            : moment(order.createdAt).add(1, 'day').hour(18).minute(0).second(0).millisecond(0);
+
+        return `${start.format('MMMM Do YYYY')}, ${start.format('h:mm A')} - ${end.format('h:mm A')}`;
+    };
+
     if (loading) return <LoadingSpinner />;
     if (error) return <div className="text-center text-red-500 mt-10">{error}</div>;
 
@@ -553,6 +586,10 @@ const MyOrdersPage = () => {
                                         </h2>
                                         <p className="text-sm text-gray-500 mt-1">
                                             Placed on: {moment(order.createdAt).format('MMMM Do YYYY, h:mm a')}
+                                        </p>
+                                        <p className="text-sm text-gray-500 mt-1 flex items-center gap-2">
+                                            <FaClock className="text-gray-400" />
+                                            Expected Delivery: {getDeliveryWindowText(order)}
                                         </p>
                                     </div>
                                     <span className={`px-4 py-1 rounded-full text-sm font-semibold capitalize ${getStatusColor(order.status)}`}>
@@ -732,6 +769,21 @@ const MyOrdersPage = () => {
                                     required
                                 />
                             </div>
+                            {requestType === 'return' && (
+                                <div className="mb-6">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                        Upload Product Images (Required)
+                                    </label>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        multiple
+                                        onChange={(e) => setReturnImages(Array.from(e.target.files || []))}
+                                        className="shadow border rounded-lg w-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                                        required
+                                    />
+                                </div>
+                            )}
                             <div className="flex justify-end space-x-4">
                                 <button
                                     type="button"

@@ -17,6 +17,10 @@ const ProductManagement = () => {
     isFeatured: false,
     isBestseller: false,
     videoUrl: '',
+    farmerName: '',
+    farmerPhone: '',
+    farmerLocation: '',
+    farmerEmail: '',
     isComingSoon: false,
   });
   const [newCategoryName, setNewCategoryName] = useState('');
@@ -136,6 +140,10 @@ const ProductManagement = () => {
       isFeatured: product.isFeatured || false,
       isBestseller: product.isBestseller || false,
       videoUrl: product.videoUrl || '',
+      farmerName: product.farmerName || '',
+      farmerPhone: product.farmerPhone || '',
+      farmerLocation: product.farmerLocation || '',
+      farmerEmail: product.farmerEmail || '',
       isComingSoon: product.isComingSoon || false,
     });
     setVariants(product.variants.map(v => ({
@@ -191,7 +199,22 @@ const ProductManagement = () => {
 
   const resetForm = () => {
     setEditingProduct(null);
-    setFormData({ name: '', description: '', brand: '', category: '', gender: '', subCategory: '', isFeatured: false, isBestseller: false, videoUrl: '', isComingSoon: false });
+    setFormData({
+      name: '',
+      description: '',
+      brand: '',
+      category: '',
+      gender: '',
+      subCategory: '',
+      isFeatured: false,
+      isBestseller: false,
+      videoUrl: '',
+      farmerName: '',
+      farmerPhone: '',
+      farmerLocation: '',
+      farmerEmail: '',
+      isComingSoon: false
+    });
     setVariants([{ size: '', price: '', originalPrice: '', countInStock: '' }]);
     setImages([]);
     setImagePreviews([]);
@@ -355,7 +378,7 @@ const ProductManagement = () => {
           <input
             type="file"
             name="video"
-            accept="video/*"
+            accept="video/*,image/*"
             onChange={handleVideoChange}
             className="w-full p-2 border rounded-md border-blue-300"
           />
@@ -363,6 +386,40 @@ const ProductManagement = () => {
             <p className="text-xs text-blue-600">Current video: {formData.videoUrl}</p>
           )}
         </div>
+
+        <h3 className="text-lg font-semibold">Farmer Details</h3>
+        <input
+          type="text"
+          name="farmerName"
+          value={formData.farmerName}
+          onChange={handleInputChange}
+          placeholder="Farmer Name"
+          className="w-full p-2 border rounded-md"
+        />
+        <input
+          type="text"
+          name="farmerPhone"
+          value={formData.farmerPhone}
+          onChange={handleInputChange}
+          placeholder="Farmer Contact Number"
+          className="w-full p-2 border rounded-md"
+        />
+        <input
+          type="text"
+          name="farmerLocation"
+          value={formData.farmerLocation}
+          onChange={handleInputChange}
+          placeholder="Farmer Location"
+          className="w-full p-2 border rounded-md"
+        />
+        <input
+          type="email"
+          name="farmerEmail"
+          value={formData.farmerEmail}
+          onChange={handleInputChange}
+          placeholder="Farmer Email"
+          className="w-full p-2 border rounded-md"
+        />
 
         {/* Variants */}
         <h3 className="text-lg font-semibold">Product Variants</h3>

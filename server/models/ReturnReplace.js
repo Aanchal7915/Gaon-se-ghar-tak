@@ -33,6 +33,7 @@ const returnReplaceSchema = new mongoose.Schema({
         product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
         size: { type: String }
     },
+    returnImages: [{ type: String }],
     // Track if a replacement has already been requested to enforce the one-time rule
     isReplaced: { type: Boolean, default: false },
     // A separate delivery person for pickup

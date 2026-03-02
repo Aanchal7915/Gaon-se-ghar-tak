@@ -40,6 +40,9 @@ const orderSchema = new mongoose.Schema({
     isReplaced: { type: Boolean, default: false }, // New field
     isReturned: { type: Boolean, default: false } ,// New field for clarity
     deliveredAt: { type: Date },
+    expectedDeliveryDate: { type: Date },
+    deliveryWindowStart: { type: Date },
+    deliveryWindowEnd: { type: Date },
     assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 }, { timestamps: true });
 

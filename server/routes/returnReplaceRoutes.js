@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const returnReplaceController = require('../controllers/returnReplaceController');
 const { protect, admin, deliveryPerson } = require('../middlewares/authMiddleware');
+const upload = require('../middlewares/uploadMiddleware');
 
 // User routes
-router.post('/request', protect, returnReplaceController.requestReturnReplace);
+router.post('/request', protect, upload.array('returnImages', 5), returnReplaceController.requestReturnReplace);
 router.post('/cancel-request', protect, returnReplaceController.cancelReturnReplaceRequest);
 router.get('/my-requests', protect, returnReplaceController.getMyPendingRequests);
 

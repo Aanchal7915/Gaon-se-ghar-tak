@@ -210,6 +210,7 @@ const ProductCard = ({ product }) => {
 
   const { user, wishlist, fetchWishlist } = useAuth();
   const { cartItems, addToCart, removeFromCart, updateCartQuantity } = useCart();
+  const isAuthenticated = Boolean(user || localStorage.getItem("token"));
 
   const defaultVariant = product.variants && product.variants.length > 0 ? product.variants[0] : null;
   const cartItem = defaultVariant ? cartItems.find((item) => item._id === product._id && item.selectedVariant.size === defaultVariant.size) : null;
@@ -225,7 +226,7 @@ const ProductCard = ({ product }) => {
 
   const handleAdd = (e) => {
     e.preventDefault();
-    if (!user) {
+    if (!isAuthenticated) {
       alert("Please login to add items to cart.");
       return;
     }
@@ -235,7 +236,7 @@ const ProductCard = ({ product }) => {
 
   const handleIncrement = (e) => {
     e.preventDefault();
-    if (!user) {
+    if (!isAuthenticated) {
       alert("Please login to add items to cart.");
       return;
     }
@@ -250,7 +251,7 @@ const ProductCard = ({ product }) => {
 
   const handleDecrement = (e) => {
     e.preventDefault();
-    if (!user) {
+    if (!isAuthenticated) {
       alert("Please login to manage cart.");
       return;
     }
