@@ -1,4 +1,4 @@
-
+﻿
 // const express = require('express');
 // const app = express();
 // const cors = require('cors');
@@ -19,7 +19,7 @@
 
 // // Middleware
 // app.use(express.json());
-// app.use(cookieParser());  // ⬅️ enable cookies
+// app.use(cookieParser());  // â¬…ï¸ enable cookies
 
 //   "http://localhost:3000",
 //   "https://shoes-ecommerce-sohams-projects-32d50290.vercel.app",
@@ -86,7 +86,8 @@ app.use(cookieParser());
 
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://gaon-se-ghar-tak.vercel.app"
+  "https://gaon-se-ghar-tak.vercel.app",
+  "https://gaonseghartak.in"
 ];
 
 app.use(cors({
@@ -119,3 +120,5 @@ app.get('/', (req, res) => {
 });
 
 module.exports = { app, allowedOrigins };
+
+
