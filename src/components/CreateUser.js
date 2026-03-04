@@ -32,21 +32,70 @@ const CreateUser = ({ onUserCreated }) => {
   };
 
   return (
-    <div className="p-6 bg-white shadow-md rounded-lg">
-      <h2 className="text-2xl font-bold mb-4">Create New User Account</h2>
+    <div className="p-5 md:p-8 bg-white shadow-sm border border-gray-100 rounded-2xl md:rounded-[2.5rem] max-w-2xl mx-auto animate-fade-in">
+      <h2 className="text-xl md:text-2xl font-black text-gray-900 mb-6 tracking-tight text-center md:text-left">Create New User Account</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Full Name" className="w-full p-2 border rounded-md" required />
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" className="w-full p-2 border rounded-md" required />
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" className="w-full p-2 border rounded-md" required />
-        <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone Number" className="w-full p-2 border rounded-md" required />
-        <select value={role} onChange={(e) => setRole(e.target.value)} className="w-full p-2 border rounded-md">
-          <option value="customer">Customer</option>
-          <option value="delivery">Delivery Partner</option>
-          <option value="admin">Admin</option>
-        </select>
-        <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Create Account</button>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Full Name"
+            className="w-full p-3 bg-gray-50 border border-gray-100 rounded-xl text-xs font-bold focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all"
+            required
+          />
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email Address"
+            className="w-full p-3 bg-gray-50 border border-gray-100 rounded-xl text-xs font-bold focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all"
+            required
+          />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Secure Password"
+            className="w-full p-3 bg-gray-50 border border-gray-100 rounded-xl text-xs font-bold focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all"
+            required
+          />
+          <input
+            type="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="Phone Number"
+            className="w-full p-3 bg-gray-50 border border-gray-100 rounded-xl text-xs font-bold focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all"
+            required
+          />
+        </div>
+        <div>
+          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 block">Account Role</label>
+          <select
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            className="w-full p-3 bg-gray-50 border border-gray-100 rounded-xl text-xs font-black focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all appearance-none cursor-pointer"
+          >
+            <option value="customer">Customer (Regular User)</option>
+            <option value="delivery">Delivery Partner (Agent)</option>
+            <option value="admin">Admin (Full Access)</option>
+          </select>
+        </div>
+        <button
+          type="submit"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-xl text-xs font-black shadow-lg shadow-blue-600/20 active:scale-[0.98] transition-all uppercase tracking-widest mt-4"
+        >
+          {message === 'User created successfully!' ? 'USER CREATED ✅' : 'CREATE ACCOUNT'}
+        </button>
       </form>
-      {message && <p className="mt-4 text-center text-sm">{message}</p>}
+      {message && (
+        <div className={`mt-6 p-4 rounded-xl text-[10px] font-black uppercase tracking-wider text-center ${message.includes('successfully') ? 'bg-green-50 text-green-600 border border-green-100' : 'bg-red-50 text-red-600 border border-red-100'
+          }`}>
+          {message}
+        </div>
+      )}
     </div>
   );
 };

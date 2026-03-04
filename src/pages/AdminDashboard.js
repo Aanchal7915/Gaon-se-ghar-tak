@@ -14,6 +14,7 @@ import CompletedCancelledRequests from '../components/CompletedCancelledRequests
 import AssignedPickups from './AssignedPickups';
 import AppointmentManagement from '../components/AppointmentManagement';
 import FranchiseStockManagement from '../components/FranchiseStockManagement';
+import { HiMenu, HiX } from 'react-icons/hi';
 
 
 const AdminDashboard = () => {
@@ -30,6 +31,7 @@ const AdminDashboard = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredUnassigned, setFilteredUnassigned] = useState([]);
     const [filteredAssigned, setFilteredAssigned] = useState([]);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const fetchAllData = async () => {
         setLoading(true);
@@ -131,127 +133,210 @@ const AdminDashboard = () => {
     if (error) return <div className="text-center text-red-500 mt-10">{error}</div>;
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
-            <div className="border-b border-gray-200 mb-6">
-                <nav className="-mb-px flex space-x-8 overflow-x-auto">
-                    <button onClick={() => setActiveTab('unassignedOrders')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'unassignedOrders' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Unassigned Deliveries</button>
-                    <button onClick={() => setActiveTab('assignedOrders')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'assignedOrders' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Assigned Deliveries</button>
-                    <button onClick={() => setActiveTab('products')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'products' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Products</button>
-                    <button onClick={() => setActiveTab('users')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'users' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Users</button>
-                    <button onClick={() => setActiveTab('createUser')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'createUser' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Create User</button>
-                    <button onClick={() => setActiveTab('analytics')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'analytics' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Analytics</button>
-                    <button onClick={() => setActiveTab('completedOrders')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'completedOrders' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Completed</button>
-                    <button onClick={() => setActiveTab('cancelledOrders')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'cancelledOrders' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Cancelled</button>
-                    <button onClick={() => setActiveTab('pendingReturns')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'pendingReturns' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Return Requests</button>
-                    <button onClick={() => setActiveTab('assignedPickups')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'assignedPickups' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Pickup Tasks</button>
-                    <button onClick={() => setActiveTab('completedReturns')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'completedReturns' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Completed Returns</button>
-                    <button onClick={() => setActiveTab('cancelledReturns')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'cancelledReturns' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Cancelled Returns</button>
-                    <button onClick={() => setActiveTab('appointments')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'appointments' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Appointments</button>
-                    <button onClick={() => setActiveTab('franchise')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'franchise' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Franchise</button>
+        <div className="container mx-auto px-2 md:px-4 py-4 md:py-8 bg-gray-50 min-h-screen">
+            <div className="flex justify-between items-center mb-6">
+                <h1 className="text-xl md:text-3xl font-black text-gray-900 tracking-tight">Admin Dashboard</h1>
+                <button
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    className="md:hidden p-2 bg-white rounded-lg shadow-sm border border-gray-200 text-gray-600 focus:outline-none"
+                >
+                    {isMenuOpen ? <HiX size={24} /> : <HiMenu size={24} />}
+                </button>
+            </div>
 
+            {/* Mobile Navigation Dropdown */}
+            {isMenuOpen && (
+                <div className="md:hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" onClick={() => setIsMenuOpen(false)}>
+                    <div className="absolute right-0 top-0 h-full w-64 bg-white shadow-2xl p-6 overflow-y-auto animate-slide-left" onClick={e => e.stopPropagation()}>
+                        <div className="flex justify-between items-center mb-8">
+                            <h2 className="text-sm font-black text-gray-400 uppercase tracking-widest">Menu</h2>
+                            <button onClick={() => setIsMenuOpen(false)} className="text-gray-400 hover:text-gray-600">
+                                <HiX size={20} />
+                            </button>
+                        </div>
+                        <nav className="flex flex-col gap-2">
+                            {[
+                                { id: 'unassignedOrders', label: 'Unassigned' },
+                                { id: 'assignedOrders', label: 'Assigned' },
+                                { id: 'products', label: 'Products' },
+                                { id: 'users', label: 'Users' },
+                                { id: 'createUser', label: 'Create User' },
+                                { id: 'analytics', label: 'Analytics' },
+                                { id: 'completedOrders', label: 'Completed' },
+                                { id: 'cancelledOrders', label: 'Cancelled' },
+                                { id: 'pendingReturns', label: 'Returns' },
+                                { id: 'assignedPickups', label: 'Pickups' },
+                                { id: 'completedReturns', label: 'Done Returns' },
+                                { id: 'cancelledReturns', label: 'No Returns' },
+                                { id: 'appointments', label: 'Appointments' },
+                                { id: 'franchise', label: 'Franchise' }
+                            ].map((tab) => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => {
+                                        setActiveTab(tab.id);
+                                        setIsMenuOpen(false);
+                                    }}
+                                    className={`text-left px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${activeTab === tab.id
+                                        ? 'bg-blue-50 text-blue-600 shadow-sm border border-blue-100'
+                                        : 'text-gray-500 hover:bg-gray-50'
+                                        }`}
+                                >
+                                    {tab.label}
+                                </button>
+                            ))}
+                        </nav>
+                    </div>
+                </div>
+            )}
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:block mb-8 bg-white p-2 rounded-2xl border border-gray-100 shadow-sm overflow-x-auto no-scrollbar scrollbar-hide">
+                <nav className="flex items-center gap-1 min-w-max">
+                    {[
+                        { id: 'unassignedOrders', label: 'Unassigned' },
+                        { id: 'assignedOrders', label: 'Assigned' },
+                        { id: 'products', label: 'Products' },
+                        { id: 'users', label: 'Users' },
+                        { id: 'createUser', label: 'Create' },
+                        { id: 'analytics', label: 'Analytics' },
+                        { id: 'completedOrders', label: 'Completed' },
+                        { id: 'cancelledOrders', label: 'Cancelled' },
+                        { id: 'pendingReturns', label: 'Returns' },
+                        { id: 'assignedPickups', label: 'Pickups' },
+                        { id: 'completedReturns', label: 'Done Returns' },
+                        { id: 'cancelledReturns', label: 'No Returns' },
+                        { id: 'appointments', label: 'Appointments' },
+                        { id: 'franchise', label: 'Franchise' }
+                    ].map((tab) => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={`px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === tab.id
+                                ? 'bg-blue-600 text-white shadow-md'
+                                : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'
+                                }`}
+                        >
+                            {tab.label}
+                        </button>
+                    ))}
                 </nav>
             </div>
 
             {activeTab === 'unassignedOrders' && (
-                <div>
-                    <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-2xl font-semibold">Unassigned Deliveries</h2>
-                        <input
-                            type="text"
-                            placeholder="Search orders..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="p-2 border rounded-md"
-                        />
+                <div className="animate-fade-in">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                        <h2 className="text-lg md:text-2xl font-black text-gray-900 tracking-tight">Unassigned Deliveries</h2>
+                        <div className="relative w-full md:w-auto">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">🔍</span>
+                            <input
+                                type="text"
+                                placeholder="Search by name, phone..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full md:w-64 pl-8 pr-4 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all"
+                            />
+                        </div>
                     </div>
-                    <div className="space-y-4">
+                    <div className="grid grid-cols-1 gap-4">
                         {filteredUnassigned.length > 0 ? filteredUnassigned.map(order => (
-                            <div key={order._id} className="bg-white rounded-lg shadow-md p-6 flex justify-between items-start flex-col md:flex-row">
-                                <div className="w-full md:w-1/2">
-                                    <p><strong>Order ID:</strong> {order.orderNumber}</p>
-                                    <p><strong>Customer:</strong> {order.customerInfo?.name}</p>
-                                    <p><strong>Phone:</strong> {order.customerInfo?.phone || 'N/A'}</p>
-
-
-                                    <p><strong>Email:</strong> {order.user?.email}</p>
-
-                                    {/* <p><strong>Phone:</strong> {order.customerInfo?.phone || 'N/A'}</p> */}
-                                    <p><strong>Address:</strong> {order.shippingAddress?.address}, {order.shippingAddress?.city} {order.shippingAddress?.postalCode}</p>
-                                    <p><strong>Total Price:</strong> ₹{order.totalPrice}</p>
-                                </div>
-                                <div className="w-full md:w-1/2 flex items-center justify-end md:justify-end mt-4 md:mt-0 space-x-4">
-                                    <div className="flex flex-col items-end">
-                                        <p className="font-semibold">Products:</p>
-                                        <div className="space-y-2 mt-2">
-                                            {order.orderItems.map((item) => (
-                                                <div key={item._id} className="flex items-center space-x-2">
-                                                    <img
-                                                        src={item.product?.images?.[0]}
-                                                        alt={item.name}
-                                                        className="w-16 h-16 object-cover rounded"
-                                                    />
-                                                    <p className="text-sm">{item.name} (Pack: {item.size})</p>
-                                                </div>
-                                            ))}
-                                        </div>
+                            <div key={order._id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-6 flex flex-col md:flex-row justify-between gap-6 hover:shadow-md transition-all">
+                                <div className="space-y-2 flex-grow">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <span className="text-[10px] font-black bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full uppercase tracking-wider">{order.orderNumber}</span>
+                                        <span className="text-[10px] font-black bg-gray-50 text-gray-500 px-2 py-0.5 rounded-full uppercase tracking-wider">Unassigned</span>
                                     </div>
-                                    <button onClick={() => handleAssignClick(order)} className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 self-start md:self-auto">Assign</button>
+                                    <p className="text-[11px] md:text-sm font-black text-gray-900">{order.customerInfo?.name}</p>
+                                    <p className="text-[10px] md:text-xs font-bold text-gray-500 flex items-center gap-2">📞 {order.customerInfo?.phone || 'N/A'}</p>
+                                    <p className="text-[10px] md:text-xs font-bold text-gray-500 flex items-center gap-2">📍 {order.shippingAddress?.address}, {order.shippingAddress?.city}</p>
+                                    <p className="text-xs md:text-sm font-black text-green-600 mt-2">₹{order.totalPrice}</p>
+                                </div>
+                                <div className="flex flex-col md:items-end gap-4 shrink-0">
+                                    <div className="space-y-2">
+                                        {order.orderItems.map((item) => (
+                                            <div key={item._id} className="flex items-center gap-3 bg-gray-50 p-1.5 md:p-2 rounded-xl border border-gray-100/50">
+                                                <img
+                                                    src={item.product?.images?.[0]}
+                                                    alt={item.name}
+                                                    className="w-8 h-8 md:w-10 md:h-10 object-cover rounded-lg"
+                                                />
+                                                <div>
+                                                    <p className="text-[9px] md:text-[10px] font-black text-gray-900 leading-tight">{item.name}</p>
+                                                    <p className="text-[8px] md:text-[9px] font-bold text-gray-400 uppercase">Pack: {item.size}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <button
+                                        onClick={() => handleAssignClick(order)}
+                                        className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-[10px] md:text-xs font-black shadow-lg shadow-blue-600/20 active:scale-95 transition-all uppercase"
+                                    >
+                                        Assign Agent
+                                    </button>
                                 </div>
                             </div>
-                        )) : <p>No unassigned orders found.</p>}
+                        )) : (
+                            <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-gray-100">
+                                <p className="text-gray-400 font-bold text-sm">No unassigned orders found.</p>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
 
             {activeTab === 'assignedOrders' && (
-                <div>
-                    <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-2xl font-semibold">Assigned Deliveries</h2>
-                        <input
-                            type="text"
-                            placeholder="Search orders..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="p-2 border rounded-md"
-                        />
+                <div className="animate-fade-in">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                        <h2 className="text-lg md:text-2xl font-black text-gray-900 tracking-tight">Assigned Deliveries</h2>
+                        <div className="relative w-full md:w-auto">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">🔍</span>
+                            <input
+                                type="text"
+                                placeholder="Search by name, agent..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full md:w-64 pl-8 pr-4 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all"
+                            />
+                        </div>
                     </div>
-                    <div className="space-y-4">
+                    <div className="grid grid-cols-1 gap-4">
                         {filteredAssigned.length > 0 ? filteredAssigned.map(order => (
-                            <div key={order._id} className="bg-white rounded-lg shadow-md p-6 flex justify-between items-start flex-col md:flex-row">
-                                <div className="w-full md:w-1/2">
-                                    <p><strong>Order ID:</strong> {order.orderNumber}</p>
-                                    <p><strong>Customer:</strong> {order.customerInfo?.name} ({order.user?.email})</p>
-                                    <p><strong>Phone:</strong> {order.customerInfo?.phone || 'N/A'}</p>
-                                    <p><strong>Address:</strong> {order.shippingAddress?.address}, {order.shippingAddress?.city} {order.shippingAddress?.postalCode}</p>
-                                    <p><strong>Assigned To:</strong> {order.assignedTo?.name} ({order.assignedTo?.email})</p>
-                                    <p><strong>Status:</strong> <span className="capitalize">{order.status}</span></p>
-                                    <p><strong>Total Price:</strong> ₹{order.totalPrice}</p>
-                                </div>
-                                <div className="w-full md:w-1/2 flex items-center justify-end md:justify-end mt-4 md:mt-0 space-x-4">
-                                    <div className="flex flex-col items-end">
-                                        <p className="font-semibold">Products:</p>
-                                        <div className="space-y-2 mt-2">
-                                            {order.orderItems.map((item) => (
-                                                <div key={item._id} className="flex items-center space-x-2">
-                                                    <img
-                                                        src={item.product?.images?.[0]}
-                                                        alt={item.name}
-                                                        className="w-16 h-16 object-cover rounded"
-                                                    />
-                                                    <p className="text-sm">{item.name} (Pack: {item.size})</p>
-                                                </div>
-                                            ))}
-                                        </div>
+                            <div key={order._id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-6 flex flex-col md:flex-row justify-between gap-6 hover:shadow-md transition-all">
+                                <div className="space-y-2 flex-grow">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <span className="text-[10px] font-black bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full uppercase tracking-wider">{order.orderNumber}</span>
+                                        <span className={`text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider ${order.status === 'delivered' ? 'bg-green-50 text-green-600' : 'bg-orange-50 text-orange-600'
+                                            }`}>
+                                            {order.status}
+                                        </span>
                                     </div>
-                                    <div className="flex space-x-2 mt-4 md:mt-0">
-                                        <button onClick={() => handleAdminStatusChange(order._id, 'delivered')} className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Complete</button>
-                                        <button onClick={() => handleAdminStatusChange(order._id, 'cancelled')} className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Cancel</button>
-                                        <button onClick={() => handleAssignClick(order)} className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600">Reassign</button>
+                                    <p className="text-[11px] md:text-sm font-black text-gray-900">{order.customerInfo?.name}</p>
+                                    <p className="text-[10px] md:text-xs font-bold text-gray-500 flex items-center gap-2">📞 {order.customerInfo?.phone || 'N/A'}</p>
+                                    <p className="text-[10px] md:text-xs font-bold text-gray-500 flex items-center gap-2">👤 Agent: <span className="text-blue-600">{order.assignedTo?.name}</span></p>
+                                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-4">PRODUCTS</p>
+                                    <div className="flex flex-wrap gap-2">
+                                        {order.orderItems.map((item) => (
+                                            <div key={item._id} className="flex items-center gap-2 bg-gray-50 p-1 md:p-1.5 rounded-lg border border-gray-100">
+                                                <img src={item.product?.images?.[0]} className="w-5 h-5 md:w-6 md:h-6 object-cover rounded" alt="" />
+                                                <span className="text-[8px] md:text-[9px] font-black text-gray-600">{item.name}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="flex flex-col md:items-end justify-between gap-4">
+                                    <p className="text-base md:text-lg font-black text-gray-900">₹{order.totalPrice}</p>
+                                    <div className="grid grid-cols-2 lg:flex gap-2 w-full md:w-auto">
+                                        <button onClick={() => handleAdminStatusChange(order._id, 'delivered')} className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-xl text-[9px] md:text-[10px] font-black transition-all">COMPLETE</button>
+                                        <button onClick={() => handleAdminStatusChange(order._id, 'cancelled')} className="bg-red-100 text-red-600 hover:bg-red-200 px-3 py-2 rounded-xl text-[9px] md:text-[10px] font-black transition-all">CANCEL</button>
+                                        <button onClick={() => handleAssignClick(order)} className="col-span-2 md:col-auto bg-gray-900 hover:bg-black text-white px-3 py-2 rounded-xl text-[9px] md:text-[10px] font-black transition-all uppercase">Reassign</button>
                                     </div>
                                 </div>
                             </div>
-                        )) : <p>No assigned orders found.</p>}
+                        )) : (
+                            <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-gray-100">
+                                <p className="text-gray-400 font-bold text-sm">No assigned orders found.</p>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
@@ -272,19 +357,40 @@ const AdminDashboard = () => {
 
 
             {showAssignModal && (
-                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
-                    <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-sm">
-                        <h3 className="text-xl font-bold mb-4">Assign Order to Delivery Partner</h3>
-                        <p className="mb-2"><strong>Order:</strong> {orderToAssign.customerInfo?.name}'s order</p>
-                        <select onChange={(e) => setSelectedPartner(e.target.value)} className="w-full p-2 border rounded-md">
-                            <option value="">Select Delivery Partner</option>
-                            {deliveryPartners.map(partner => (
-                                <option key={partner._id} value={partner._id}>{partner.name} ({partner.email})</option>
-                            ))}
-                        </select>
-                        <div className="mt-6 flex justify-between space-x-4">
-                            <button onClick={() => setShowAssignModal(false)} className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md">Cancel</button>
-                            <button onClick={handleAssignOrder} className="bg-green-600 text-white px-4 py-2 rounded-md" disabled={!selectedPartner}>Confirm Assign</button>
+                <div className="fixed inset-0 z-[100] bg-gray-900/60 backdrop-blur-sm overflow-y-auto h-full w-full flex items-center justify-center p-4">
+                    <div className="bg-white p-6 md:p-8 rounded-3xl shadow-2xl w-full max-w-sm animate-pop-in">
+                        <h3 className="text-lg font-black text-gray-900 mb-2 tracking-tight">Assign Order</h3>
+                        <p className="text-xs font-bold text-gray-500 mb-6">Assigning <span className="text-blue-600">{orderToAssign.customerInfo?.name}</span>'s order to an agent.</p>
+
+                        <div className="space-y-4">
+                            <div>
+                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 block">Select Delivery Partner</label>
+                                <select
+                                    onChange={(e) => setSelectedPartner(e.target.value)}
+                                    className="w-full p-3 bg-gray-50 border border-gray-100 rounded-xl text-xs font-black focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all"
+                                >
+                                    <option value="">Choose partner...</option>
+                                    {deliveryPartners.map(partner => (
+                                        <option key={partner._id} value={partner._id}>{partner.name} ({partner.email})</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="flex gap-3 pt-4">
+                                <button
+                                    onClick={() => setShowAssignModal(false)}
+                                    className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-600 px-4 py-3 rounded-xl text-xs font-black transition-all"
+                                >
+                                    CANCEL
+                                </button>
+                                <button
+                                    onClick={handleAssignOrder}
+                                    disabled={!selectedPartner}
+                                    className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-200 text-white px-4 py-3 rounded-xl text-xs font-black shadow-lg shadow-blue-600/20 transition-all active:scale-95"
+                                >
+                                    CONFIRM
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

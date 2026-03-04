@@ -124,106 +124,146 @@ const ReturnReplaceRequests = ({ deliveryPartners, setActiveTab }) => {
     if (error) return <div className="text-center text-red-500 mt-10">{error}</div>;
 
     return (
-        <div>
-            <h2 className="text-2xl font-semibold mb-4">Pending Return & Replacement Requests</h2>
-            <div className="space-y-4">
+        <div className="p-4 md:p-8 bg-white shadow-sm border border-gray-100 rounded-2xl md:rounded-[2.5rem] animate-fade-in">
+            <h2 className="text-xl md:text-2xl font-black text-gray-900 mb-6 tracking-tight">Return & Replacement Requests</h2>
+            <div className="grid grid-cols-1 gap-4">
                 {requests.length > 0 ? (
                     requests.map(request => (
-                        <div key={request._id} className="bg-white rounded-lg shadow-md p-6">
-                            <p><strong>Request ID:</strong> {request._id}</p>
-                            <p><strong>Order Number:</strong> {request.order?.orderNumber}</p>
-                            <p><strong>Customer:</strong> {request.user?.name} ({request.user?.phone})</p>
-                            <p><strong>Email:</strong> {request.user?.email}</p>
-                            <p><strong>Address:</strong> {request.order?.shippingAddress?.address}, {request.order?.shippingAddress?.city}, {request.order?.shippingAddress?.postalCode}</p>
-
-                            <p><strong>Type:</strong> <span className="capitalize">{request.type}</span></p>
-                            <div className="flex items-center space-x-4 my-3 p-3 bg-gray-50 rounded-lg">
-                                {request.originalItem?.product?.images?.[0] ? (
-                                    <img
-                                        src={request.originalItem.product.images[0]}
-                                        alt={request.originalItem.name}
-                                        className="w-16 h-16 object-cover rounded shadow-sm"
-                                    />
-                                ) : (
-                                    <div className="w-16 h-16 bg-gray-200 rounded flex items-center justify-center text-xs text-gray-400">No Image</div>
-                                )}
-                                <div>
-                                    <p className="font-bold text-gray-800">{request.originalItem?.name || 'Product Details Not Available'}</p>
-                                    <p className="text-sm text-gray-500">Qty: {request.originalItem?.qty} | Pack: {request.originalItem?.size}</p>
-                                    <p className="text-sm font-bold text-indigo-600 font-sans">₹{request.originalItem?.price}</p>
-                                </div>
+                        <div key={request._id} className="bg-gray-50/50 border border-gray-100 rounded-2xl p-4 md:p-6 hover:bg-white hover:shadow-md transition-all">
+                            <div className="flex flex-wrap items-center gap-2 mb-4">
+                                <span className={`text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest ${request.type === 'return' ? 'bg-orange-50 text-orange-600' : 'bg-blue-50 text-blue-600'
+                                    }`}>
+                                    {request.type}
+                                </span>
+                                <span className="bg-gray-100 text-gray-500 text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">
+                                    {request.status}
+                                </span>
+                                <p className="text-xs font-black text-gray-900 ml-auto">#{request.order?.orderNumber}</p>
                             </div>
-                            <p><strong>Reason:</strong> {request.reason}</p>
-                            <p><strong>Status:</strong> <button onClick={() => handleMoveToUnassigned(request._id)} className="text-blue-600 font-bold hover:underline">Unassigned Deliveries</button></p>
-                            <div className="mt-4 flex space-x-2">
-                                {request.status === 'pending' && (
-                                    <button
-                                        onClick={() => handleApproveRequest(request._id)}
-                                        className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-                                    >
-                                        Approve Request
-                                    </button>
-                                )}
-                                {request.status === 'approved' && (
-                                    <button
-                                        onClick={() => handleAssignPickupClick(request)}
-                                        className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
-                                    >
-                                        Assign for Pickup
-                                    </button>
-                                )}
-                                {(request.status === 'pending' || request.status === 'approved') && (
-                                    <button
-                                        onClick={() => handleRejectRequest(request._id)}
-                                        className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
-                                    >
-                                        Reject Request
-                                    </button>
-                                )}
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-3">
+                                    <div className="space-y-1">
+                                        <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest leading-none">Customer Details</p>
+                                        <p className="text-[10px] font-black text-gray-900">{request.user?.name} <span className="text-gray-400 font-bold ml-1">({request.user?.phone})</span></p>
+                                        <p className="text-[10px] font-bold text-gray-500">{request.user?.email}</p>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest leading-none">Pickup Address</p>
+                                        <p className="text-[10px] font-bold text-gray-600 leading-tight">{request.order?.shippingAddress?.address}, {request.order?.shippingAddress?.city} - {request.order?.shippingAddress?.postalCode}</p>
+                                    </div>
+                                    <div className="pt-2">
+                                        <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Reason</p>
+                                        <p className="text-[10px] font-bold text-gray-700 bg-white p-2 rounded-lg border border-gray-100 italic">"{request.reason}"</p>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest leading-none border-b border-gray-100 pb-1">Product Details</p>
+                                    <div className="flex items-center gap-3 bg-white p-3 rounded-xl border border-gray-50 shadow-sm">
+                                        {request.originalItem?.product?.images?.[0] ? (
+                                            <img
+                                                src={request.originalItem.product.images[0]}
+                                                alt={request.originalItem.name}
+                                                className="w-12 h-12 object-cover rounded-lg border border-gray-50"
+                                            />
+                                        ) : (
+                                            <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center text-[6px] font-black text-gray-300">NO IMG</div>
+                                        )}
+                                        <div className="min-w-0">
+                                            <p className="text-[10px] font-black text-gray-900 truncate tracking-tight leading-tight uppercase">{request.originalItem?.name || 'Unknown Product'}</p>
+                                            <p className="text-[8px] font-bold text-gray-400 uppercase tracking-tighter">Size: {request.originalItem?.size} • Qty: {request.originalItem?.qty}</p>
+                                            <p className="text-[10px] font-black text-blue-600 mt-0.5">₹{request.originalItem?.price}</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-wrap gap-2 pt-2">
+                                        {request.status === 'pending' && (
+                                            <button
+                                                onClick={() => handleApproveRequest(request._id)}
+                                                className="flex-grow bg-blue-600 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-md shadow-blue-600/10 hover:bg-blue-700 transition-all"
+                                            >
+                                                Approve
+                                            </button>
+                                        )}
+                                        {request.status === 'approved' && (
+                                            <button
+                                                onClick={() => handleAssignPickupClick(request)}
+                                                className="flex-grow bg-green-600 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-md shadow-green-600/10 hover:bg-green-700 transition-all"
+                                            >
+                                                Assign Partner
+                                            </button>
+                                        )}
+                                        {(request.status === 'pending' || request.status === 'approved') && (
+                                            <button
+                                                onClick={() => handleRejectRequest(request._id)}
+                                                className="flex-grow bg-red-50 text-red-500 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border border-red-100 hover:bg-red-500 hover:text-white transition-all"
+                                            >
+                                                Reject
+                                            </button>
+                                        )}
+                                    </div>
+                                    <button onClick={() => handleMoveToUnassigned(request._id)} className="w-full text-[8px] font-black text-blue-400 uppercase tracking-widest hover:text-blue-600 transition-colors">Move to Unassigned Orders →</button>
+                                </div>
                             </div>
                         </div>
                     ))
                 ) : (
-                    <p>No pending requests found.</p>
+                    <div className="py-12 text-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 text-gray-300 font-black text-xs uppercase tracking-widest">
+                        No pending requests found
+                    </div>
                 )}
             </div>
 
             {/* Assign Pickup Modal */}
             {showAssignModal && (
-                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
-                    <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-sm">
-                        <h3 className="text-xl font-bold mb-4">Assign Pickup to Delivery Partner</h3>
-                        <p className="mb-2"><strong>Request Type:</strong> <span className="capitalize">{requestToAssign.type}</span></p>
-                        <select
-                            onChange={(e) => setSelectedPartner(e.target.value)}
-                            className="w-full p-2 border rounded-md"
-                        >
-                            <option value="">Select Delivery Partner</option>
-                            {deliveryPartners.map(partner => (
-                                <option key={partner._id} value={partner._id}>{partner.name} ({partner.email})</option>
-                            ))}
-                        </select>
-                        <div className="mt-6 flex justify-between space-x-4">
+                <div className="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+                    <div className="bg-white p-6 md:p-8 rounded-[2rem] border border-gray-100 shadow-2xl w-full max-w-sm animate-pop-in">
+                        <h3 className="text-xl font-black text-gray-900 mb-2 tracking-tight">Assign Partner</h3>
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-6">Request ID: {requestToAssign._id.slice(-8)}</p>
+
+                        <div className="space-y-4">
+                            <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 mb-6">
+                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Request Type</p>
+                                <p className="text-sm font-black text-blue-600 uppercase tracking-wider">{requestToAssign.type}</p>
+                            </div>
+
+                            <div className="space-y-1">
+                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Select Delivery Partner</label>
+                                <select
+                                    onChange={(e) => setSelectedPartner(e.target.value)}
+                                    className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl text-[10px] font-black uppercase tracking-widest focus:ring-4 focus:ring-blue-500/10 outline-none transition-all cursor-pointer"
+                                >
+                                    <option value="">CHOOSE PARTNER...</option>
+                                    {deliveryPartners.map(partner => (
+                                        <option key={partner._id} value={partner._id}>{partner.name.toUpperCase()}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="mt-8 grid grid-cols-2 gap-3">
                             <button
                                 type="button"
                                 onClick={() => setShowAssignModal(false)}
-                                className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md"
+                                className="bg-gray-100 text-gray-500 p-4 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all"
                             >
                                 Cancel
                             </button>
                             <button
                                 type="button"
                                 onClick={handleAssignPickup}
-                                className="bg-green-600 text-white px-4 py-2 rounded-md"
+                                className="bg-blue-600 text-white p-4 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-blue-600/20 active:scale-95 transition-all disabled:opacity-50"
                                 disabled={!selectedPartner}
                             >
-                                Confirm Assign
+                                Assign
                             </button>
                         </div>
                     </div>
                 </div>
             )}
         </div>
+
     );
 };
 

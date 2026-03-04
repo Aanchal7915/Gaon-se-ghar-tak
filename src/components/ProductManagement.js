@@ -420,151 +420,245 @@ const ProductManagement = () => {
   };
 
   return (
-    <div className="p-6 bg-white shadow-md rounded-lg">
-      <h2 className="text-2xl font-bold mb-4">{editingProduct ? 'Edit Product' : 'Add New Product'}</h2>
-      <form onSubmit={editingProduct ? handleUpdateProduct : handleAddProduct} className="space-y-4">
-        <input type="text" name="name" value={formData.name} onChange={handleInputChange} placeholder="Product Name" className="w-full p-2 border rounded-md" required />
-        <textarea name="description" value={formData.description} onChange={handleInputChange} placeholder="Description" className="w-full p-2 border rounded-md" required />
-        <input type="text" name="brand" value={formData.brand} onChange={handleInputChange} placeholder="Brand" className="w-full p-2 border rounded-md" required />
-
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            name="isFeatured"
-            id="isFeatured"
-            checked={formData.isFeatured}
-            onChange={handleInputChange}
-            className="w-4 h-4 accent-blue-600"
-          />
-          <label htmlFor="isFeatured" className="text-gray-700 font-medium cursor-pointer">
-            Featured Product
-          </label>
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            name="isBestseller"
-            id="isBestseller"
-            checked={formData.isBestseller}
-            onChange={handleInputChange}
-            className="w-4 h-4 accent-green-600"
-          />
-          <label htmlFor="isBestseller" className="text-gray-700 font-medium cursor-pointer">
-            Best Seller Product
-          </label>
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            name="isComingSoon"
-            id="isComingSoon"
-            checked={formData.isComingSoon}
-            onChange={handleInputChange}
-            className="w-4 h-4 accent-yellow-600"
-          />
-          <label htmlFor="isComingSoon" className="text-gray-700 font-medium cursor-pointer">
-            Coming Soon (Upcoming Product)
-          </label>
-        </div>
-
-        {/* Category */}
-        {/* Category */}
-        <select
-          name="category"
-          value={formData.category}
-          onChange={(e) => {
-            if (e.target.value === "new") {
-              setShowCategoryForm(true);
-              setFormData({ ...formData, category: "" });
-            } else {
-              setShowCategoryForm(false);
-              handleInputChange(e);
-            }
-          }}
-          className="w-full p-2 border rounded-md"
-          required
-        >
-          <option value="">Select Category</option>
-          {categories.map(cat => (
-            <option key={cat._id} value={cat._id}>{cat.name}</option>
-          ))}
-          <option value="new">+ Create New Category</option>
-        </select>
-
-        {/* Show new category form if selected */}
-        {showCategoryForm && (
-          <div className="p-4 border rounded-md bg-gray-50 mt-2">
-            <h3 className="text-lg font-semibold mb-2">Add New Category</h3>
-            <input
-              type="text"
-              placeholder="Category Name"
-              value={newCategoryName}
-              onChange={(e) => setNewCategoryName(e.target.value)}
-              className="w-full p-2 border rounded-md mb-2"
-            />
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files[0];
-                setNewCategoryImage(file);
-                setNewCategoryImagePreview(URL.createObjectURL(file));
-              }}
-              className="w-full p-2 border rounded-md mb-2"
-            />
-            {newCategoryImagePreview && (
-              <img src={newCategoryImagePreview} alt="Preview" className="h-20 w-20 object-cover rounded-md mb-2" />
-            )}
-            <button
-              type="button"
-              onClick={async () => {
-                try {
-                  const token = localStorage.getItem("token");
-                  const data = new FormData();
-                  data.append("name", newCategoryName);
-                  if (newCategoryImage) data.append("image", newCategoryImage);
-
-                  const res = await apiClient.post("/categories", data, {
-                    headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
-                  });
-
-                  alert("Category created!");
-                  setCategories([...categories, res.data]);
-                  setFormData({ ...formData, category: res.data._id });
-                  setShowCategoryForm(false);
-                  setNewCategoryName("");
-                  setNewCategoryImage(null);
-                  setNewCategoryImagePreview(null);
-                } catch (err) {
-                  console.error(err);
-                  alert("Failed to create category");
-                }
-              }}
-              className="bg-green-600 text-white px-4 py-2 rounded-md"
-            >
-              Save Category
-            </button>
+    <div className="p-4 md:p-8 bg-white shadow-sm border border-gray-100 rounded-2xl md:rounded-[2.5rem] animate-fade-in">
+      <h2 className="text-xl md:text-2xl font-black text-gray-900 mb-6 tracking-tight">{editingProduct ? 'Edit Product' : 'Add New Product'}</h2>
+      <form onSubmit={editingProduct ? handleUpdateProduct : handleAddProduct} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-1">
+            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Product Name</label>
+            <input type="text" name="name" value={formData.name} onChange={handleInputChange} placeholder="Enter name" className="w-full p-3 bg-gray-50 border border-gray-100 rounded-xl text-xs font-bold focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all" required />
           </div>
-        )}
+          <div className="space-y-1">
+            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Brand</label>
+            <input type="text" name="brand" value={formData.brand} onChange={handleInputChange} placeholder="Enter brand" className="w-full p-3 bg-gray-50 border border-gray-100 rounded-xl text-xs font-bold focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all" required />
+          </div>
+        </div>
 
-        {/* Manage Existing Categories */}
-        <div className="mt-4 p-4 border rounded-md bg-gray-100">
-          <h3 className="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider">Existing Categories (Click &times; to delete)</h3>
-          <div className="flex flex-wrap gap-2">
-            {categories.map(cat => (
-              <div key={cat._id} className="flex items-center bg-white border border-gray-300 rounded-full pl-3 pr-1 py-1 shadow-sm hover:border-red-300 transition-all group">
-                <span className="text-xs font-bold text-gray-700 mr-2">{cat.name}</span>
+        <div className="space-y-1">
+          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Description</label>
+          <textarea name="description" value={formData.description} onChange={handleInputChange} placeholder="Describe the product..." className="w-full p-3 bg-gray-50 border border-gray-100 rounded-xl text-xs font-bold focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all min-h-[100px]" required />
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="flex items-center gap-2 p-3 bg-blue-50/50 rounded-xl border border-blue-100/50">
+            <input type="checkbox" name="isFeatured" id="isFeatured" checked={formData.isFeatured} onChange={handleInputChange} className="w-4 h-4 rounded accent-blue-600" />
+            <label htmlFor="isFeatured" className="text-[10px] font-black text-blue-700 uppercase tracking-wider cursor-pointer">Featured</label>
+          </div>
+          <div className="flex items-center gap-2 p-3 bg-green-50/50 rounded-xl border border-green-100/50">
+            <input type="checkbox" name="isBestseller" id="isBestseller" checked={formData.isBestseller} onChange={handleInputChange} className="w-4 h-4 rounded accent-green-600" />
+            <label htmlFor="isBestseller" className="text-[10px] font-black text-green-700 uppercase tracking-wider cursor-pointer">Bestseller</label>
+          </div>
+          <div className="flex items-center gap-2 p-3 bg-yellow-50/50 rounded-xl border border-yellow-100/50">
+            <input type="checkbox" name="isComingSoon" id="isComingSoon" checked={formData.isComingSoon} onChange={handleInputChange} className="w-4 h-4 rounded accent-yellow-600" />
+            <label htmlFor="isComingSoon" className="text-[10px] font-black text-yellow-700 uppercase tracking-wider cursor-pointer">Upcoming</label>
+          </div>
+        </div>
+
+
+        {/* Category */}
+        {/* Category */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-4">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Category</label>
+              <select
+                name="category"
+                value={formData.category}
+                onChange={(e) => {
+                  if (e.target.value === "new") {
+                    setShowCategoryForm(true);
+                    setFormData({ ...formData, category: "" });
+                  } else {
+                    setShowCategoryForm(false);
+                    handleInputChange(e);
+                  }
+                }}
+                className="w-full p-3 bg-gray-50 border border-gray-100 rounded-xl text-xs font-black focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all cursor-pointer"
+                required
+              >
+                <option value="">Select Category</option>
+                {categories.map(cat => (
+                  <option key={cat._id} value={cat._id}>{cat.name}</option>
+                ))}
+                <option value="new">+ Create New Category</option>
+              </select>
+            </div>
+
+
+            {/* Show new category form if selected */}
+            {showCategoryForm && (
+              <div className="p-4 border rounded-md bg-gray-50 mt-2">
+                <h3 className="text-lg font-semibold mb-2">Add New Category</h3>
+                <input
+                  type="text"
+                  placeholder="Category Name"
+                  value={newCategoryName}
+                  onChange={(e) => setNewCategoryName(e.target.value)}
+                  className="w-full p-2 border rounded-md mb-2"
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    setNewCategoryImage(file);
+                    setNewCategoryImagePreview(URL.createObjectURL(file));
+                  }}
+                  className="w-full p-2 border rounded-md mb-2"
+                />
+                {newCategoryImagePreview && (
+                  <img src={newCategoryImagePreview} alt="Preview" className="h-20 w-20 object-cover rounded-md mb-2" />
+                )}
                 <button
                   type="button"
-                  onClick={() => handleDeleteCategory(cat._id)}
-                  className="bg-gray-100 text-gray-400 hover:bg-red-500 hover:text-white rounded-full p-1 transition-all"
-                  title={`Delete ${cat.name}`}
+                  onClick={async () => {
+                    try {
+                      const token = localStorage.getItem("token");
+                      const data = new FormData();
+                      data.append("name", newCategoryName);
+                      if (newCategoryImage) data.append("image", newCategoryImage);
+
+                      const res = await apiClient.post("/categories", data, {
+                        headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
+                      });
+
+                      alert("Category created!");
+                      setCategories([...categories, res.data]);
+                      setFormData({ ...formData, category: res.data._id });
+                      setShowCategoryForm(false);
+                      setNewCategoryName("");
+                      setNewCategoryImage(null);
+                      setNewCategoryImagePreview(null);
+                    } catch (err) {
+                      console.error(err);
+                      alert("Failed to create category");
+                    }
+                  }}
+                  className="bg-green-600 text-white px-4 py-2 rounded-md"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
+                  Save Category
+                </button>
+              </div>
+            )}
+
+            {/* Manage Existing Categories */}
+            <div className="mt-4 p-4 border rounded-md bg-gray-100">
+              <h3 className="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider">Existing Categories (Click &times; to delete)</h3>
+              <div className="flex flex-wrap gap-2">
+                {categories.map(cat => (
+                  <div key={cat._id} className="flex items-center bg-white border border-gray-300 rounded-full pl-3 pr-1 py-1 shadow-sm hover:border-red-300 transition-all group">
+                    <span className="text-xs font-bold text-gray-700 mr-2">{cat.name}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteCategory(cat._id)}
+                      className="bg-gray-100 text-gray-400 hover:bg-red-500 hover:text-white rounded-full p-1 transition-all"
+                      title={`Delete ${cat.name}`}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+
+            {/* Item Type (Mapped to Gender field) */}
+            <div className="space-y-1">
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Item Type</label>
+              <select name="gender" value={formData.gender} onChange={handleInputChange} className="w-full p-3 bg-gray-50 border border-gray-100 rounded-xl text-xs font-black focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all cursor-pointer" required>
+                <option value="">Select Type</option>
+                <option value="standard">Standard</option>
+                <option value="organic">Organic</option>
+                <option value="premium">Premium</option>
+                <option value="budget">Budget</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Sub Category</label>
+              <input
+                type="text"
+                name="subCategory"
+                value={formData.subCategory}
+                onChange={handleInputChange}
+                placeholder="e.g. Fruits, Dairy..."
+                className="w-full p-3 bg-gray-50 border border-gray-100 rounded-xl text-xs font-bold focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Product Video (Optional)</label>
+              <div className="relative group">
+                <input
+                  type="file"
+                  name="video"
+                  accept="video/*,image/*"
+                  onChange={handleVideoChange}
+                  className="w-full p-3 bg-gray-50 border border-gray-100 rounded-xl text-[10px] font-bold outline-none file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div className="bg-gray-50/50 p-4 md:p-6 rounded-2xl border border-gray-100">
+          <h3 className="text-sm font-black text-gray-900 mb-4 tracking-widest uppercase">Farmer Details</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Name</label>
+              <input type="text" name="farmerName" value={formData.farmerName} onChange={handleInputChange} placeholder="Farmer Name" className="w-full p-3 bg-white border border-gray-100 rounded-xl text-xs font-bold outline-none" />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Phone</label>
+              <input type="text" name="farmerPhone" value={formData.farmerPhone} onChange={handleInputChange} placeholder="Contact Number" className="w-full p-3 bg-white border border-gray-100 rounded-xl text-xs font-bold outline-none" />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Location</label>
+              <input type="text" name="farmerLocation" value={formData.farmerLocation} onChange={handleInputChange} placeholder="Location" className="w-full p-3 bg-white border border-gray-100 rounded-xl text-xs font-bold outline-none" />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Email</label>
+              <input type="email" name="farmerEmail" value={formData.farmerEmail} onChange={handleInputChange} placeholder="Email" className="w-full p-3 bg-white border border-gray-100 rounded-xl text-xs font-bold outline-none" />
+            </div>
+          </div>
+        </div>
+
+
+        <div className="bg-gray-50/50 p-4 md:p-6 rounded-2xl border border-gray-100">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-sm font-black text-gray-900 tracking-widest uppercase">Global Variants</h3>
+            <button type="button" onClick={addVariant} className="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider shadow-sm active:scale-95 transition-all">Add +</button>
+          </div>
+          <div className="space-y-3">
+            {variants.map((variant, index) => (
+              <div key={index} className="grid grid-cols-2 md:flex items-end gap-2 bg-white p-3 rounded-xl border border-gray-100 relative group">
+                <div className="space-y-1">
+                  <label className="text-[8px] font-black text-gray-400 uppercase">Pack/Size</label>
+                  <input type="text" name="size" value={variant.size} onChange={(e) => handleVariantChange(index, e)} placeholder="e.g. 500g" className="w-full p-2 bg-gray-50 border border-gray-100 rounded-lg text-xs font-black outline-none" required />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[8px] font-black text-gray-400 uppercase">Orig. Price</label>
+                  <input type="number" name="originalPrice" value={variant.originalPrice} onChange={(e) => handleVariantChange(index, e)} placeholder="MRP" className="w-full p-2 bg-gray-50 border border-gray-100 rounded-lg text-xs font-black outline-none" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[8px] font-black text-gray-400 uppercase">Disc %</label>
+                  <input type="number" name="discount" value={variant.discount} onChange={(e) => handleVariantChange(index, e)} placeholder="%" className="w-full p-2 bg-gray-50 border border-gray-100 rounded-lg text-xs font-black outline-none" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[8px] font-black text-gray-400 uppercase">Sale Price</label>
+                  <input type="number" name="price" value={variant.price} onChange={(e) => handleVariantChange(index, e)} placeholder="Selling" className="w-full p-2 bg-gray-50 border border-gray-100 rounded-lg text-xs font-black outline-none" required />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[8px] font-black text-gray-400 uppercase">Stock</label>
+                  <input type="number" name="countInStock" value={variant.countInStock} onChange={(e) => handleVariantChange(index, e)} placeholder="Qty" className="w-full p-2 bg-gray-50 border border-gray-100 rounded-lg text-xs font-black outline-none" required />
+                </div>
+                <button type="button" onClick={() => removeVariant(index)} className="md:relative absolute top-2 right-2 bg-red-50 text-red-500 p-2 rounded-lg hover:bg-red-500 hover:text-white transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7" /></svg>
                 </button>
               </div>
             ))}
@@ -572,216 +666,148 @@ const ProductManagement = () => {
         </div>
 
 
-        {/* Item Type (Mapped to Gender field) */}
-        <select name="gender" value={formData.gender} onChange={handleInputChange} className="w-full p-2 border rounded-md" required>
-          <option value="">Select Item Type</option>
-          <option value="standard">Standard</option>
-          <option value="organic">Organic</option>
-          <option value="premium">Premium</option>
-          <option value="budget">Budget</option>
-        </select>
-
-        {/* SubCategory */}
-        <input
-          type="text"
-          name="subCategory"
-          value={formData.subCategory}
-          onChange={handleInputChange}
-          placeholder="Sub Category (e.g., Fruits, Vegetables, Dairy)"
-          className="w-full p-2 border rounded-md"
-        />
-
-        {/* Video Upload */}
-        <div className="space-y-1">
-          <label className="block text-sm font-medium text-gray-700">Upload Product Video (Optional)</label>
-          <input
-            type="file"
-            name="video"
-            accept="video/*,image/*"
-            onChange={handleVideoChange}
-            className="w-full p-2 border rounded-md border-blue-300"
-          />
-          {formData.videoUrl && !videoFile && (
-            <p className="text-xs text-blue-600">Current video: {formData.videoUrl}</p>
-          )}
+        <div className="bg-gray-50/50 p-4 md:p-6 rounded-2xl border border-gray-100">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-sm font-black text-gray-900 tracking-widest uppercase">Pincode Specific Rules</h3>
+            <button type="button" onClick={addPincodeRow} className="bg-green-600 text-white px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider shadow-sm active:scale-95 transition-all">Add +</button>
+          </div>
+          <div className="space-y-4">
+            {pincodePricingRows.map((row, index) => (
+              <div key={`pincode-row-${index}`} className="bg-white p-4 rounded-xl border border-gray-100 relative">
+                <div className="grid grid-cols-1 gap-4 mb-4">
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-black text-gray-400 uppercase">Target Pincodes (Comma separated)</label>
+                    <input type="text" name="pincodes" value={row.pincodes} onChange={(e) => handlePincodeRowChange(index, e)} placeholder="e.g. 110001, 110002" className="w-full p-3 bg-gray-50 border border-gray-100 rounded-xl text-xs font-black outline-none" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 lg:flex items-end gap-3">
+                  <div className="space-y-1 flex-grow">
+                    <label className="text-[8px] font-black text-gray-400 uppercase">Pack Size</label>
+                    <input type="text" name="size" value={row.size} onChange={(e) => handlePincodeRowChange(index, e)} placeholder="Pack Size" className="w-full p-2 bg-gray-50 border border-gray-100 rounded-lg text-xs font-black outline-none" required />
+                  </div>
+                  <div className="space-y-1 w-24">
+                    <label className="text-[8px] font-black text-gray-400 uppercase">Orig. Price</label>
+                    <input type="number" name="originalPrice" value={row.originalPrice} onChange={(e) => handlePincodeRowChange(index, e)} placeholder="MRP" className="w-full p-2 bg-gray-50 border border-gray-100 rounded-lg text-xs font-black outline-none" />
+                  </div>
+                  <div className="space-y-1 w-16">
+                    <label className="text-[8px] font-black text-gray-400 uppercase">Disc %</label>
+                    <input type="number" name="discount" value={row.discount} onChange={(e) => handlePincodeRowChange(index, e)} placeholder="%" className="w-full p-2 bg-gray-50 border border-gray-100 rounded-lg text-xs font-black outline-none" />
+                  </div>
+                  <div className="space-y-1 w-24">
+                    <label className="text-[8px] font-black text-gray-400 uppercase">Sale Price</label>
+                    <input type="number" name="price" value={row.price} onChange={(e) => handlePincodeRowChange(index, e)} placeholder="Selling" className="w-full p-2 bg-gray-50 border border-gray-100 rounded-lg text-xs font-black outline-none" />
+                  </div>
+                  <div className="space-y-1 w-20">
+                    <label className="text-[8px] font-black text-gray-400 uppercase">Inventory</label>
+                    <input type="number" name="inventory" value={row.inventory} onChange={(e) => handlePincodeRowChange(index, e)} placeholder="Qty" className="w-full p-2 bg-gray-50 border border-gray-100 rounded-lg text-xs font-black outline-none" />
+                  </div>
+                  <button type="button" onClick={() => removePincodeRow(index)} className="bg-red-50 text-red-500 p-2 rounded-lg hover:bg-red-500 hover:text-white transition-all shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7" /></svg>
+                  </button>
+                </div>
+                <div className="mt-3 p-2 bg-blue-50/50 rounded-lg border border-blue-100/30">
+                  <p className="text-[9px] font-black text-blue-600 uppercase leading-tight tracking-wider">
+                    Resolved: {extractPincodes(row.pincodes)
+                      .map((pincode) => pincodeLocationMap[pincode] ? pincodeLocationMap[pincode] : `Fetching...`)
+                      .join(', ') || 'Waiting for pincodes...'}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <h3 className="text-lg font-semibold">Farmer Details</h3>
-        <input
-          type="text"
-          name="farmerName"
-          value={formData.farmerName}
-          onChange={handleInputChange}
-          placeholder="Farmer Name"
-          className="w-full p-2 border rounded-md"
-        />
-        <input
-          type="text"
-          name="farmerPhone"
-          value={formData.farmerPhone}
-          onChange={handleInputChange}
-          placeholder="Farmer Contact Number"
-          className="w-full p-2 border rounded-md"
-        />
-        <input
-          type="text"
-          name="farmerLocation"
-          value={formData.farmerLocation}
-          onChange={handleInputChange}
-          placeholder="Farmer Location"
-          className="w-full p-2 border rounded-md"
-        />
-        <input
-          type="email"
-          name="farmerEmail"
-          value={formData.farmerEmail}
-          onChange={handleInputChange}
-          placeholder="Farmer Email"
-          className="w-full p-2 border rounded-md"
-        />
-
-        {/* Variants */}
-        <h3 className="text-lg font-semibold">Product Variants</h3>
-        {variants.map((variant, index) => (
-          <div key={index} className="flex space-x-2">
-            <input type="text" name="size" value={variant.size} onChange={(e) => handleVariantChange(index, e)} placeholder="Pack/Size" className="w-full p-2 border rounded-md" required />
-            <input type="number" name="originalPrice" value={variant.originalPrice} onChange={(e) => handleVariantChange(index, e)} placeholder="Original Price" className="w-full p-2 border rounded-md" />
-            <input type="number" name="discount" value={variant.discount} onChange={(e) => handleVariantChange(index, e)} placeholder="Disc %" className="w-full p-2 border rounded-md" />
-            <input type="number" name="price" value={variant.price} onChange={(e) => handleVariantChange(index, e)} placeholder="Selling Price" className="w-full p-2 border rounded-md" required />
-            <input type="number" name="countInStock" value={variant.countInStock} onChange={(e) => handleVariantChange(index, e)} placeholder="Stock" className="w-full p-2 border rounded-md" required />
-            <button type="button" onClick={() => removeVariant(index)} className="bg-red-500 text-white p-2 rounded-md">-</button>
-          </div>
-        ))}
-        <button type="button" onClick={addVariant} className="bg-gray-200 text-gray-800 p-2 rounded-md">Add Variant</button>
-
-        <h3 className="text-lg font-semibold">Pincode Price & Inventory</h3>
-        {pincodePricingRows.map((row, index) => (
-          <div key={`pincode-row-${index}`} className="space-y-1">
-            <div className="flex space-x-2">
-              <input
-                type="text"
-                name="pincodes"
-                value={row.pincodes}
-                onChange={(e) => handlePincodeRowChange(index, e)}
-                placeholder="Pincode(s) e.g. 110001,124001"
-                className="w-full p-2 border rounded-md"
-              />
-              <input
-                type="text"
-                name="size"
-                value={row.size}
-                onChange={(e) => handlePincodeRowChange(index, e)}
-                placeholder="Pack Size"
-                className="w-full p-2 border rounded-md"
-                required
-              />
-              <input
-                type="number"
-                name="originalPrice"
-                value={row.originalPrice}
-                onChange={(e) => handlePincodeRowChange(index, e)}
-                placeholder="Original Price"
-                className="w-full p-2 border rounded-md"
-              />
-              <input
-                type="number"
-                name="discount"
-                value={row.discount}
-                onChange={(e) => handlePincodeRowChange(index, e)}
-                placeholder="Disc %"
-                className="w-full p-2 border rounded-md"
-              />
-              <input
-                type="number"
-                name="price"
-                value={row.price}
-                onChange={(e) => handlePincodeRowChange(index, e)}
-                placeholder="Selling Price"
-                className="w-full p-2 border rounded-md"
-              />
-              <input
-                type="number"
-                name="inventory"
-                value={row.inventory}
-                onChange={(e) => handlePincodeRowChange(index, e)}
-                placeholder="Inventory"
-                className="w-full p-2 border rounded-md"
-              />
-              <button type="button" onClick={() => removePincodeRow(index)} className="bg-red-500 text-white p-2 rounded-md">-</button>
-            </div>
-            <p className="text-xs text-gray-600">
-              Location: {extractPincodes(row.pincodes)
-                .map((pincode) => pincodeLocationMap[pincode] ? `${pincode} - ${pincodeLocationMap[pincode]}` : `${pincode} - Fetching...`)
-                .join(', ') || 'N/A'}
-            </p>
-          </div>
-        ))}
-        <button type="button" onClick={addPincodeRow} className="bg-gray-200 text-gray-800 p-2 rounded-md">Add Pincode Rule</button>
 
         {/* Images */}
-        <h3 className="text-lg font-semibold">Product Images</h3>
-        <input type="file" name="images" multiple onChange={handleImageChange} className="w-full p-2 border rounded-md" />
-        <div className="flex flex-wrap space-x-2 mt-2">
-          {existingImages.map((url, idx) => (
-            <div key={`ex-${idx}`} className="relative">
-              <img src={url} alt="" className="h-24 w-24 object-cover rounded-md" />
-              <button type="button" onClick={() => handleRemoveImage(idx, true)} className="absolute top-0 right-0 bg-red-600 text-white rounded-full h-6 w-6">&times;</button>
+        <div className="bg-gray-50/50 p-4 md:p-6 rounded-2xl border border-gray-100">
+          <h3 className="text-sm font-black text-gray-900 mb-4 tracking-widest uppercase">Product Images</h3>
+          <div className="space-y-4">
+            <input type="file" name="images" multiple onChange={handleImageChange} className="w-full p-3 bg-white border border-gray-100 rounded-xl text-[10px] font-black outline-none file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all" />
+            <div className="flex flex-wrap gap-3">
+              {existingImages.map((url, idx) => (
+                <div key={`ex-${idx}`} className="relative group">
+                  <img src={url} alt="" className="h-20 w-20 md:h-24 md:w-24 object-cover rounded-xl border border-gray-200 shadow-sm" />
+                  <button type="button" onClick={() => handleRemoveImage(idx, true)} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full h-6 w-6 flex items-center justify-center text-sm shadow-lg transform group-hover:scale-110 transition-all">&times;</button>
+                </div>
+              ))}
+              {imagePreviews.map((preview, idx) => (
+                <div key={`new-${idx}`} className="relative group">
+                  <img src={preview} alt="" className="h-20 w-20 md:h-24 md:w-24 object-cover rounded-xl border border-gray-200 shadow-sm" />
+                  <button type="button" onClick={() => handleRemoveImage(idx, false)} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full h-6 w-6 flex items-center justify-center text-sm shadow-lg transform group-hover:scale-110 transition-all">&times;</button>
+                </div>
+              ))}
             </div>
-          ))}
-          {imagePreviews.map((preview, idx) => (
-            <div key={`new-${idx}`} className="relative">
-              <img src={preview} alt="" className="h-24 w-24 object-cover rounded-md" />
-              <button type="button" onClick={() => handleRemoveImage(idx, false)} className="absolute top-0 right-0 bg-red-600 text-white rounded-full h-6 w-6">&times;</button>
+          </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-3">
+          <button type="submit" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-xl text-xs font-black shadow-lg shadow-blue-600/20 transition-all active:scale-[0.98] uppercase tracking-widest">
+            {editingProduct ? 'UPDATE PRODUCT' : 'ADD PRODUCT'}
+          </button>
+          {editingProduct && (
+            <button type="button" onClick={resetForm} className="sm:w-32 bg-gray-100 hover:bg-gray-200 text-gray-500 p-4 rounded-xl text-xs font-black transition-all uppercase tracking-widest">
+              CANCEL
+            </button>
+          )}
+        </div>
+      </form>
+
+
+      {/* Existing Products */}
+      <div className="mt-12">
+        <h2 className="text-xl md:text-2xl font-black text-gray-900 mb-6 tracking-tight">Existing Products</h2>
+        <div className="grid grid-cols-1 gap-4">
+          {products.map(product => (
+            <div key={product._id} className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all">
+              <div className="flex flex-col md:flex-row gap-4 md:items-center">
+                <div className="w-full md:w-24 h-40 md:h-24 shrink-0">
+                  <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover rounded-xl border border-gray-50" />
+                </div>
+                <div className="flex-grow space-y-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-[10px] font-black bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full uppercase tracking-wider">{product.brand}</span>
+                    <span className="text-[10px] font-black bg-gray-50 text-gray-400 px-2 py-0.5 rounded-full uppercase tracking-wider">{product.category?.name || 'N/A'}</span>
+                    <h3 className="w-full md:w-auto text-sm font-black text-gray-900">{product.name}</h3>
+                  </div>
+                  
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Global Variants</p>
+                    <div className="flex flex-wrap gap-2 text-[10px] font-bold text-gray-600">
+                      {product.variants.map(v => (
+                        <span key={v._id || v.size} className={`px-2 py-1 rounded-lg border ${v.countInStock <= 0 ? 'bg-red-50 border-red-100 text-red-600' : 'bg-gray-50 border-gray-100'}`}>
+                          {v.size}: {v.countInStock <= 0 ? 'OUT' : `₹${v.price} (${v.countInStock})`}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {product.pincodePricing && product.pincodePricing.length > 0 && (
+                    <div className="space-y-1">
+                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Pincode Rules</p>
+                      <div className="flex flex-wrap gap-2 text-[10px] font-bold text-gray-500 opacity-80">
+                        {product.pincodePricing.map((rule, idx) => (
+                          <span key={`${product._id}-rule-${idx}`} className="bg-blue-50/50 px-2 py-1 rounded-lg">
+                            {rule.pincode}: ₹{rule.price} ({rule.inventory})
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex justify-between items-center pt-2">
+                    <p className="text-[10px] font-black text-gray-900 bg-gray-100 px-3 py-1 rounded-full uppercase">
+                      Total Stock: {product.variants.reduce((acc, v) => acc + (v.countInStock || 0), 0)}
+                    </p>
+                    <div className="flex gap-2">
+                      <button onClick={() => handleEditClick(product)} className="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-white rounded-xl text-[10px] font-black transition-all">EDIT</button>
+                      <button onClick={() => handleDeleteProduct(product._id)} className="px-4 py-2 bg-red-100 hover:bg-red-500 text-red-500 hover:text-white rounded-xl text-[10px] font-black transition-all">DELETE</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           ))}
         </div>
-
-        <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded-md">
-          {editingProduct ? 'Update Product' : 'Add Product'}
-        </button>
-        {editingProduct && (
-          <button type="button" onClick={resetForm} className="w-full bg-gray-400 text-white p-2 rounded-md">Cancel</button>
-        )}
-      </form>
-
-      {/* Existing Products */}
-      <h2 className="text-2xl font-bold mt-8 mb-4">Existing Products</h2>
-      <div className="space-y-4">
-        {products.map(product => (
-          <div key={product._id} className="flex justify-between items-center p-4 bg-gray-100 rounded-md">
-            <div className="flex items-center space-x-4">
-              <img src={product.images[0]} alt={product.name} className="w-16 h-16 object-cover rounded-md" />
-              <div>
-                <span className="font-semibold">{product.name} - {product.brand}</span>
-                <p className="text-sm text-gray-600">Category: {product.category?.name || 'N/A'}</p>
-                <p className="text-sm text-gray-600">Variants: {product.variants.map(v => (
-                  <span key={v._id || v.size} className={`mr-2 ${v.countInStock <= 0 ? 'text-red-600 font-bold' : ''}`}>
-                    {v.size}(₹{v.price}): {v.countInStock <= 0 ? 'OUT OF STOCK' : `Qty: ${v.countInStock}`}
-                  </span>
-                ))}</p>
-                <p className="text-xs font-bold mt-1">
-                  Total Inventory: {product.variants.reduce((acc, v) => acc + (v.countInStock || 0), 0)} unit(s)
-                  {product.variants.every(v => v.countInStock <= 0) && (
-                    <span className="ml-2 px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-[10px] uppercase">Sold Out</span>
-                  )}
-                </p>
-                <p className="text-sm text-gray-600">
-                  Pincode Rules: {product.pincodePricing && product.pincodePricing.length > 0
-                    ? product.pincodePricing.map((rule, idx) => (
-                      <span key={`pincode-${product._id}-${idx}`} className="mr-2">
-                        {rule.pincode} ({rule.location || 'Location N/A'} - {rule.size} - Rs.{rule.price}): Qty {rule.inventory}
-                      </span>
-                    ))
-                    : 'N/A'}
-                </p>
-              </div>
-            </div>
-            <div className="flex space-x-2">
-              <button onClick={() => handleEditClick(product)} className="bg-yellow-500 text-white px-4 py-2 rounded-md">Edit</button>
-              <button onClick={() => handleDeleteProduct(product._id)} className="bg-red-600 text-white px-4 py-2 rounded-md">Delete</button>
-            </div>
-          </div>
-        ))}
       </div>
     </div>
   );

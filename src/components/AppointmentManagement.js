@@ -78,86 +78,138 @@ const AppointmentManagement = () => {
     if (loading) return <div>Loading appointments...</div>;
 
     return (
-        <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-4">Farm Appointments</h2>
+        <div className="p-4 md:p-8 bg-white shadow-sm border border-gray-100 rounded-2xl md:rounded-[2.5rem] animate-fade-in">
+            <h2 className="text-xl md:text-2xl font-black text-gray-900 mb-6 tracking-tight">Farm Appointments</h2>
 
             {/* Filter Section */}
-            <div className="flex flex-wrap gap-4 mb-6">
-                <input
-                    type="number"
-                    name="year"
-                    placeholder="Year"
-                    value={filters.year}
-                    onChange={handleFilterChange}
-                    className="border rounded px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-32"
-                />
-                <select
-                    name="month"
-                    value={filters.month}
-                    onChange={handleFilterChange}
-                    className="border rounded px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                    <option value="">Select Month</option>
-                    <option value="1">January</option>
-                    <option value="2">February</option>
-                    <option value="3">March</option>
-                    <option value="4">April</option>
-                    <option value="5">May</option>
-                    <option value="6">June</option>
-                    <option value="7">July</option>
-                    <option value="8">August</option>
-                    <option value="9">September</option>
-                    <option value="10">October</option>
-                    <option value="11">November</option>
-                    <option value="12">December</option>
-                </select>
-                <input
-                    type="text"
-                    name="search"
-                    placeholder="Search by name, ID, or phone"
-                    value={filters.search}
-                    onChange={handleFilterChange}
-                    className="border rounded px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 flex-grow"
-                />
+            <div className="flex flex-col md:flex-row gap-3 mb-8">
+                <div className="flex gap-2 shrink-0">
+                    <input
+                        type="number"
+                        name="year"
+                        placeholder="Year"
+                        value={filters.year}
+                        onChange={handleFilterChange}
+                        className="w-20 bg-gray-50 border border-gray-100 rounded-xl px-3 py-2 text-[10px] font-black uppercase tracking-widest outline-none focus:ring-4 focus:ring-blue-500/10 transition-all"
+                    />
+                    <select
+                        name="month"
+                        value={filters.month}
+                        onChange={handleFilterChange}
+                        className="flex-grow md:w-32 bg-gray-50 border border-gray-100 rounded-xl px-3 py-2 text-[10px] font-black uppercase tracking-widest outline-none focus:ring-4 focus:ring-blue-500/10 transition-all cursor-pointer"
+                    >
+                        <option value="">MONTH...</option>
+                        <option value="1">JANUARY</option>
+                        <option value="2">FEBRUARY</option>
+                        <option value="3">MARCH</option>
+                        <option value="4">APRIL</option>
+                        <option value="5">MAY</option>
+                        <option value="6">JUNE</option>
+                        <option value="7">JULY</option>
+                        <option value="8">AUGUST</option>
+                        <option value="9">SEPTEMBER</option>
+                        <option value="10">OCTOBER</option>
+                        <option value="11">NOVEMBER</option>
+                        <option value="12">DECEMBER</option>
+                    </select>
+                </div>
+                <div className="relative flex-grow">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">🔍</span>
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Search by name, ID, or phone..."
+                        value={filters.search}
+                        onChange={handleFilterChange}
+                        className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-xs font-bold focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all placeholder:text-gray-300"
+                    />
+                </div>
             </div>
 
-            <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                        <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Message</th>
+            {/* Mobile View: Cards */}
+            <div className="grid grid-cols-1 gap-4 md:hidden">
+                {filteredAppointments.length > 0 ? (
+                    filteredAppointments.map((appointment) => (
+                        <div key={appointment._id} className="bg-gray-50/50 border border-gray-100 rounded-2xl p-4 space-y-4">
+                            <div className="flex justify-between items-start">
+                                <div className="space-y-1">
+                                    <p className="text-[10px] font-black text-gray-900 uppercase tracking-tight">{appointment.name}</p>
+                                    <p className="text-[8px] font-bold text-gray-400 uppercase tracking-widest">{appointment.phone}</p>
+                                </div>
+                                <select
+                                    value={appointment.status || 'pending'}
+                                    onChange={(e) => handleStatusUpdate(appointment._id, e.target.value)}
+                                    className={`px-2 py-1 rounded-lg text-[8px] font-black uppercase tracking-widest border transition-all outline-none ${appointment.status === 'confirmed' ? 'bg-green-50 text-green-600 border-green-100' :
+                                            appointment.status === 'rejected' ? 'bg-red-50 text-red-600 border-red-100' :
+                                                appointment.status === 'visited' ? 'bg-blue-50 text-blue-600 border-blue-100' :
+                                                    'bg-gray-100 text-gray-500 border-gray-200'
+                                        }`}
+                                >
+                                    <option value="pending">PENDING</option>
+                                    <option value="confirmed">CONFIRMED</option>
+                                    <option value="rejected">REJECTED</option>
+                                    <option value="visited">VISITED</option>
+                                </select>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100">
+                                <div>
+                                    <p className="text-[7px] font-black text-gray-300 uppercase tracking-widest leading-none mb-1">Date & Time</p>
+                                    <p className="text-[9px] font-bold text-gray-600 uppercase">{new Date(appointment.preferredDate).toLocaleDateString()} @ {appointment.preferredTime}</p>
+                                </div>
+                                <div className="text-right">
+                                    <button
+                                        onClick={() => showMessage(appointment.message)}
+                                        className="inline-flex items-center gap-2 bg-white border border-gray-200 px-3 py-1.5 rounded-lg text-[8px] font-black text-gray-400 uppercase tracking-widest hover:bg-gray-50"
+                                    >
+                                        <FaEnvelope size={10} /> Message
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <div className="py-12 text-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 text-gray-300 font-black text-[10px] uppercase tracking-widest">
+                        No appointments found
+                    </div>
+                )}
+            </div>
+
+            {/* Desktop View: Table */}
+            <div className="hidden md:block overflow-x-auto no-scrollbar">
+                <table className="w-full">
+                    <thead>
+                        <tr className="border-b border-gray-100">
+                            <th className="px-4 py-4 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Date</th>
+                            <th className="px-4 py-4 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Time</th>
+                            <th className="px-4 py-4 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Visitor</th>
+                            <th className="px-4 py-4 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Contacts</th>
+                            <th className="px-4 py-4 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Status</th>
+                            <th className="px-4 py-4 text-right text-[10px] font-black text-gray-400 uppercase tracking-widest">Message</th>
                         </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="divide-y divide-gray-50">
                         {filteredAppointments.length > 0 ? (
                             filteredAppointments.map((appointment) => (
-                                <tr key={appointment._id}>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <tr key={appointment._id} className="hover:bg-gray-50/50 transition-colors group">
+                                    <td className="px-4 py-4 text-[10px] font-bold text-gray-900 uppercase">
                                         {new Date(appointment.preferredDate).toLocaleDateString()}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <td className="px-4 py-4 text-[10px] font-bold text-gray-500 uppercase">
                                         {appointment.preferredTime}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <td className="px-4 py-4 text-[10px] font-black text-gray-900 uppercase">
                                         {appointment.name}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {appointment.email || '-'}
+                                    <td className="px-4 py-4">
+                                        <p className="text-[10px] font-bold text-gray-500">{appointment.phone}</p>
+                                        <p className="text-[9px] font-medium text-gray-400 lowercase">{appointment.email || 'no email'}</p>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {appointment.phone}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <td className="px-4 py-4">
                                         <select
                                             value={appointment.status || 'pending'}
                                             onChange={(e) => handleStatusUpdate(appointment._id, e.target.value)}
-                                            className="border rounded px-2 py-1 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="bg-white border border-gray-100 rounded-lg px-2 py-1 text-[8px] font-black uppercase tracking-widest outline-none focus:ring-4 focus:ring-blue-500/10"
                                         >
                                             <option value="pending">Pending</option>
                                             <option value="confirmed">Confirmed</option>
@@ -165,21 +217,20 @@ const AppointmentManagement = () => {
                                             <option value="visited">Visited</option>
                                         </select>
                                     </td>
-                                    <td className="px-6 py-4 text-sm text-gray-900">
+                                    <td className="px-4 py-4 text-right">
                                         <button
                                             onClick={() => showMessage(appointment.message)}
-                                            className="text-blue-600 hover:text-blue-800 transition-colors"
-                                            title="View Message"
+                                            className="text-gray-300 hover:text-blue-500 transition-colors p-2"
                                         >
-                                            <FaEnvelope size={18} />
+                                            <FaEnvelope size={14} />
                                         </button>
                                     </td>
                                 </tr>
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="7" className="px-6 py-4 text-center text-sm text-gray-500">
-                                    No appointments found.
+                                <td colSpan="6" className="py-12 text-center text-gray-300 font-black text-[10px] uppercase tracking-widest italic">
+                                    No records found for the selected period
                                 </td>
                             </tr>
                         )}
@@ -189,24 +240,25 @@ const AppointmentManagement = () => {
 
             {/* Message Modal */}
             {selectedMessage && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 backdrop-blur-sm animate-in fade-in duration-300">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden transform animate-in slide-in-from-bottom-8 duration-300">
-                        <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 px-6 py-4">
-                            <h3 className="text-black font-bold text-lg flex items-center">
-                                <FaEnvelope className="mr-2" /> Visitor Message
-                            </h3>
-                        </div>
-                        <div className="p-8">
-                            <div className="bg-gray-50 rounded-xl p-6 border border-gray-100 italic text-gray-700 leading-relaxed shadow-inner overflow-auto max-h-60 break-words text-sm">
-                                "{selectedMessage}"
+                <div className="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+                    <div className="bg-white p-6 md:p-8 rounded-[2rem] border border-gray-100 shadow-2xl w-full max-w-sm animate-pop-in">
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="p-3 bg-blue-50 rounded-2xl text-blue-600">
+                                <FaEnvelope size={20} />
                             </div>
-                            <button
-                                onClick={() => setSelectedMessage(null)}
-                                className="mt-8 w-full bg-green-600 text-white font-bold py-3 rounded-xl hover:bg-green-700 transition-all shadow-lg hover:shadow-green-100 uppercase tracking-wider text-xs"
-                            >
-                                Close
-                            </button>
+                            <h3 className="text-xl font-black text-gray-900 tracking-tight">Visitor Message</h3>
                         </div>
+
+                        <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100 mb-8 max-h-[40vh] overflow-y-auto no-scrollbar">
+                            <p className="text-xs font-bold text-gray-600 leading-relaxed italic">"{selectedMessage}"</p>
+                        </div>
+
+                        <button
+                            onClick={() => setSelectedMessage(null)}
+                            className="w-full bg-gray-900 text-white p-4 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-gray-900/20 active:scale-95 transition-all"
+                        >
+                            Close Message
+                        </button>
                     </div>
                 </div>
             )}
