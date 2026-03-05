@@ -78,111 +78,70 @@ const CompletedOrders = ({ refreshFlag }) => {
     if (error) return <div className="text-center text-red-500 mt-10">{error}</div>;
 
     return (
-        <div className="p-4 md:p-8 bg-white shadow-sm border border-gray-100 rounded-2xl md:rounded-[2.5rem] animate-fade-in">
-            <h2 className="text-xl md:text-2xl font-black text-gray-900 mb-6 tracking-tight">Completed Orders</h2>
+        <div className="p-6 bg-white shadow-md rounded-lg">
+            <h2 className="text-2xl font-semibold mb-4">Completed Orders</h2>
 
-            <div className="flex flex-col md:flex-row gap-4 mb-8">
-                <div className="flex gap-2 w-full md:w-auto overflow-x-auto no-scrollbar">
-                    <select
-                        value={selectedMonth}
-                        onChange={(e) => setSelectedMonth(e.target.value)}
-                        className="bg-gray-50 border border-gray-100 rounded-xl px-3 py-2 text-[10px] font-black uppercase tracking-widest outline-none focus:ring-4 focus:ring-blue-500/10 transition-all cursor-pointer"
-                    >
+            <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4 mb-4">
+                <div className="flex space-x-2">
+                    <select value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)} className="p-2 border rounded-md">
                         {months.map(m => (
                             <option key={m.value} value={m.value}>{m.name}</option>
                         ))}
                     </select>
-                    <select
-                        value={selectedYear}
-                        onChange={(e) => setSelectedYear(e.target.value)}
-                        className="bg-gray-50 border border-gray-100 rounded-xl px-3 py-2 text-[10px] font-black uppercase tracking-widest outline-none focus:ring-4 focus:ring-blue-500/10 transition-all cursor-pointer"
-                    >
+                    <select value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)} className="p-2 border rounded-md">
                         {years.map(y => (
                             <option key={y} value={y}>{y}</option>
                         ))}
                     </select>
                 </div>
-                <div className="relative flex-grow">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">🔍</span>
-                    <input
-                        type="text"
-                        placeholder="Search by name, order ID, or phone..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-xs font-bold focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all placeholder:text-gray-300"
-                    />
-                </div>
+                <input
+                    type="text"
+                    placeholder="Search by name, order ID, or phone"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="p-2 border rounded-md w-full md:w-1/2"
+                />
             </div>
 
-            <div className="grid grid-cols-1 gap-4">
+            <div className="space-y-4">
                 {filteredOrders.length > 0 ? (
                     filteredOrders.map(order => (
-                        <div key={order._id} className="bg-gray-50/50 border border-gray-100 rounded-2xl p-4 hover:bg-white hover:shadow-md transition-all group">
-                            <div className="flex flex-col md:flex-row justify-between gap-6">
-                                <div className="space-y-3 flex-grow">
-                                    <div className="flex flex-wrap items-center gap-2">
-                                        <span className="bg-green-50 text-green-600 text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">Delivered</span>
-                                        <p className="text-sm font-black text-gray-900 tracking-tight">#{order.orderNumber}</p>
-                                    </div>
+                        <div key={order._id} className="bg-gray-100 rounded-lg p-4 flex justify-between items-start md:items-center flex-col md:flex-row">
+                            <div className="w-full md:w-1/2">
+                                <p><strong>Order ID:</strong> {order.orderNumber}</p>
+                                <p><strong>Customer:</strong> {order.user?.name}</p>
+                                <p><strong>Phone:</strong> {order.user?.phone || 'N/A'}</p>
+                                <p><strong>Email:</strong> {order.user?.email}</p>
+                                <p><strong>Address:</strong> {order.shippingAddress?.address}, {order.shippingAddress?.city}, {order.shippingAddress?.postalCode}</p>
+                                <p><strong>Assigned To:</strong> {order.assignedTo?.name || 'N/A'}</p>
+                                <p><strong>Delivered On:</strong> {moment(order.deliveredAt).format('MMMM Do YYYY, h:mm:ss a')}</p>
+                                <p><strong>Total Price:</strong> ₹{order.totalPrice}</p>
+                            </div>
 
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
-                                        <div className="space-y-0.5">
-                                            <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest leading-none">Customer Info</p>
-                                            <p className="text-[10px] font-black text-gray-900 leading-tight">{order.user?.name}</p>
-                                            <p className="text-[10px] font-bold text-gray-500">{order.user?.phone || 'No Phone'}</p>
-                                        </div>
-                                        <div className="space-y-0.5">
-                                            <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest leading-none">Shipping Address</p>
-                                            <p className="text-[10px] font-bold text-gray-600 line-clamp-2">{order.shippingAddress?.address}, {order.shippingAddress?.city} - {order.shippingAddress?.postalCode}</p>
-                                        </div>
-                                        <div className="space-y-0.5">
-                                            <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest leading-none">Delivered By</p>
-                                            <p className="text-[10px] font-black text-blue-600">{order.assignedTo?.name || 'N/A'}</p>
-                                        </div>
-                                        <div className="space-y-0.5">
-                                            <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest leading-none">Completion Date</p>
-                                            <p className="text-[10px] font-bold text-gray-600">{moment(order.deliveredAt).format('MMM Do YYYY, h:mm A')}</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="pt-2 flex items-center justify-between">
-                                        <div className="px-3 py-1 bg-gray-900 text-white rounded-lg text-[10px] font-black tracking-widest uppercase shadow-sm">
-                                            ₹{order.totalPrice}
-                                        </div>
-                                        <button
-                                            onClick={() => handleRevertStatus(order._id)}
-                                            className="px-4 py-1.5 bg-red-100 text-red-500 hover:bg-red-500 hover:text-white rounded-lg text-[10px] font-black uppercase tracking-widest transition-all shadow-sm active:scale-95"
-                                        >
-                                            Revert
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div className="md:w-48 shrink-0">
-                                    <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-3 border-b border-gray-100 pb-1">Order Items</p>
-                                    <div className="space-y-2">
+                            <div className="w-full md:w-1/2 flex items-center justify-end md:justify-end mt-4 md:mt-0 space-x-4">
+                                <div className="flex flex-col items-end">
+                                    <p className="font-semibold">Products:</p>
+                                    <div className="space-y-2 mt-2">
                                         {order.orderItems.map((item) => (
-                                            <div key={item._id} className="flex items-center gap-3">
+                                            <div key={item._id} className="flex items-center space-x-2">
                                                 <img
                                                     src={item.product?.images?.[0]}
                                                     alt={item.name}
-                                                    className="w-10 h-10 object-cover rounded-lg border border-gray-100"
+                                                    className="w-16 h-16 object-cover rounded"
                                                 />
-                                                <div className="min-w-0">
-                                                    <p className="text-[10px] font-black text-gray-900 truncate leading-tight uppercase">{item.name}</p>
-                                                    <p className="text-[8px] font-bold text-gray-400 uppercase tracking-tighter">Size: {item.size} • Qty: {item.qty}</p>
-                                                </div>
+                                                <p className="text-sm">
+                                                    {item.name} (Pack: {item.size})
+                                                </p>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
+                                <button onClick={() => handleRevertStatus(order._id)} className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 self-start md:self-auto">Revert</button>
                             </div>
                         </div>
                     ))
                 ) : (
-                    <div className="py-12 text-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 text-gray-300 font-black text-xs uppercase tracking-widest">
-                        No completed orders found
-                    </div>
+                    <p>No completed orders found for this period.</p>
                 )}
             </div>
         </div>
