@@ -122,9 +122,16 @@ const LoginRegisterPage = () => {
               </div>
               <div className="input-box">
                 <button type="submit" className="btn" disabled={isSubmitting}>
-                  {isSubmitting ? "Logging in..." : "Login"}
+                  Login
                 </button>
               </div>
+
+              {isSubmitting && (
+                <div className="flex items-center justify-center gap-2 mt-4 text-white">
+                  <div className="spinner"></div>
+                  <span className="text-sm font-medium">Logging in...</span>
+                </div>
+              )}
               <div className="regi-link">
                 <p>
                   Don’t have an account?{" "}
@@ -205,13 +212,16 @@ const LoginRegisterPage = () => {
                   </div>
                 </>
               )}
-              <div className="input-box">
-                <button type="submit" className="btn" disabled={isSubmitting}>
-                  {isSubmitting
-                    ? (isOtpSent ? "Registering..." : "Sending...")
-                    : (isOtpSent ? "Verify & Register" : "Request OTP")}
-                </button>
-              </div>
+              <button type="submit" className="btn" disabled={isSubmitting}>
+                {isOtpSent ? "Verify & Register" : "Request OTP"}
+              </button>
+
+              {isSubmitting && (
+                <div className="flex items-center justify-center gap-2 mt-4 text-white">
+                  <div className="spinner"></div>
+                  <span className="text-sm font-medium">{isOtpSent ? "Registering..." : "Sending..."}</span>
+                </div>
+              )}
               <div className="regi-link">
                 <p>
                   Already have an account?{" "}
