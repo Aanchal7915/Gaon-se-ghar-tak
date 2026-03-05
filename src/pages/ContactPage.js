@@ -77,7 +77,7 @@ import { motion } from "framer-motion";
 import { FaMapMarkerAlt, FaPhoneAlt, FaClock, FaWhatsapp } from "react-icons/fa";
 
 const ContactPage = () => {
-  const whatsappNumber = "919728268800";
+  const whatsappNumber = "917293333340";
 
   return (
     <div className="container mx-auto p-4 lg:p-16">
@@ -115,9 +115,8 @@ const ContactPage = () => {
               <div>
                 <h3 className="text-lg font-semibold text-gray-700">Address</h3>
                 <p className="text-gray-600">
-                  Gandhi Shopping Complex <br />
-                  94D, Delhi Rd, Model Town <br />
-                  Rohtak, Haryana 124001
+                  Dk saharan Marodhi JATAN 103 <br />
+                  Rohtak
                 </p>
               </div>
             </div>
@@ -127,10 +126,10 @@ const ContactPage = () => {
               <div>
                 <h3 className="text-lg font-semibold text-gray-700">Phone</h3>
                 <a
-                  href="tel:+919728268800"
+                  href="tel:+917293333340"
                   className="text-blue-600 hover:underline"
                 >
-                  097282 68800
+                  7293333340
                 </a>
               </div>
             </div>
