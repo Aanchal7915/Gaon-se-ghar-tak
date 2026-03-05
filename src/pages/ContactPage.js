@@ -146,7 +146,7 @@ const ContactPage = () => {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="bg-white p-8 rounded-xl shadow-lg"
+          className="bg-white p-8 rounded-xl shadow-lg order-2 lg:order-first"
         >
           <h2 className="text-lg md:text-2xl font-bold text-gray-800 mb-4 md:mb-6">Our Details</h2>
           <div className="space-y-6">
@@ -205,7 +205,7 @@ const ContactPage = () => {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="bg-white p-8 rounded-xl shadow-lg"
+          className="bg-white p-8 rounded-xl shadow-lg order-first lg:order-last"
         >
           <div className="space-y-1 mb-6">
             <div className="flex items-center space-x-2 text-green-600 font-bold text-xs uppercase tracking-widest">
