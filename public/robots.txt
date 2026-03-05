@@ -1,3 +1,12 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /admin/
+Disallow: /delivery/
+Disallow: /myorders/
+Disallow: /my-appointments/
+Disallow: /cart/
+Disallow: /wishlist/
+Disallow: /search
+
+Sitemap: https://gaonseghartak.in/sitemap.xml

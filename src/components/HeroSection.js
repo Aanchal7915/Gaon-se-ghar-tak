@@ -135,9 +135,9 @@ const HeroSection = () => {
                   <div className="absolute top-1 right-2 text-[6px] md:text-[8px] text-yellow-700/40">✦</div>
 
                   {/* Content Container */}
-                  <div className="relative z-10 flex flex-col items-center w-full h-full pt-4 md:pt-8">
+                  <div className="relative z-10 flex flex-col items-center w-full h-full pt-2 md:pt-8">
                     {/* Square Image with Glow - Optimized for mobile and multi-column desktop */}
-                    <div className="w-10 h-10 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-32 lg:h-32 rounded-lg overflow-hidden border border-white/80 shadow-[0_0_12px_rgba(255,255,255,0.3)] bg-white/30 p-0.5 transform transition-all duration-500 group-hover:scale-105 group-hover:rotate-1">
+                    <div className="w-16 h-16 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-32 lg:h-32 rounded-lg overflow-hidden border border-white/80 shadow-[0_0_12px_rgba(255,255,255,0.3)] bg-white/30 p-0.5 transform transition-all duration-500 group-hover:scale-105 group-hover:rotate-1">
                       <img
                         src={cat.image}
                         alt={cat.name}
