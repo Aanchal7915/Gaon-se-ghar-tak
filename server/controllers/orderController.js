@@ -251,7 +251,7 @@ exports.createRazorpayOrder = async (req, res) => {
   const order = await Order.findById(req.params.id);
   if (order) {
     const options = {
-      amount: order.totalPrice * 100,
+      amount: Math.round(order.totalPrice * 100),
       currency: "INR",
       receipt: order._id.toString()
     };
@@ -268,7 +268,8 @@ exports.createRazorpayOrder = async (req, res) => {
 
       res.status(201).json(responseData);
     } catch (error) {
-      res.status(500).json({ message: 'Razorpay order creation failed' });
+      console.error('Razorpay Error:', error);
+      res.status(500).json({ message: `Razorpay order creation failed: ${error.message}` });
     }
   } else {
     res.status(404).json({ message: 'Order not found' });
