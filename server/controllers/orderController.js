@@ -56,22 +56,27 @@ exports.createOrder = async (req, res) => {
 
   const { orderItems, shippingAddress, totalPrice, customerLocation, customerInfo } = req.body;
 
-  // Pincode Validation
-  if (!shippingAddress || !shippingAddress.postalCode || !ALLOWED_PINCODES.includes(shippingAddress.postalCode.toString().trim())) {
-    return res.status(400).json({ message: 'Delivery not available at your location. We currently serve only in Rohtak and surrounding areas.' });
+  const hasValidShippingAddress = shippingAddress && shippingAddress.postalCode && ALLOWED_PINCODES.includes(shippingAddress.postalCode.toString().trim());
+
+  const hasValidMapPin = customerLocation &&
+    typeof customerLocation.latitude === 'number' &&
+    typeof customerLocation.longitude === 'number' &&
+    !Number.isNaN(customerLocation.latitude) &&
+    !Number.isNaN(customerLocation.longitude);
+
+  if (!hasValidShippingAddress && !hasValidMapPin) {
+    return res.status(400).json({ message: 'Please provide either a valid 124*** pincode address OR set your delivery pin on the map.' });
+  }
+
+  // Pincode Validation: Only enforce if they provided a manual address but no map pin
+  if (shippingAddress && shippingAddress.postalCode) {
+    if (!ALLOWED_PINCODES.includes(shippingAddress.postalCode.toString().trim())) {
+      return res.status(400).json({ message: 'Delivery not available at your location. We currently serve only in Rohtak and surrounding areas.' });
+    }
   }
 
   if (!orderItems || orderItems.length === 0) {
     return res.status(400).json({ message: 'No order items' });
-  }
-  if (
-    !customerLocation ||
-    typeof customerLocation.latitude !== 'number' ||
-    typeof customerLocation.longitude !== 'number' ||
-    Number.isNaN(customerLocation.latitude) ||
-    Number.isNaN(customerLocation.longitude)
-  ) {
-    return res.status(400).json({ message: 'Please set delivery pin on map.' });
   }
 
   const session = await mongoose.startSession();

@@ -126,7 +126,7 @@ const Header = () => {
     { name: "Shop All", path: "/products" },
     { name: "Blog", path: "/blog" },
     { name: "Contact", path: "/contact" },
-    { name: "Visit our khet", path: "/book-appointment" }  ];
+    { name: "Visit our khet", path: "/book-appointment" }];
 
   const isActive = (path) => location.pathname === path;
 

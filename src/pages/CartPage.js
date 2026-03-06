@@ -397,21 +397,26 @@ const CartPage = () => {
                                 </div>
 
                                 {showMap && (
-                                    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                                        <div className="bg-white rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col relative transition-all transform scale-100">
+                                    <div className="fixed inset-0 z-[99999] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-0 sm:p-4 transition-opacity">
+                                        <div className="bg-white rounded-t-[32px] sm:rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col relative transform transition-transform mt-auto sm:mt-0 max-h-[92vh]">
+                                            {/* Mobile drag handle */}
+                                            <div className="w-full flex justify-center pt-3 pb-2 sm:hidden bg-white shrink-0">
+                                                <div className="w-12 h-1.5 bg-gray-200 rounded-full"></div>
+                                            </div>
+
                                             {/* Header */}
-                                            <div className="p-5 border-b border-gray-100 flex justify-between items-center bg-white">
+                                            <div className="px-5 pb-4 pt-2 sm:p-5 sm:border-b border-gray-100 flex justify-between items-center bg-white shrink-0">
                                                 <div>
                                                     <h3 className="text-xl font-bold text-gray-900">Select Location</h3>
-                                                    <p className="text-xs text-gray-500 mt-1">Please pin your service address</p>
+                                                    <p className="text-[11px] sm:text-xs text-gray-500 mt-1">Please pin your service address</p>
                                                 </div>
-                                                <button type="button" onClick={() => setShowMap(false)} className="text-gray-400 hover:bg-gray-100 rounded-full transition-colors p-2">
-                                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                <button type="button" onClick={() => setShowMap(false)} className="text-gray-400 hover:bg-gray-100 rounded-full transition-colors p-2 -mr-2">
+                                                    <svg className="w-6 h-6 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                                                 </button>
                                             </div>
 
                                             {/* Map Area */}
-                                            <div className="h-72 sm:h-80 w-full relative">
+                                            <div className="h-[45vh] sm:h-80 w-full relative shrink-0">
                                                 <MapContainer center={mapCenter} zoom={16} style={{ height: '100%', width: '100%' }}>
                                                     <RecenterMap center={mapCenter} />
                                                     <MapClickHandler />
@@ -458,14 +463,14 @@ const CartPage = () => {
                                             </div>
 
                                             {/* Footer Area */}
-                                            <div className="p-5 bg-white flex flex-col gap-4">
-                                                <div className="bg-gray-50 border border-gray-100 p-4 rounded-xl">
-                                                    <p className="text-[10px] font-bold text-blue-600 uppercase tracking-wider mb-1.5">FINAL ADDRESS:</p>
-                                                    <p className="text-sm text-gray-700 leading-snug line-clamp-2 min-h-[40px] italic">
+                                            <div className="p-5 pb-8 sm:pb-5 bg-white flex flex-col gap-3 sm:gap-4 overflow-y-auto">
+                                                <div className="bg-gray-50 border border-gray-100 p-3 sm:p-4 rounded-xl shrink-0">
+                                                    <p className="text-[10px] font-bold text-blue-600 uppercase tracking-wider mb-1">FINAL ADDRESS:</p>
+                                                    <p className="text-xs sm:text-sm text-gray-700 leading-snug line-clamp-2 min-h-[36px] italic">
                                                         {modalAddressText || "Click anywhere on the map above to select your location..."}
                                                     </p>
                                                 </div>
-                                                <button type="button" onClick={() => setShowMap(false)} className="w-full bg-blue-600 text-white font-bold py-3.5 rounded-xl hover:bg-blue-700 transition-colors shadow-md shadow-blue-500/30 text-[15px]">
+                                                <button type="button" onClick={() => setShowMap(false)} className="w-full shrink-0 bg-blue-600 text-white font-bold py-3.5 rounded-xl hover:bg-blue-700 transition-colors shadow-md shadow-blue-500/30 text-sm sm:text-[15px] mb-2 sm:mb-0">
                                                     Confirm This Location
                                                 </button>
                                             </div>
