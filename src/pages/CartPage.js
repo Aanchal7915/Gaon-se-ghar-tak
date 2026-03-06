@@ -34,17 +34,12 @@ const CartPage = () => {
     const [showMap, setShowMap] = useState(false);
     const [modalAddressText, setModalAddressText] = useState("");
     const [orderStatus, setOrderStatus] = useState({ isOpen: true, reason: '' });
-    const alertShown = useRef(false);
-
     useEffect(() => {
-        if (loading) return; // Wait until auth state is loaded
+        if (loading) return;
 
-        if (!user) {
-            if (!alertShown.current) {
-                alert("Please login to access your shopping cart.");
-                alertShown.current = true;
-                navigate("/");
-            }
+        const token = localStorage.getItem('token');
+        if (!user && !token) {
+            navigate("/login");
             return;
         }
 
