@@ -79,9 +79,6 @@ exports.createOrder = async (req, res) => {
     return res.status(400).json({ message: 'No order items' });
   }
 
-  const session = await mongoose.startSession();
-  session.startTransaction();
-
   try {
     const orderNumber = `ORD-${Date.now()}`;
     const validatedOrderItems = [];
@@ -90,7 +87,7 @@ exports.createOrder = async (req, res) => {
     const deliveryWindowEnd = nextDay.clone().hour(18).minute(0).second(0).millisecond(0);
 
     for (const item of orderItems) {
-      const product = await Product.findById(item.product).session(session);
+      const product = await Product.findById(item.product);
       if (!product) {
         throw new Error(`Product not found for item: ${item.name}`);
       }
@@ -106,7 +103,7 @@ exports.createOrder = async (req, res) => {
 
       // Decrement stock
       variant.countInStock -= item.qty;
-      await product.save({ session });
+      await product.save();
 
       validatedOrderItems.push({
         name: item.name,
@@ -134,15 +131,10 @@ exports.createOrder = async (req, res) => {
       deliveryWindowEnd: deliveryWindowEnd.toDate()
     });
 
-    const createdOrder = await order.save({ session });
-
-    await session.commitTransaction();
-    session.endSession();
+    const createdOrder = await order.save();
 
     res.status(201).json(createdOrder);
   } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
     console.error('Order creation failed:', error.message);
     res.status(500).json({ message: error.message || 'Server Error' });
   }
