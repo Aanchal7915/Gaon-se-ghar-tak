@@ -592,9 +592,6 @@ const MyOrdersPage = () => {
                                             Expected Delivery: {getDeliveryWindowText(order)}
                                         </p>
                                     </div>
-                                    <span className={`px-4 py-1 rounded-full text-sm font-semibold capitalize ${getStatusColor(order.status)}`}>
-                                        {order.status}
-                                    </span>
                                 </div>
 
                                 <div className="grid grid-cols-2 md:flex md:justify-between md:items-center mb-6 text-sm md:text-base">
@@ -610,8 +607,13 @@ const MyOrdersPage = () => {
                                     </div>
                                     <div className="flex items-center space-x-2 text-gray-700">
                                         <p className="font-semibold">Delivery:</p>
-                                        <p className={`font-semibold ${order.isDelivered ? 'text-green-600' : 'text-red-600'}`}>
-                                            {order.isDelivered ? 'Delivered' : 'Pending'}
+                                        <p className={`font-semibold ${order.isDelivered ? 'text-green-600' :
+                                            order.status === 'out for delivery' ? 'text-blue-600' :
+                                                order.status === 'cancelled' ? 'text-red-600' : 'text-yellow-600'
+                                            }`}>
+                                            {order.status === 'out for delivery' ? 'Out for Delivery' :
+                                                order.isDelivered ? 'Delivered' :
+                                                    order.status === 'cancelled' ? 'Cancelled' : 'Pending'}
                                         </p>
                                     </div>
                                 </div>
