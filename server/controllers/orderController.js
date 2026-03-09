@@ -367,7 +367,8 @@ exports.getUnassignedOrders = async (req, res) => {
         { assignedTo: null }
       ],
       isDelivered: false,
-      isCancelled: false
+      isCancelled: false,
+      isPaid: true
     })
       .populate('user', 'email name')
       .populate({
@@ -388,7 +389,8 @@ exports.getAssignedOrders = async (req, res) => {
     const assignedOrders = await Order.find({
       assignedTo: { $ne: null },
       isDelivered: false,
-      isCancelled: false
+      isCancelled: false,
+      isPaid: true
     })
       .populate('user', 'name email phone')
       .populate('assignedTo', 'name email')

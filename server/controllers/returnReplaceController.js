@@ -169,7 +169,12 @@ const updatePickupStatus = async (req, res) => {
 
     try {
         const request = await ReturnReplace.findById(requestId);
-        if (!request || request.pickupPerson.toString() !== deliveryPersonId.toString()) {
+        if (!request) {
+            return res.status(404).json({ message: 'Pickup request not found' });
+        }
+
+        // Check if pickupPerson exists and matches
+        if (!request.pickupPerson || request.pickupPerson.toString() !== deliveryPersonId.toString()) {
             return res.status(403).json({ message: 'Not authorized for this pickup' });
         }
 
@@ -183,35 +188,40 @@ const updatePickupStatus = async (req, res) => {
                     const isReplace = request.type === 'replace';
                     const itemData = isReplace ? request.replacedItem : request.originalItem;
 
-                    const newOrder = new Order({
-                        orderNumber: `${isReplace ? 'REP' : 'RET'}-${Date.now()}`,
-                        user: request.user,
-                        orderItems: [{
-                            name: itemData.name,
-                            qty: itemData.qty,
-                            price: 0,
-                            product: itemData.product,
-                            size: itemData.size
-                        }],
-                        shippingAddress: originalOrder.shippingAddress,
-                        customerInfo: originalOrder.customerInfo,
-                        paymentMethod: isReplace ? 'Replacement' : 'Return Pickup',
-                        totalPrice: 0,
-                        isPaid: true,
-                        isReplaced: false,
-                        isReturned: false,
-                        paidAt: Date.now(),
-                        customerLocation: originalOrder.customerLocation
-                    });
-                    await newOrder.save();
+                    if (itemData && itemData.product) {
+                        const newOrder = new Order({
+                            orderNumber: `${isReplace ? 'REP' : 'RET'}-${Date.now()}`,
+                            user: request.user,
+                            orderItems: [{
+                                name: itemData.name,
+                                qty: itemData.qty,
+                                price: 0,
+                                product: itemData.product,
+                                size: itemData.size
+                            }],
+                            shippingAddress: originalOrder.shippingAddress,
+                            customerInfo: originalOrder.customerInfo,
+                            paymentMethod: isReplace ? 'Replacement' : 'Return Pickup',
+                            totalPrice: 0,
+                            isPaid: true,
+                            isReplaced: false,
+                            isReturned: false,
+                            paidAt: Date.now(),
+                            customerLocation: originalOrder.customerLocation
+                        });
+                        await newOrder.save();
+                    } else {
+                        console.warn(`Missing itemData or product for requestId: ${requestId}`);
+                    }
                 }
             }
         }
         await request.save();
 
-        res.json({ message: 'Pickup status updated', request });
+        res.json({ message: 'Pickup status updated successfully', request });
     } catch (error) {
-        res.status(500).json({ message: 'Server Error' });
+        console.error('Update pickup status error:', error);
+        res.status(500).json({ message: error.message || 'Server Error' });
     }
 };
 
@@ -267,11 +277,16 @@ const getAdminCancelledRequests = async (req, res) => {
 const getMyPickups = async (req, res) => {
     try {
         const pickups = await ReturnReplace.find({ pickupPerson: req.user._id })
-            .populate('order', 'orderNumber totalPrice status')
+            .populate('user', 'name email phone')
+            .populate({
+                path: 'order',
+                select: 'orderNumber totalPrice status shippingAddress',
+            })
             .sort({ createdAt: -1 });
 
         res.json(pickups);
     } catch (error) {
+        console.error('Get my pickups error:', error);
         res.status(500).json({ message: 'Server Error' });
     }
 };

@@ -1,8 +1,8 @@
-// src/controllers/deliveryController.js
 const Delivery = require('../models/Delivery');
 const Order = require('../models/Order');
 const otpService = require('../services/otpService');
 const moment = require('moment');
+const mongoose = require('mongoose');
 
 
 exports.assignOrderToDelivery = async (req, res) => {
@@ -15,32 +15,34 @@ exports.assignOrderToDelivery = async (req, res) => {
     }
 
     // Check if delivery exists
-    let delivery = await Delivery.findOne({ order: orderId });
+    let existingDelivery = await Delivery.findOne({ order: orderId });
 
-    if (delivery) {
-      if (delivery.deliveryPerson.toString() === deliveryPersonId) {
-        // ✅ Same partner → do nothing, just return
-        return res.status(200).json({ message: 'Order already assigned to this delivery person', delivery });
+    if (existingDelivery) {
+      if (existingDelivery.deliveryPerson.toString() === deliveryPersonId) {
+        return res.status(200).json({ message: 'Order already assigned to this delivery person', delivery: existingDelivery });
       }
-
-      // ✅ Different partner → remove old delivery record
-      await Delivery.deleteOne({ _id: delivery._id });
+      // Remove old delivery record if assigning to a different person
+      await Delivery.deleteOne({ _id: existingDelivery._id });
     }
 
-    // Assign fresh delivery
+    // Update order assignment and keep status as pending
     order.assignedTo = deliveryPersonId;
-    order.status = 'out for delivery';
+    order.status = 'pending';
     await order.save();
 
-    const newDelivery = new Delivery({
+    // Create a new delivery record
+    const newDelivery = await Delivery.create({
       order: orderId,
       deliveryPerson: deliveryPersonId,
       status: 'pending'
     });
-    await newDelivery.save();
 
-    const populatedDelivery = await newDelivery.populate([
-      { path: 'order', populate: { path: 'user', select: 'name email phone' } },
+    // Fetch and populate for the response
+    const populatedDelivery = await Delivery.findById(newDelivery._id).populate([
+      {
+        path: 'order',
+        populate: { path: 'user', select: 'name email phone' }
+      },
       { path: 'deliveryPerson', select: 'name email' }
     ]);
 
@@ -50,7 +52,7 @@ exports.assignOrderToDelivery = async (req, res) => {
     });
   } catch (error) {
     console.error('Error assigning order:', error);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: error.message || 'Server Error' });
   }
 };
 
@@ -82,19 +84,27 @@ exports.updateDeliveryStatus = async (req, res) => {
   const { orderId, status, otp } = req.body;
 
   try {
-    const delivery = await Delivery.findOne({ order: orderId, deliveryPerson: req.user._id });
+    const delivery = await Delivery.findOne({
+      order: new mongoose.Types.ObjectId(orderId),
+      deliveryPerson: req.user._id
+    });
+
     if (!delivery) {
-      return res.status(404).json({ message: 'Delivery not found' });
+      console.error(`Delivery not found for orderId: ${orderId} and deliveryPerson: ${req.user._id}`);
+      return res.status(404).json({ message: 'Delivery record not found' });
     }
 
-    // (Optional) ✅ Verify OTP if required
-    if ((status === 'delivered' || status === 'cancelled') && otp) {
-      if (delivery.otp !== otp || delivery.otpExpiry < Date.now()) {
+    // Verify OTP if required (for Delivered or Cancelled status)
+    if ((status === 'delivered' || status === 'cancelled')) {
+      if (!otp) {
+        return res.status(400).json({ message: 'OTP is required for this status update' });
+      }
+      if (delivery.otp !== otp || (delivery.otpExpiry && delivery.otpExpiry < Date.now())) {
         return res.status(400).json({ message: 'Invalid or expired OTP' });
       }
     }
 
-    // ✅ Update Delivery status
+    // Update Delivery status
     delivery.status = status;
 
     if (status === 'delivered') {
@@ -119,10 +129,10 @@ exports.updateDeliveryStatus = async (req, res) => {
 
     await delivery.save();
 
-    res.json({ message: 'Delivery status updated', delivery });
+    res.json({ message: 'Delivery status updated successfully', delivery });
   } catch (error) {
-    console.error('Update delivery status error:', error.message);
-    res.status(500).json({ message: 'Server Error' });
+    console.error('Update delivery status error:', error);
+    res.status(500).json({ message: error.message || 'Server Error' });
   }
 };
 
@@ -137,8 +147,9 @@ exports.sendDeliveryOtp = async (req, res) => {
   const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now
 
   try {
-    const delivery = await Delivery.findOne({ order: orderId }).populate('deliveryPerson', 'email');
+    const delivery = await Delivery.findOne({ order: new mongoose.Types.ObjectId(orderId) }).populate('deliveryPerson', 'email');
     if (!delivery) {
+      console.error(`Delivery record not found for OTP send. OrderId: ${orderId}`);
       return res.status(404).json({ message: 'Delivery record not found.' });
     }
 
@@ -155,7 +166,7 @@ exports.sendDeliveryOtp = async (req, res) => {
 
     res.status(200).json({ message: 'OTP sent to customer\'s email.' });
   } catch (error) {
-    console.error(error);
+    console.error('Send OTP error:', error);
     res.status(500).json({ message: 'Failed to send OTP.' });
   }
 };
