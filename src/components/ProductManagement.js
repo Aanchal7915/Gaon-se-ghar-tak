@@ -658,41 +658,6 @@ const ProductManagement = () => {
           </div>
         </div>
 
-        <div className="space-y-4">
-          <h3 className="text-sm font-black text-gray-800 uppercase tracking-widest border-b pb-1">Product Variants</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {variants.map((variant, index) => (
-              <div key={index} className="relative p-4 border rounded-2xl bg-gray-50 hover:bg-white transition-all shadow-sm group">
-                <button type="button" onClick={() => removeVariant(index)} className="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform">×</button>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="col-span-2">
-                    <label className="block text-[10px] font-bold text-gray-400 uppercase">Pack Size / Name</label>
-                    <input type="text" name="size" value={variant.size} onChange={(e) => handleVariantChange(index, e)} placeholder="Pack/Size" className="w-full p-2 border rounded-lg text-sm" required />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-bold text-gray-400 uppercase">Original Price</label>
-                    <input type="number" name="originalPrice" value={variant.originalPrice} onChange={(e) => handleVariantChange(index, e)} placeholder="Original" className="w-full p-2 border rounded-lg text-sm" />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-bold text-gray-400 uppercase">Discount %</label>
-                    <input type="number" name="discount" value={variant.discount} onChange={(e) => handleVariantChange(index, e)} placeholder="%" className="w-full p-2 border rounded-lg text-sm" />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-bold text-gray-400 uppercase">Selling Price</label>
-                    <input type="number" name="price" value={variant.price} onChange={(e) => handleVariantChange(index, e)} placeholder="Price" className="w-full p-2 border rounded-lg font-bold text-green-700 text-sm" required />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-bold text-gray-400 uppercase">Stock Count</label>
-                    <input type="number" name="countInStock" value={variant.countInStock} onChange={(e) => handleVariantChange(index, e)} placeholder="Qty" className="w-full p-2 border rounded-lg text-sm" required />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <button type="button" onClick={addVariant} className="bg-blue-50 text-blue-600 font-bold px-4 py-2 rounded-xl text-xs hover:bg-blue-600 hover:text-white transition-all w-full md:w-auto">
-            + Add Another Variant
-          </button>
-        </div>
 
         <div className="space-y-4">
           <h3 className="text-sm font-black text-gray-800 uppercase tracking-widest border-b pb-1">Pincode Price & Inventory <span className="text-red-600 text-lg">*</span></h3>

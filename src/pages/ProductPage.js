@@ -146,9 +146,7 @@ const ProductPage = () => {
         const rule = selectedPincode.length === 6
           ? product.pincodePricing?.find(p => p.pincode === selectedPincode.trim() && p.size === v.size)
           : null;
-        const stock = selectedPincode.length === 6
-          ? (rule ? Number(rule.inventory) : 0)
-          : Number(v.countInStock);
+        const stock = rule ? Number(rule.inventory) : 0;
         return stock > 0;
       });
 
@@ -172,9 +170,9 @@ const ProductPage = () => {
     const pincodeRule = (selectedPincode && selectedVariant)
       ? product?.pincodePricing?.find((entry) => entry.pincode === selectedPincode.trim() && entry.size === selectedVariant.size)
       : null;
-    const effectiveStock = pincodeRule ? Number(pincodeRule.inventory) : selectedVariant.countInStock;
-    const effectivePrice = pincodeRule ? Number(pincodeRule.price) : selectedVariant.price;
-    const effectiveOriginalPrice = pincodeRule ? (pincodeRule.originalPrice || null) : (selectedVariant.originalPrice || null);
+    const effectiveStock = pincodeRule ? Number(pincodeRule.inventory) : 0;
+    const effectivePrice = pincodeRule ? Number(pincodeRule.price) : null;
+    const effectiveOriginalPrice = pincodeRule ? (pincodeRule.originalPrice || null) : null;
 
     if (selectedPincode && !pincodeRule) {
       alert("This product is not available for selected pincode.");

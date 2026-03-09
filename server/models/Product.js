@@ -20,11 +20,11 @@ const productSchema = new mongoose.Schema({
   subCategory: { type: String }, // optional (e.g. "sneakers", "boots")
 
   variants: [{
-    size: { type: String, required: true },
-    price: { type: Number, required: true },
-    originalPrice: { type: Number }, // Standard/MRP price to show as strikethrough
+    size: { type: String },
+    price: { type: Number },
+    originalPrice: { type: Number },
     discount: { type: Number },
-    countInStock: { type: Number, required: true, default: 0 },
+    countInStock: { type: Number, default: 0 },
   }],
   pincodePricing: [{
     pincode: { type: String },
