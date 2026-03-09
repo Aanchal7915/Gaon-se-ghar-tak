@@ -225,14 +225,23 @@ const ProductCard = ({ product }) => {
     return { rate, count };
   }, [product._id]);
 
-  // Pincode Logic for Card
-  const selectedPincode = localStorage.getItem("selectedPincode");
+  // Pincode Logic for Card — reactive to changes
+  const [selectedPincode, setSelectedPincode] = useState(
+    () => localStorage.getItem("selectedPincode") || ""
+  );
+
+  useEffect(() => {
+    const handlePincodeUpdate = () => {
+      setSelectedPincode(localStorage.getItem("selectedPincode") || "");
+    };
+    window.addEventListener("pincode-updated", handlePincodeUpdate);
+    return () => window.removeEventListener("pincode-updated", handlePincodeUpdate);
+  }, []);
 
   const localPriceData = useMemo(() => {
     if (!selectedPincode || !product.pincodePricing || product.pincodePricing.length === 0) {
       return null;
     }
-    // Find first available rule for this pincode
     return product.pincodePricing.find(p => p.pincode === selectedPincode.trim());
   }, [product.pincodePricing, selectedPincode]);
 
@@ -456,9 +465,9 @@ const ProductCard = ({ product }) => {
                 </span>
               )}
             </div>
-            {product.variants[0].originalPrice && (
+            {effectiveOriginalPrice && effectivePrice && (
               <span className="text-[6px] sm:text-[10px] text-green-600 font-bold mt-0.5">
-                {Math.round(((product.variants[0].originalPrice - product.variants[0].price) / product.variants[0].originalPrice) * 100)}% OFF
+                {Math.round(((effectiveOriginalPrice - effectivePrice) / effectiveOriginalPrice) * 100)}% OFF
               </span>
             )}
           </div>

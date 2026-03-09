@@ -34,8 +34,80 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [animateCart, setAnimateCart] = useState(false);
   const [categories, setCategories] = useState([]);
-  const [pincode, setPincode] = useState(() => localStorage.getItem("selectedPincode") || "");
+  const [pincode, setPincode] = useState(() => {
+    if (window.location.pathname === "/login") return "";
+    return localStorage.getItem("selectedPincode") || "124001";
+  });
   const [isDeliverable, setIsDeliverable] = useState(null);
+
+  const [showInitialPincodeModal, setShowInitialPincodeModal] = useState(false);
+  const [modalPincode, setModalPincode] = useState("");
+  const [triggerModalOnHome, setTriggerModalOnHome] = useState(false);
+
+  useEffect(() => {
+    // Check if we need to show the modal when we land on the home page
+    if (location.pathname === "/" && triggerModalOnHome) {
+      setShowInitialPincodeModal(true);
+      setTriggerModalOnHome(false);
+    }
+  }, [location.pathname, triggerModalOnHome]);
+
+  useEffect(() => {
+    // Set default pincode if none is saved AND we are not on login page
+    if (!localStorage.getItem("selectedPincode") && location.pathname !== "/login") {
+      localStorage.setItem("selectedPincode", "124001");
+      setPincode("124001");
+      window.dispatchEvent(new Event("pincode-updated"));
+    }
+
+    // Show modal on mount if already logged in and not shown this session
+    const token = localStorage.getItem("token");
+    const modalShown = sessionStorage.getItem("pincodeModalShown");
+    if (token && !modalShown) {
+      sessionStorage.setItem("pincodeModalShown", "true");
+      // Only show if we're not on the login page, otherwise queue it
+      if (location.pathname !== "/login") {
+        setShowInitialPincodeModal(true);
+      } else {
+        setTriggerModalOnHome(true);
+      }
+    }
+
+    // Show modal after login event
+    const handleUserLoggedIn = () => {
+      sessionStorage.removeItem("pincodeModalShown"); // reset so it shows after fresh login
+      const shownCheck = sessionStorage.getItem("pincodeModalShown");
+      if (!shownCheck) {
+        sessionStorage.setItem("pincodeModalShown", "true");
+        // Queue it instead of showing immediately on the login page
+        setTriggerModalOnHome(true);
+      }
+    };
+    window.addEventListener("user-logged-in", handleUserLoggedIn);
+    return () => window.removeEventListener("user-logged-in", handleUserLoggedIn);
+  }, [location.pathname]); // Listen to path changes
+
+  const handleModalClose = () => {
+    // If user closes without entering, keep 124001 as default
+    if (!localStorage.getItem("selectedPincode") || localStorage.getItem("selectedPincode") === "124001") {
+      localStorage.setItem("selectedPincode", "124001");
+      setPincode("124001");
+      window.dispatchEvent(new Event("pincode-updated"));
+    }
+    setShowInitialPincodeModal(false);
+  };
+
+  const handleModalSubmit = (e) => {
+    e.preventDefault();
+    if (modalPincode.length === 6) {
+      setPincode(modalPincode);
+      localStorage.setItem("selectedPincode", modalPincode);
+      window.dispatchEvent(new Event("pincode-updated"));
+      setShowInitialPincodeModal(false);
+    } else {
+      alert("Please enter a valid 6-digit Pincode");
+    }
+  };
 
   const handlePincodeChange = (e) => {
     const val = e.target.value.replace(/\D/g, "");
@@ -136,6 +208,10 @@ const Header = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("selectedPincode");
+    sessionStorage.removeItem("pincodeModalShown");
+    setPincode("");
+    window.dispatchEvent(new Event("pincode-updated"));
     cartContext?.clearCart(); // Clear the cart on logout
     navigate("/login");
   };
@@ -546,6 +622,65 @@ const Header = () => {
           </div>
         </aside>
       </div>
+
+      {/* Initial Pincode Modal */}
+      {showInitialPincodeModal && (
+        <div className="fixed top-0 left-0 w-screen h-screen z-[9999] flex items-center justify-center p-4">
+          {/* Enhanced Glassmorphism Backdrop */}
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-[8px] transition-all duration-300"></div>
+
+          {/* Modal Container - Perfectly Centered */}
+          <div className="relative bg-white rounded-[2.5rem] p-8 sm:p-10 w-full max-w-sm shadow-[0_25px_60px_rgba(0,0,0,0.3)] transform transition-all duration-500 scale-100 opacity-100 border border-white/20">
+            {/* Close Button */}
+            <button
+              onClick={handleModalClose}
+              className="absolute -top-4 -right-4 bg-white text-gray-500 hover:text-red-500 w-11 h-11 rounded-full flex items-center justify-center shadow-xl hover:shadow-2xl transition-all duration-200 border border-gray-100 group z-50"
+            >
+              <HiOutlineX className="w-6 h-6 transform group-hover:rotate-90 transition-transform duration-300" />
+            </button>
+
+            {/* Header Content */}
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 bg-gradient-to-br from-green-50 to-green-100 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-inner">
+                <HiOutlineLocationMarker className="w-8 h-8 text-green-600 animate-bounce-slow" />
+              </div>
+              <h2 className="text-2xl font-black text-gray-800 tracking-tight mb-2">Set Your Location</h2>
+              <p className="text-[13px] text-gray-500 leading-relaxed font-medium">
+                Please enter your pincode to see available <br /> products and special pricing for your area.
+              </p>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleModalSubmit} className="space-y-5">
+              <div className="relative group">
+                <input
+                  type="text"
+                  maxLength="6"
+                  placeholder="000000"
+                  value={modalPincode}
+                  onChange={(e) => setModalPincode(e.target.value.replace(/\D/g, ""))}
+                  className="w-full text-center tracking-[0.5em] text-2xl font-extrabold p-4 border-2 border-gray-100 bg-gray-50/50 rounded-2xl focus:outline-none focus:border-green-500 focus:bg-white transition-all placeholder:text-gray-200 placeholder:tracking-normal placeholder:font-bold"
+                />
+              </div>
+
+              <div className="bg-green-50/50 rounded-xl p-3 flex items-start space-x-2 border border-green-100/50">
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500 mt-1.5 shrink-0"></div>
+                <p className="text-[11px] text-green-700 leading-snug">
+                  Don't have a pincode? Closing this will show default products for <span className="font-bold underline">124001</span>.
+                </p>
+              </div>
+
+              <button
+                type="submit"
+                disabled={modalPincode.length !== 6}
+                className="w-full h-14 bg-green-600 text-white font-black text-lg rounded-2xl hover:bg-green-700 active:scale-[0.98] transition-all disabled:grayscale disabled:opacity-30 disabled:cursor-not-allowed shadow-[0_10px_20px_rgba(22,163,74,0.3)] hover:shadow-[0_15px_25px_rgba(22,163,74,0.4)]"
+              >
+                Set Location
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

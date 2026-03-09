@@ -1,9 +1,10 @@
-// src/pages/LoginPage.js
 import React, { useState } from 'react';
 import apiClient from '../services/apiClient';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const LoginPage = () => {
+    const { login } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -16,12 +17,11 @@ const LoginPage = () => {
         try {
             const { data } = await apiClient.post('/auth/login', { email, password });
 
-            // Store the JWT token and user info
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('user', JSON.stringify(data.user));
+            // Use the AuthContext login function
+            await login(data);
 
             console.log('Login successful:', data.user);
-            navigate('/'); // Redirect to the home page or dashboard
+            navigate('/'); // Redirect to the home page
         } catch (err) {
             setError(err.response?.data?.message || 'Login failed');
             console.error('Login error:', err);

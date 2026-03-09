@@ -52,6 +52,12 @@ const DeliveryDashboard = () => {
     }, [filterMonth, filterYear]);
 
     const handleUpdateStatus = async (delivery, status) => {
+        if (!delivery || !delivery.order || !delivery.order._id) {
+            alert('Invalid delivery or order information.');
+            console.error('Delivery or Order ID is missing', delivery);
+            return;
+        }
+
         setCurrentDelivery({ ...delivery, newStatus: status });
         if (status === 'out for delivery') {
             try {
@@ -64,7 +70,8 @@ const DeliveryDashboard = () => {
                 alert('Status updated to "Out for Delivery".');
                 fetchAllData();
             } catch (error) {
-                alert('Failed to update status.');
+                console.error('Update status error:', error.response?.data || error.message);
+                alert(error.response?.data?.message || 'Failed to update status.');
             }
         } else {
             try {
@@ -73,7 +80,8 @@ const DeliveryDashboard = () => {
                 setShowOtpModal(true);
                 alert('OTP sent to customer.');
             } catch (error) {
-                alert('Failed to send OTP.');
+                console.error('Send OTP error:', error.response?.data || error.message);
+                alert(error.response?.data?.message || 'Failed to send OTP.');
             }
         }
     };
@@ -96,7 +104,8 @@ const DeliveryDashboard = () => {
             setOtpInput('');
             fetchAllData();
         } catch (error) {
-            alert('Failed to update status.');
+            console.error('Verify and update status error:', error.response?.data || error.message);
+            alert(error.response?.data?.message || 'Failed to update status.');
         }
     };
 
@@ -111,7 +120,8 @@ const DeliveryDashboard = () => {
             alert('Pickup status updated successfully!');
             fetchAllData();
         } catch (error) {
-            alert('Failed to update pickup status.');
+            console.error('Update pickup status error:', error.response?.data || error.message);
+            alert(error.response?.data?.message || 'Failed to update pickup status.');
         }
     };
 
@@ -170,7 +180,7 @@ const DeliveryDashboard = () => {
 
                                 <p><strong>Request Type:</strong> <span className="capitalize">{pickup.type}</span></p>
                                 <p><strong>Reason:</strong> {pickup.reason}</p>
-                                <p><strong>Status:</strong> <span className="capitalize">{pickup.status}</span></p>
+                                <p><strong>Status:</strong> <span className="capitalize">{pickup.status === 'out for pickup' ? 'Pickup' : pickup.status}</span></p>
                                 <div className="mt-4 flex space-x-2">
                                     <button
                                         onClick={() => handlePickupStatusChange(pickup, 'received')}

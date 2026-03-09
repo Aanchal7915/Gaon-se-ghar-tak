@@ -29,6 +29,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("user", JSON.stringify(userData.user));
     localStorage.setItem("token", userData.token);
     setUser(userData.user);
+    window.dispatchEvent(new Event("user-logged-in"));
     // ⚠️ No need to set the header manually; apiClient handles it.
     await fetchWishlist();
   };

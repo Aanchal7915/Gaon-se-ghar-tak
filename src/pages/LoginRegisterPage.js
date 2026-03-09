@@ -1,6 +1,7 @@
 import apiClient from '../services/apiClient';
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "../styles/auth.css";
 
 const LoginRegisterPage = () => {
@@ -23,6 +24,7 @@ const LoginRegisterPage = () => {
   const [isLoginSubmitting, setIsLoginSubmitting] = useState(false);
   const [isSignupSubmitting, setIsSignupSubmitting] = useState(false);
 
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   // 🔹 Handle Login
@@ -36,8 +38,7 @@ const LoginRegisterPage = () => {
         email: loginEmail,
         password: loginPassword,
       });
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      await login(data);
       navigate("/");
     } catch (err) {
       setLoginError(err.response?.data?.message || "Login failed");
@@ -80,8 +81,7 @@ const LoginRegisterPage = () => {
         password: signupPassword,
         phone,
       });
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      await login(data);
       navigate("/");
     } catch (err) {
       setSignupMessage(err.response?.data?.message || "Signup failed.");

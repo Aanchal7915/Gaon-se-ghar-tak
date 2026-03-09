@@ -408,6 +408,7 @@ const MyOrdersPage = () => {
         setSelectedItem(item);
         setRequestType(type);
         setRequestReason('');
+        setRequestMessage(''); // Clear previous message
         setSelectedSize('');
         setReturnImages([]);
 
@@ -487,7 +488,7 @@ const MyOrdersPage = () => {
             setRequestMessage(
                 requestType === 'return'
                     ? 'Return request submitted. Please wait for approval request.'
-                    : 'Request submitted successfully!'
+                    : 'Replacement Request submitted successfully!'
             );
             setShowRequestModal(false);
             setReturnImages([]);
@@ -554,11 +555,6 @@ const MyOrdersPage = () => {
     return (
         <div className="bg-gray-100 min-h-screen container mx-auto px-4 py-4 md:py-12">
             <h1 className="text-2xl md:text-4xl font-extrabold mb-4 md:mb-8 text-center text-gray-800">Your Order History</h1>
-            {requestMessage && (
-                <div className="bg-green-100 text-green-700 p-4 rounded-md mb-6 transition-all duration-300 transform animate-fadeInUp">
-                    {requestMessage}
-                </div>
-            )}
 
             {orders.length === 0 ? (
                 <div className="text-center text-gray-500 py-8 md:py-12">
@@ -647,9 +643,15 @@ const MyOrdersPage = () => {
                                                     </div>
                                                 </div>
 
+                                                {/* Success/Notification Message for this Item */}
+                                                {requestMessage && currentOrder?._id === order._id && selectedItem?._id === item._id && (
+                                                    <div className="mt-3 bg-green-100 text-green-700 p-3 rounded-md animate-fadeInUp">
+                                                        {requestMessage}
+                                                    </div>
+                                                )}
+
                                                 {/* Item Specific Request Status */}
-                                                {/* Status hidden on frontend as per admin requirement */}
-                                                {/* {itemRequest && (
+                                                {itemRequest && (
                                                     <div className="mt-3 p-2 rounded bg-white shadow-sm border border-gray-100 flex items-center space-x-2">
                                                         <span className={`text-sm ${getRequestStatusColor(itemRequest.status)}`}>
                                                             {itemRequest.status === 'pending' && <FaClock />}
@@ -660,18 +662,13 @@ const MyOrdersPage = () => {
                                                             {!itemRequest.status && <FaBox />}
                                                         </span>
                                                         <p className={`text-xs font-bold capitalize ${getRequestStatusColor(itemRequest.status)}`}>
-                                                            {itemRequest.status === 'pending' ? 'Request Under Review' : `${itemRequest.type}: ${itemRequest.status}`}
+                                                            {itemRequest.status === 'pending'
+                                                                ? `${itemRequest.type === 'replace' ? 'Replace' : 'Return'} Request Under Review` :
+                                                                itemRequest.status === 'out for pickup' ? `${itemRequest.type === 'replace' ? 'Replace' : 'Return'}: Pickup` :
+                                                                    `${itemRequest.type === 'replace' ? 'Replace' : 'Return'}: ${itemRequest.status}`}
                                                         </p>
-                                                        {isItemPendingOrInProgress && (
-                                                            <button
-                                                                onClick={() => handleCancelRequest(itemRequest._id)}
-                                                                className="ml-auto text-xs bg-gray-200 hover:bg-gray-300 px-2 py-0.5 rounded transition-colors"
-                                                            >
-                                                                Cancel
-                                                            </button>
-                                                        )}
                                                     </div>
-                                                )} */}
+                                                )}
 
                                                 {/* Item Specific Action Buttons */}
                                                 {isItemActionable && (
