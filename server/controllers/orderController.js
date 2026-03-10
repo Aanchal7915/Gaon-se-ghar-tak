@@ -31,6 +31,8 @@ exports.getOrderStatus = async (req, res) => {
 // Generic pincode validation for India (6 digits)
 const isValidPincode = (pc) => pc && /^\d{6}$/.test(pc.toString().trim());
 
+const normalizeSize = (size) => size ? size.toLowerCase().replace(/\([^)]*\)/g, '').replace(/[^a-z0-9]/g, '').trim() : '';
+
 exports.createOrder = async (req, res) => {
   // Check Order Timing: 12:00 PM to 6:00 PM (18:00)
   const currentTime = moment();
@@ -88,7 +90,7 @@ exports.createOrder = async (req, res) => {
         throw new Error(`Product not found for item: ${item.name}`);
       }
 
-      const variant = product.variants.find(v => v.size === item.size);
+      const variant = product.variants.find(v => normalizeSize(v.size) === normalizeSize(item.size));
       if (!variant) {
         throw new Error(`Variant not found for product: ${item.name}`);
       }

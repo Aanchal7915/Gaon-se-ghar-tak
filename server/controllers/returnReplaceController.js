@@ -320,7 +320,11 @@ const getCompletedPickups = async (req, res) => {
             pickupPerson: req.user._id,
             status: 'received',
         })
-            .populate('order', 'orderNumber')
+            .populate('user', 'name email phone')
+            .populate({
+                path: 'order',
+                select: 'orderNumber totalPrice status shippingAddress',
+            })
             .sort({ pickupDeliveredAt: -1 });
 
         res.json(completed);
