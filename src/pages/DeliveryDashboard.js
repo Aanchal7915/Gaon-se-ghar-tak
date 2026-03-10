@@ -134,17 +134,17 @@ const DeliveryDashboard = () => {
     if (error) return <div className="text-center text-red-500 mt-10">{error}</div>;
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold mb-6">Delivery Dashboard</h1>
+        <div className="p-3 md:p-6 lg:p-8 bg-gray-50 min-h-screen">
+            <h1 className="text-lg md:text-2xl lg:text-3xl font-bold mb-6 text-gray-800">Delivery Dashboard</h1>
 
-            <div className="border-b border-gray-200 mb-6">
-                <nav className="-mb-px flex space-x-8">
-                    <button onClick={() => setActiveTab('assigned')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'assigned' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Assigned Deliveries</button>
-                    <button onClick={() => setActiveTab('pickups')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'pickups' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Pickup Assignments</button>
-                    <button onClick={() => setActiveTab('delivered')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'delivered' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Delivered Orders</button>
-                    <button onClick={() => setActiveTab('cancelled')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'cancelled' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Cancelled Orders</button>
-                    <button onClick={() => setActiveTab('completedPickups')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'completedPickups' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Completed Pickups</button>
-                    <button onClick={() => setActiveTab('tracker')} className={`py-4 px-1 border-b-2 font-medium ${activeTab === 'tracker' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Live Tracker</button>
+            <div className="border-b border-gray-200 mb-6 overflow-x-auto scrollbar-hide">
+                <nav className="-mb-px flex space-x-4 md:space-x-8 whitespace-nowrap pb-1">
+                    <button onClick={() => setActiveTab('assigned')} className={`py-3 px-1 border-b-2 font-medium text-xs md:text-base ${activeTab === 'assigned' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Assigned Deliveries</button>
+                    <button onClick={() => setActiveTab('pickups')} className={`py-3 px-1 border-b-2 font-medium text-xs md:text-base ${activeTab === 'pickups' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Pickup Assignments</button>
+                    <button onClick={() => setActiveTab('delivered')} className={`py-3 px-1 border-b-2 font-medium text-xs md:text-base ${activeTab === 'delivered' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Delivered Orders</button>
+                    <button onClick={() => setActiveTab('cancelled')} className={`py-3 px-1 border-b-2 font-medium text-xs md:text-base ${activeTab === 'cancelled' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Cancelled Orders</button>
+                    <button onClick={() => setActiveTab('completedPickups')} className={`py-3 px-1 border-b-2 font-medium text-xs md:text-base ${activeTab === 'completedPickups' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Completed Pickups</button>
+                    <button onClick={() => setActiveTab('tracker')} className={`py-3 px-1 border-b-2 font-medium text-xs md:text-base ${activeTab === 'tracker' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Live Tracker</button>
                 </nav>
             </div>
 
@@ -152,17 +152,18 @@ const DeliveryDashboard = () => {
                 <div className="space-y-4">
                     {assignedDeliveries.length > 0 ? (
                         assignedDeliveries.map(delivery => (
-                            <div key={delivery._id} className="bg-white rounded-lg shadow-md p-6">
-                                <p><strong>Order ID:</strong> {delivery.order?.orderNumber}</p>
-                                <p><strong>Customer:</strong> {delivery.order?.user?.name} ({delivery.order?.user?.phone})</p>
-                                <p><strong>Email:</strong> {delivery.order?.user?.email}</p>
-                                <p><strong>Address:</strong> {delivery.order?.shippingAddress?.address}, {delivery.order?.shippingAddress?.city}, {delivery.order?.shippingAddress?.postalCode}</p>
-
-                                <p><strong>Status:</strong> <span className="capitalize">{delivery.status}</span></p>
-                                <div className="mt-4 flex space-x-2">
-                                    <button onClick={() => handleUpdateStatus(delivery, 'out for delivery')} className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Out for Delivery</button>
-                                    <button onClick={() => handleUpdateStatus(delivery, 'delivered')} className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Delivered</button>
-                                    <button onClick={() => handleUpdateStatus(delivery, 'cancelled')} className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Cancel</button>
+                            <div key={delivery._id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-3.5 md:p-6 transition-all hover:shadow-md">
+                                <div className="space-y-1.5 mb-4">
+                                    <p className="text-[13px] md:text-base"><strong>Order ID:</strong> <span className="text-blue-600 font-medium">{delivery.order?.orderNumber}</span></p>
+                                    <p className="text-[13px] md:text-base"><strong>Customer:</strong> {delivery.order?.user?.name} ({delivery.order?.user?.phone})</p>
+                                    <p className="text-[13px] md:text-base"><strong>Email:</strong> {delivery.order?.user?.email}</p>
+                                    <p className="text-[13px] md:text-base"><strong>Address:</strong> {delivery.order?.shippingAddress?.address}, {delivery.order?.shippingAddress?.city}, {delivery.order?.shippingAddress?.postalCode}</p>
+                                    <p className="text-[13px] md:text-base"><strong>Status:</strong> <span className="capitalize font-semibold text-blue-600">{delivery.status}</span></p>
+                                </div>
+                                <div className="mt-5 flex flex-row gap-2">
+                                    <button onClick={() => handleUpdateStatus(delivery, 'out for delivery')} className="flex-1 bg-blue-600 text-white px-1.5 py-2 rounded-lg hover:bg-blue-700 transition-colors text-[10px] md:text-sm font-semibold shadow-sm">Out Delivery</button>
+                                    <button onClick={() => handleUpdateStatus(delivery, 'delivered')} className="flex-1 bg-green-600 text-white px-1.5 py-2 rounded-lg hover:bg-green-700 transition-colors text-[10px] md:text-sm font-semibold shadow-sm">Delivered</button>
+                                    <button onClick={() => handleUpdateStatus(delivery, 'cancelled')} className="flex-1 bg-red-600 text-white px-1.5 py-2 rounded-lg hover:bg-red-700 transition-colors text-[10px] md:text-sm font-semibold shadow-sm">Cancel</button>
                                 </div>
                             </div>
                         ))
@@ -174,22 +175,23 @@ const DeliveryDashboard = () => {
 
             {activeTab === 'pickups' && (
                 <div className="space-y-4">
-                    <h2 className="text-2xl font-semibold mb-4">Your Pickup Assignments</h2>
+                    <h2 className="text-lg md:text-xl font-semibold mb-6 text-gray-800">Your Pickup Assignments</h2>
                     {assignedPickups.filter(p => p.status !== 'received').length > 0 ? (
                         assignedPickups.filter(p => p.status !== 'received').map(pickup => (
-                            <div key={pickup._id} className="bg-white rounded-lg shadow-md p-6">
-                                <p><strong>Order Number:</strong> {pickup.order?.orderNumber}</p>
-                                <p><strong>Customer:</strong> {pickup.user?.name} ({pickup.user?.phone})</p>
-                                <p><strong>Email:</strong> {pickup.user?.email}</p>
-                                <p><strong>Address:</strong> {pickup.order?.shippingAddress?.address}, {pickup.order?.shippingAddress?.city}, {pickup.order?.shippingAddress?.postalCode}</p>
-
-                                <p><strong>Request Type:</strong> <span className="capitalize">{pickup.type}</span></p>
-                                <p><strong>Reason:</strong> {pickup.reason}</p>
-                                <p><strong>Status:</strong> <span className="capitalize">{pickup.status === 'out for pickup' ? 'Pickup' : pickup.status}</span></p>
-                                <div className="mt-4 flex space-x-2">
+                            <div key={pickup._id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-3.5 md:p-6 transition-all hover:shadow-md">
+                                <div className="space-y-1.5 mb-4">
+                                    <p className="text-[13px] md:text-base"><strong>Order Number:</strong> <span className="text-blue-600 font-medium">{pickup.order?.orderNumber}</span></p>
+                                    <p className="text-[13px] md:text-base"><strong>Customer:</strong> {pickup.user?.name} ({pickup.user?.phone})</p>
+                                    <p className="text-[13px] md:text-base"><strong>Email:</strong> {pickup.user?.email}</p>
+                                    <p className="text-[13px] md:text-base"><strong>Address:</strong> {pickup.order?.shippingAddress?.address}, {pickup.order?.shippingAddress?.city}, {pickup.order?.shippingAddress?.postalCode}</p>
+                                    <p className="text-[13px] md:text-base"><strong>Request Type:</strong> <span className="capitalize font-semibold text-indigo-600">{pickup.type}</span></p>
+                                    <p className="text-[13px] md:text-base"><strong>Reason:</strong> <span className="text-gray-600">{pickup.reason}</span></p>
+                                    <p className="text-[13px] md:text-base"><strong>Status:</strong> <span className="capitalize font-semibold text-orange-600">{pickup.status === 'out for pickup' ? 'Pickup' : pickup.status}</span></p>
+                                </div>
+                                <div className="mt-5">
                                     <button
                                         onClick={() => handlePickupStatusChange(pickup, 'received')}
-                                        className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
+                                        className="w-full md:w-auto bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition-colors font-semibold text-xs shadow-sm"
                                     >
                                         Mark as Received
                                     </button>
@@ -205,61 +207,63 @@ const DeliveryDashboard = () => {
 
             {activeTab === 'delivered' && (
                 <div className="space-y-4">
-                    <h2 className="text-2xl font-semibold mb-4">Your Delivered Orders</h2>
+                    <h2 className="text-lg md:text-xl font-semibold mb-6 text-gray-800">Your Delivered Orders</h2>
                     {deliveredOrders.length > 0 ? (
                         deliveredOrders.map(delivery => (
-                            <div key={delivery._id} className="bg-white rounded-lg shadow-md p-6">
-                                <p><strong>Order ID:</strong> {delivery.order?.orderNumber}</p>
-                                <p><strong>Customer:</strong> {delivery.order?.user?.name} ({delivery.order?.user?.phone})</p>
-                                <p><strong>Email:</strong> {delivery.order?.user?.email}</p>
-                                <p><strong>Address:</strong> {delivery.order?.shippingAddress?.address}, {delivery.order?.shippingAddress?.city}, {delivery.order?.shippingAddress?.postalCode}</p>
-
-                                <p><strong>Status:</strong> <span className="capitalize text-green-600">{delivery.status}</span></p>
-                                <p><strong>Delivered On:</strong> {moment(delivery.deliveredAt).format('MMMM Do YYYY, h:mm:ss a')}</p>
+                            <div key={delivery._id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-3.5 md:p-6 transition-all hover:shadow-md">
+                                <div className="space-y-1.5">
+                                    <p className="text-[13px] md:text-base"><strong>Order ID:</strong> <span className="text-blue-600 font-medium">{delivery.order?.orderNumber}</span></p>
+                                    <p className="text-[13px] md:text-base"><strong>Customer:</strong> {delivery.order?.user?.name} ({delivery.order?.user?.phone})</p>
+                                    <p className="text-[13px] md:text-base"><strong>Email:</strong> {delivery.order?.user?.email}</p>
+                                    <p className="text-[13px] md:text-base"><strong>Address:</strong> {delivery.order?.shippingAddress?.address}, {delivery.order?.shippingAddress?.city}, {delivery.order?.shippingAddress?.postalCode}</p>
+                                    <p className="text-[13px] md:text-base"><strong>Status:</strong> <span className="capitalize font-semibold text-green-600">{delivery.status}</span></p>
+                                    <p className="text-[13px] md:text-base"><strong>Delivered On:</strong> <span className="text-gray-500">{moment(delivery.deliveredAt).format('MMMM Do YYYY, h:mm:ss a')}</span></p>
+                                </div>
                             </div>
                         ))
                     ) : (
-                        <p>No delivered orders found.</p>
+                        <p className="text-center py-10 text-gray-500">No delivered orders found.</p>
                     )}
                 </div>
             )}
 
             {activeTab === 'cancelled' && (
                 <div className="space-y-4">
-                    <h2 className="text-2xl font-semibold mb-4">Your Cancelled Orders</h2>
+                    <h2 className="text-lg md:text-xl font-semibold mb-6 text-gray-800">Your Cancelled Orders</h2>
                     {cancelledOrders.length > 0 ? (
                         cancelledOrders.map(delivery => (
-                            <div key={delivery._id} className="bg-white rounded-lg shadow-md p-6">
-                                <p><strong>Order ID:</strong> {delivery.order?.orderNumber}</p>
-                                <p><strong>Customer:</strong> {delivery.order?.user?.name} ({delivery.order?.user?.phone})</p>
-                                <p><strong>Email:</strong> {delivery.order?.user?.email}</p>
-                                <p><strong>Address:</strong> {delivery.order?.shippingAddress?.address}, {delivery.order?.shippingAddress?.city}, {delivery.order?.shippingAddress?.postalCode}</p>
-
-                                <p><strong>Status:</strong> <span className="capitalize text-red-600">{delivery.status}</span></p>
-                                <p><strong>Cancelled On:</strong> {moment(delivery.updatedAt).format('MMMM Do YYYY, h:mm:ss a')}</p>
+                            <div key={delivery._id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-3.5 md:p-6 transition-all hover:shadow-md">
+                                <div className="space-y-1.5">
+                                    <p className="text-[13px] md:text-base"><strong>Order ID:</strong> <span className="text-blue-600 font-medium">{delivery.order?.orderNumber}</span></p>
+                                    <p className="text-[13px] md:text-base"><strong>Customer:</strong> {delivery.order?.user?.name} ({delivery.order?.user?.phone})</p>
+                                    <p className="text-[13px] md:text-base"><strong>Email:</strong> {delivery.order?.user?.email}</p>
+                                    <p className="text-[13px] md:text-base"><strong>Address:</strong> {delivery.order?.shippingAddress?.address}, {delivery.order?.shippingAddress?.city}, {delivery.order?.shippingAddress?.postalCode}</p>
+                                    <p className="text-[13px] md:text-base"><strong>Status:</strong> <span className="capitalize font-semibold text-red-600">{delivery.status}</span></p>
+                                    <p className="text-[13px] md:text-base"><strong>Cancelled On:</strong> <span className="text-gray-500">{moment(delivery.updatedAt).format('MMMM Do YYYY, h:mm:ss a')}</span></p>
+                                </div>
                             </div>
                         ))
                     ) : (
-                        <p>No cancelled orders found.</p>
+                        <p className="text-center py-10 text-gray-500">No cancelled orders found.</p>
                     )}
                 </div>
             )}
 
             {activeTab === 'completedPickups' && (
                 <div className="space-y-4">
-                    <h2 className="text-2xl font-semibold mb-4">Completed Pickups</h2>
-                    <div className="flex space-x-4 mb-4">
+                    <h2 className="text-lg md:text-xl font-semibold mb-6 text-gray-800">Completed Pickups</h2>
+                    <div className="flex flex-col md:flex-row gap-4 mb-8">
                         <input
                             type="number"
                             placeholder="Year"
                             value={filterYear}
                             onChange={(e) => setFilterYear(e.target.value)}
-                            className="p-2 border rounded"
+                            className="p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none shadow-sm flex-1 md:max-w-[150px] text-sm"
                         />
                         <select
                             value={filterMonth}
                             onChange={(e) => setFilterMonth(e.target.value)}
-                            className="p-2 border rounded"
+                            className="p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none shadow-sm flex-1 md:max-w-[200px] text-sm"
                         >
                             <option value="">Select Month</option>
                             {moment.months().map((month, index) => (
@@ -269,16 +273,17 @@ const DeliveryDashboard = () => {
                     </div>
                     {completedPickups.length > 0 ? (
                         completedPickups.map(pickup => (
-                            <div key={pickup._id} className="bg-white rounded-lg shadow-md p-6">
-                                <p><strong>Order Number:</strong> {pickup.order?.orderNumber}</p>
-                                <p><strong>Customer:</strong> {pickup.user?.name} ({pickup.user?.phone})</p>
-                                <p><strong>Email:</strong> {pickup.user?.email}</p>
-                                <p><strong>Address:</strong> {pickup.order?.shippingAddress?.address}, {pickup.order?.shippingAddress?.city}, {pickup.order?.shippingAddress?.postalCode}</p>
-
-                                <p><strong>Request Type:</strong> <span className="capitalize">{pickup.type}</span></p>
-                                <p><strong>Reason:</strong> {pickup.reason}</p>
-                                <p><strong>Status:</strong> <span className="capitalize text-green-600">{pickup.status}</span></p>
-                                <p><strong>Completed On:</strong> {moment(pickup.pickupDeliveredAt).format('MMMM Do YYYY, h:mm:ss a')}</p>
+                            <div key={pickup._id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-3.5 md:p-6 transition-all hover:shadow-md">
+                                <div className="space-y-1.5">
+                                    <p className="text-[13px] md:text-base"><strong>Order Number:</strong> <span className="text-blue-600 font-medium">{pickup.order?.orderNumber}</span></p>
+                                    <p className="text-[13px] md:text-base"><strong>Customer:</strong> {pickup.user?.name} ({pickup.user?.phone})</p>
+                                    <p className="text-[13px] md:text-base"><strong>Email:</strong> {pickup.user?.email}</p>
+                                    <p className="text-[13px] md:text-base"><strong>Address:</strong> {pickup.order?.shippingAddress?.address}, {pickup.order?.shippingAddress?.city}, {pickup.order?.shippingAddress?.postalCode}</p>
+                                    <p className="text-[13px] md:text-base"><strong>Request Type:</strong> <span className="capitalize font-semibold text-indigo-600">{pickup.type}</span></p>
+                                    <p className="text-[13px] md:text-base"><strong>Reason:</strong> <span className="text-gray-600">{pickup.reason}</span></p>
+                                    <p className="text-[13px] md:text-base"><strong>Status:</strong> <span className="capitalize font-semibold text-green-600">{pickup.status}</span></p>
+                                    <p className="text-[13px] md:text-base"><strong>Completed On:</strong> <span className="text-gray-500">{moment(pickup.pickupDeliveredAt).format('MMMM Do YYYY, h:mm:ss a')}</span></p>
+                                </div>
                             </div>
                         ))
                     ) : (
@@ -289,23 +294,24 @@ const DeliveryDashboard = () => {
 
             {activeTab === 'tracker' && <LiveLocationTracker />}
 
+
             {showOtpModal && (
-                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
-                    <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-sm">
-                        <h3 className="text-xl font-bold mb-4">Verify with OTP</h3>
-                        <p className="text-gray-600 mb-4">An OTP has been sent to the customer's email. Please enter it to update the status.</p>
-                        <div className="flex space-x-2">
+                <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm overflow-y-auto h-full w-full flex items-center justify-center p-4 z-50">
+                    <div className="bg-white p-6 md:p-8 rounded-2xl shadow-2xl w-full max-w-sm transform transition-all">
+                        <h3 className="text-xl font-bold mb-4 text-gray-900 border-b pb-2">Verify with OTP</h3>
+                        <p className="text-gray-600 mb-6 text-sm">An OTP has been sent to the customer's email. Please enter it to update the status.</p>
+                        <div className="mb-6">
                             <input
                                 type="text"
                                 value={otpInput}
                                 onChange={(e) => setOtpInput(e.target.value)}
-                                placeholder="Enter OTP"
-                                className="w-full p-2 border rounded-md"
+                                placeholder="Enter 6-digit OTP"
+                                className="w-full p-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-green-500/10 focus:border-green-500 outline-none transition-all text-center tracking-[0.5em] font-bold text-lg"
                             />
                         </div>
-                        <div className="mt-6 flex justify-between space-x-4">
-                            <button onClick={() => { setShowOtpModal(false); setOtpInput(''); }} className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md">Cancel</button>
-                            <button onClick={handleVerifyAndChangeStatus} className="bg-green-600 text-white px-4 py-2 rounded-md">Verify & Update</button>
+                        <div className="flex flex-col gap-3">
+                            <button onClick={handleVerifyAndChangeStatus} className="w-full bg-green-600 text-white font-bold py-3 rounded-xl hover:bg-green-700 transition-all shadow-lg shadow-green-100 uppercase tracking-wider text-xs">Verify & Update</button>
+                            <button onClick={() => { setShowOtpModal(false); setOtpInput(''); }} className="w-full bg-gray-50 text-gray-500 font-bold py-3 rounded-xl hover:bg-gray-100 transition-all uppercase tracking-wider text-xs">Cancel</button>
                         </div>
                     </div>
                 </div>

@@ -48,15 +48,15 @@ const LiveLocationTracker = () => {
     }, []);
 
     return (
-        <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-2xl font-semibold mb-4">Live Location Tracker</h2>
-            <p className="text-gray-600 mb-2">{status}</p>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-6 transition-all">
+            <h2 className="text-lg md:text-xl font-semibold mb-4 text-gray-800">Live Location Tracker</h2>
+            <p className="text-gray-600 mb-2 text-sm md:text-base">{status}</p>
             {location.latitude && location.longitude && (
-                <div className="mt-4">
-                    <p><strong>Latitude:</strong> {location.latitude}</p>
-                    <p><strong>Longitude:</strong> {location.longitude}</p>
-                    <div className="h-64 bg-gray-200 rounded-md mt-4 flex items-center justify-center">
-                        <p className="text-gray-500">Map view will be displayed here.</p>
+                <div className="mt-4 space-y-1">
+                    <p className="text-sm md:text-base"><strong>Latitude:</strong> {location.latitude}</p>
+                    <p className="text-sm md:text-base"><strong>Longitude:</strong> {location.longitude}</p>
+                    <div className="h-64 bg-gray-100 rounded-xl mt-4 flex items-center justify-center border-2 border-dashed border-gray-200">
+                        <p className="text-gray-400 text-[13px] md:text-sm italic">Map view will be displayed here.</p>
                     </div>
                 </div>
             )}
