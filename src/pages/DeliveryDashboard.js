@@ -309,7 +309,7 @@ const DeliveryDashboard = () => {
                                 value={otpInput}
                                 onChange={(e) => setOtpInput(e.target.value)}
                                 placeholder="Enter 6-digit OTP"
-                                className="w-full p-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-green-500/10 focus:border-green-500 outline-none transition-all text-center tracking-[0.5em] font-bold text-lg"
+                                className="w-full p-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-green-500/10 focus:border-green-500 outline-none transition-all text-center tracking-[0.5em] font-bold text-sm"
                             />
                         </div>
                         <div className="flex flex-col gap-3">

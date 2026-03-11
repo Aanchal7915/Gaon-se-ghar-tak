@@ -1,25 +1,35 @@
-// const nodemailer = require('nodemailer');
 const sgMail = require('@sendgrid/mail');
 require('dotenv').config();
 
-// const transporter = nodemailer.createTransport({
-//   service: 'gmail',
-//   auth: {
-//     user: process.env.EMAIL_USER,
-//     pass: process.env.EMAIL_PASS
-//   }
-// });
-
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
 const sendOTP = async (email, otp) => {
+  if (!email) {
+    throw new Error('Customer email is missing.');
+  }
+
+  const apiKey = process.env.SENDGRID_API_KEY ? process.env.SENDGRID_API_KEY.trim() : null;
+  const emailFrom = process.env.EMAIL_FROM ? process.env.EMAIL_FROM.trim() : null;
+  const fromName = process.env.FROM_NAME ? process.env.FROM_NAME.trim() : 'Gaon Se Ghar Tak';
+
+  if (!apiKey) {
+    console.error('CRITICAL: SENDGRID_API_KEY is not defined in env!');
+    throw new Error('Email service configuration missing (API Key).');
+  }
+
+  if (!emailFrom) {
+    console.error('CRITICAL: EMAIL_FROM is not defined in env!');
+    throw new Error('Email service configuration missing (Sender Email).');
+  }
+
+  sgMail.setApiKey(apiKey);
+
   const msg = {
-    to: email,
+    to: email.trim(),
     from: {
-      email: process.env.EMAIL_FROM,
-      name: process.env.FROM_NAME,
+      email: emailFrom,
+      name: fromName,
     },
     subject: 'Your OTP for Gaon Se Ghar Tak',
+    text: `Your One-Time Password is: ${otp}`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
         <h1 style="color: #2c3e50; text-align: center;">Your One-Time Password</h1>
@@ -36,50 +46,25 @@ const sendOTP = async (email, otp) => {
           Gaon Se Ghar Tak - Connecting you to your roots.
         </p>
       </div>
-    `
+    `,
   };
 
   try {
+    console.log(`[SendGrid] Attempting to send OTP to: ${email}`);
+    // Wait for the response but don't block too long
     await sgMail.send(msg);
-    console.log('OTP Email sent successfully via SendGrid');
+    console.log(`[SendGrid] Success: OTP sent to ${email}`);
   } catch (error) {
-    console.error('SendGrid email error:', error);
+    console.error('[SendGrid] Error sending email:', error);
     if (error.response) {
-      console.error(error.response.body);
+      const errorDetail = JSON.stringify(error.response.body, null, 2);
+      console.error('[SendGrid] Response details:', errorDetail);
+      if (error.response.body && error.response.body.errors && error.response.body.errors[0]) {
+        throw new Error(`SendGrid: ${error.response.body.errors[0].message}`);
+      }
     }
-    throw new Error('Failed to send OTP email.');
+    throw new Error(error.message || 'Failed to send OTP via SendGrid.');
   }
 };
 
 module.exports = { sendOTP };
-
-// {
-//   "name": "server",
-//   "version": "1.0.0",
-//   "main": "server.js",
-//   "scripts": {
-//     "start": "node src/server.js",
-//     "dev": "nodemon src/server.js"
-//   },
-//   "keywords": [],
-//   "author": "",
-//   "license": "ISC",
-//   "description": "",
-//   "dependencies": {
-//     "bcryptjs": "^3.0.2",
-//     "cloudinary": "^2.7.0",
-//     "cookie-parser": "^1.4.7",
-//     "dotenv": "^17.2.2",
-//     "express": "^5.1.0",
-//     "jsonwebtoken": "^9.0.2",
-//     "moment": "^2.30.1",
-//     "mongoose": "^8.18.1",
-//     "multer": "^2.0.2",
-//     "nodemailer": "^7.0.6",
-//     "razorpay": "^2.9.6",
-//     "socket.io": "^4.8.1"
-//   },
-//   "devDependencies": {
-//     "nodemon": "^3.1.10"
-//   }
-// }
